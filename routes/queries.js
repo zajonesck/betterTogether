@@ -1,10 +1,21 @@
 const Pool = require("pg").Pool;
+
+// local DB connection
+// const pool = new Pool({
+//   user: "zacharyjones",
+//   host: "localhost",
+//   database: "trainingapp",
+//   password: "Copal3200!",
+//   port: 5432,
+// });
+
 const pool = new Pool({
-  user: "zacharyjones",
-  host: "localhost",
-  database: "trainingapp",
-  password: "Copal3200!",
+  user: "qacufwqdwaercf",
+  host: "ec2-23-23-151-191.compute-1.amazonaws.com",
+  database: "d5tbsn9k6iejgi",
+  password: "53b9b10b6742d9d09890febc4fd2c44148bc64935e83bd230060b32deaec57d5",
   port: 5432,
+  ssl: true,
 });
 const getClients = (request, response) => {
   pool.query(
@@ -30,20 +41,6 @@ const addClient = (request, response) => {
     }
   );
 };
-// const createUser = (request, response) => {
-//   const { name, email } = request.body;
-
-//   pool.query(
-//     "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
-//     [name, email],
-//     (error, results) => {
-//       if (error) {
-//         throw error;
-//       }
-//       response.status(201).send(`User added with ID: ${results.rows[0].id}`);
-//     }
-//   );
-// };
 
 module.exports = {
   getClients,

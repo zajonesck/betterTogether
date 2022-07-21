@@ -21,4 +21,4 @@ app.get("/", (request, response) => {
 
 app.get("/clients", db.getClients);
 
-app.post("/addclients", db.addClient);
+app.post("/clients", db.addClient);
