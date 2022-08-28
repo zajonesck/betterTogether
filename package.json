@@ -1,6 +1,9 @@
 {
   "name": "node-clients_data-postgres",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.4.0"
+  },
   "description": "RESTful clients_data with Node.js, Express, and PostgreSQL",
   "main": "index.js",
   "license": "MIT",
