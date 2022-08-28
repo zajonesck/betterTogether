@@ -1,6 +1,6 @@
 const Pool = require("pg").Pool;
 
-// local DB connection
+//local DB connection
 // const pool = new Pool({
 //   user: "zacharyjones",
 //   host: "localhost",
@@ -29,15 +29,18 @@ const getClients = (request, response) => {
   );
 };
 const addClient = (request, response) => {
+  console.log(request.body);
   const { client, weight } = request.body;
 
   pool.query(
-    `INSERT INTO clients_data (client_name, weight, date) VALUES ('${client}', ${weight} , CURRENT_DATE)`,
-    (error, results) => {
-      if (error) {
-        throw error;
+    "INSERT INTO clients_data (client_name, weight, date) VALUES($1, $2, CURRENT_DATE)",
+    [client, weight],
+    (err, res) => {
+      if (err) {
+        console.log(err);
+        return err;
       }
-      response.status(200).json(results.rows);
+      response.status(200).json(res.rows);
     }
   );
 };
