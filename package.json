@@ -8,6 +8,8 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^29.0.1",
+    "nodemon": "^2.0.19",
     "supertest": "^6.2.4"
   },
   "dependencies": {
@@ -19,7 +21,7 @@
     "pg": "^8.8.0"
   },
   "scripts": {
-    "start": "node app.js",
-    "test": "NODE_ENV=test mocha --reporter spec"
+    "start": "nodemon app.js",
+    "test": "jest"
   }
 }
