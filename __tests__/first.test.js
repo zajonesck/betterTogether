@@ -16,22 +16,14 @@ describe("GET /clients", () => {
 
 // //POST
 // //test const addClient
-// describe("POST /clients", () => {
-//     test("It responds with the newly created student", async () => {
-//       const newStudent = await request(app)
-//         .post("/students")
-//         .send({
-//           name: "New Student"
-//         });
-
-//       // make sure we add it correctly
-//       expect(newStudent.body).toHaveProperty("id");
-//       expect(newStudent.body.name).toBe("New Student");
-//       expect(newStudent.statusCode).toBe(200);
-
-//       // make sure we have 3 students now
-//       const response = await request(app).get("/students");
-//       expect(response.body.length).toBe(3);
-//     });
-//   });
-// });
+describe("POST /clients", () => {
+  test("It responds with the newly created client", async () => {
+    const newClient = await request(baseURL).post("/clients").send({
+      client: "New client",
+      weight: 10,
+    });
+    //todo: fix test
+    expect(newClient.body).toStrictEqual([]);
+    expect(newClient.statusCode).toBe(200);
+  });
+});
