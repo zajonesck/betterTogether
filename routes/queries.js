@@ -15,7 +15,7 @@ const pool = new Pool({
   database: "d5tbsn9k6iejgi",
   password: "53b9b10b6742d9d09890febc4fd2c44148bc64935e83bd230060b32deaec57d5",
   port: 5432,
-  ssl: true,
+  ssl: { rejectUnauthorized: false },
 });
 const getClients = (request, response) => {
   pool.query(
