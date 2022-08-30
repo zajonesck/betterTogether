@@ -21,7 +21,8 @@
     "pg": "^8.8.0"
   },
   "scripts": {
-    "start": "nodemon app.js",
+    "start:watch":"nodemon app.js",
+    "start": "node app.js",
     "test": "jest"
   }
 }
