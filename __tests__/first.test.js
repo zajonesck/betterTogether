@@ -18,11 +18,15 @@ describe("GET /clients", () => {
 // //test const addClient
 describe("POST /clients", () => {
   test("It responds with the newly created client", async () => {
+    const response = await request(baseURL).get("/clients");
+    const numberOfClients = response.body.length;
     const newClient = await request(baseURL).post("/clients").send({
-      client: "New client",
-      weight: 10,
+      client_name: "New client",
+      birth_day: "10/10/1010",
     });
     //todo: fix test
+    const newResponse = await request(baseURL).get("/clients");
+    expect(newResponse.body.length).toBe(numberOfClients + 1);
     expect(newClient.body).toStrictEqual([]);
     expect(newClient.statusCode).toBe(200);
   });
