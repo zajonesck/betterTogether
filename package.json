@@ -21,7 +21,7 @@
     "pg": "^8.8.0"
   },
   "scripts": {
-    "start:watch":"nodemon app.js",
+    "start:watch": "NODE_ENV=local nodemon app.js",
     "start": "node app.js",
     "test": "jest"
   }
