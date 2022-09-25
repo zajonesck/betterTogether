@@ -2,8 +2,12 @@ const db = require("./queries");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+var cors = require("cors");
+
 const port = process.env.PORT || 3000;
 
+// Add Access Control Allow Origin headers
+app.use(cors());
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({

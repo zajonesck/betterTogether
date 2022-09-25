@@ -15,3 +15,8 @@ view heroku logs
 ```
 $ heroku logs --tail
 ```
+
+```
+run app
+$ nodemon app.js
+```
