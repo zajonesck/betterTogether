@@ -1,5 +1,7 @@
 <script>
 import axios from "axios";
+import { format, parseISO } from "date-fns";
+
 export default {
   data() {
     return {
@@ -13,6 +15,12 @@ export default {
       this.clients = response.data;
     });
   },
+  methods: {
+    newDate(birthDay) {
+      const date = format(parseISO(birthDay), " MMM, dd, yyyy");
+      return date;
+    },
+  },
 };
 </script>
 
@@ -25,32 +33,17 @@ export default {
     </tr>
     <tr v-for="client in clients">
       <td>{{ client.client_name }}</td>
-      <td>{{ client.birth_day }}</td>
+      <td>{{ newDate(client.birth_day) }}</td>
     </tr>
   </table>
 
-  <button @click="count++">You clicked me {{ count }} times.</button>
+  <button @click="count++">Go do {{ count }} push-ups.</button>
 </template>
 <style scoped>
 h1 {
+  color: red;
   font-weight: 500;
   font-size: 2.6rem;
   top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
 }
 </style>
