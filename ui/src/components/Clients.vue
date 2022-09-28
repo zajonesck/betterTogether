@@ -6,7 +6,8 @@ export default {
   data() {
     return {
       clients: [],
-      count: 0,
+      newClientName: "Name",
+      newClientBirthDate: "mm/dd/yyyy",
     };
   },
   mounted() {
@@ -19,6 +20,15 @@ export default {
     newDate(birthDay) {
       const date = format(parseISO(birthDay), " MMM, dd, yyyy");
       return date;
+    },
+    addClient(client_name, birth_day) {
+      const requestBody = {
+        client_name: this.newClientName,
+        birth_day: this.newClientBirthDate,
+      };
+      axios
+        .post("http://localhost:3000/clients", requestBody)
+        .then((response) => console.log("copesponse"));
     },
   },
 };
@@ -36,8 +46,11 @@ export default {
       <td>{{ newDate(client.birth_day) }}</td>
     </tr>
   </table>
-
-  <button @click="count++">Go do {{ count }} push-ups.</button>
+  <label>Name </label>
+  <input v-model="newClientName" type="text" id="name" name="name" size="10" />
+  <label>Birth Date </label>
+  <input v-model="newClientBirthDate" type="text" id="date" name="birth date" />
+  <button @click="addClient">Add new client.</button>
 </template>
 <style scoped>
 h1 {
