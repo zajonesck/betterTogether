@@ -34,18 +34,17 @@ const getClients = (request, response) => {
   );
 };
 const addClient = (request, response) => {
-  console.log("request body here!!!", request.body);
   const { client_name, birth_day } = request.body;
 
   pool.query(
     "INSERT INTO clients (client_name, birth_day) VALUES($1, $2)",
     [client_name, birth_day],
-    (err, res) => {
-      if (err) {
-        console.log(err);
-        return err;
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return error;
       }
-      response.status(200).json(res.rows);
+      response.status(200).json(results.rows);
     }
   );
 };

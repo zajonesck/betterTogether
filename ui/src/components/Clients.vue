@@ -6,29 +6,36 @@ export default {
   data() {
     return {
       clients: [],
-      newClientName: "Name",
-      newClientBirthDate: "mm/dd/yyyy",
+      newClientName: "",
+      newClientBirthDate: "",
     };
   },
   mounted() {
-    axios.get("http://localhost:3000/clients").then((response) => {
-      console.log(response);
-      this.clients = response.data;
-    });
+    this.getClients();
   },
   methods: {
+    getClients() {
+      axios.get("http://localhost:3000/clients").then((response) => {
+        this.clients = response.data;
+      });
+    },
     newDate(birthDay) {
       const date = format(parseISO(birthDay), " MMM, dd, yyyy");
       return date;
     },
-    addClient(client_name, birth_day) {
+    addClient() {
       const requestBody = {
         client_name: this.newClientName,
         birth_day: this.newClientBirthDate,
       };
       axios
         .post("http://localhost:3000/clients", requestBody)
-        .then((response) => console.log("copesponse"));
+        .then((response) => {
+          console.log("copesponse", response);
+          this.getClients();
+          this.newClientName = "";
+          this.newClientBirthDate = "";
+        });
     },
   },
 };
@@ -47,9 +54,14 @@ export default {
     </tr>
   </table>
   <label>Name </label>
-  <input v-model="newClientName" type="text" id="name" name="name" size="10" />
+  <input v-model="newClientName" type="text" id="name" placeholder="Mr. Woof" />
   <label>Birth Date </label>
-  <input v-model="newClientBirthDate" type="text" id="date" name="birth date" />
+  <input
+    v-model="newClientBirthDate"
+    type="date"
+    id="date"
+    placeholder="123-46-6789"
+  />
   <button @click="addClient">Add new client.</button>
 </template>
 <style scoped>
@@ -57,6 +69,9 @@ h1 {
   color: red;
   font-weight: 500;
   font-size: 2.6rem;
-  top: -10px;
+  text-align: center;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
 }
 </style>
