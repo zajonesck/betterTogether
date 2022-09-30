@@ -21,6 +21,21 @@ if (process.env.NODE_ENV == "local") {
     ssl: { rejectUnauthorized: false },
   });
 }
+//DELETE FROM clients WHERE id = 324;
+const deleteClient = (request, response) => {
+  const clientId = request.params.clientId;
+  pool.query(
+    "DELETE FROM clients WHERE id = $1",
+    [clientId],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
 
 const getClients = (request, response) => {
   pool.query(
@@ -35,7 +50,6 @@ const getClients = (request, response) => {
 };
 const addClient = (request, response) => {
   const { client_name, birth_day } = request.body;
-
   pool.query(
     "INSERT INTO clients (client_name, birth_day) VALUES($1, $2)",
     [client_name, birth_day],
@@ -52,4 +66,5 @@ const addClient = (request, response) => {
 module.exports = {
   getClients,
   addClient,
+  deleteClient,
 };

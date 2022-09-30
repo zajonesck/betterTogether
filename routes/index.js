@@ -26,3 +26,5 @@ app.get("/", (request, response) => {
 app.get("/clients", db.getClients);
 
 app.post("/clients", db.addClient);
+
+app.delete("/clients/:clientId", db.deleteClient);
