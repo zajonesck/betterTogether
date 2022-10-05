@@ -21,7 +21,6 @@ if (process.env.NODE_ENV == "local") {
     ssl: { rejectUnauthorized: false },
   });
 }
-//DELETE FROM clients WHERE id = 324;
 const deleteClient = (request, response) => {
   const clientId = request.params.clientId;
   pool.query(

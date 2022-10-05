@@ -31,10 +31,20 @@ export default {
       axios
         .post("http://localhost:3000/clients", requestBody)
         .then((response) => {
-          console.log("copesponse", response);
+          console.log(response);
           this.getClients();
           this.newClientName = "";
           this.newClientBirthDate = "";
+        });
+    },
+    deleteClient(clientId) {
+      console.log("delete");
+      console.log(clientId);
+      axios
+        .delete(`http://localhost:3000/clients/${clientId}`)
+        .then((response) => {
+          console.log(response);
+          this.getClients();
         });
     },
   },
@@ -47,22 +57,24 @@ export default {
     <tr>
       <th>Client</th>
       <th>Birth date</th>
+      <th>Delete</th>
     </tr>
     <tr v-for="client in clients">
       <td>{{ client.client_name }}</td>
       <td>{{ newDate(client.birth_day) }}</td>
+      <td><button @click="deleteClient(client.id)">Delete Client</button></td>
     </tr>
   </table>
-  <label>Name </label>
-  <input v-model="newClientName" type="text" id="name" placeholder="Mr. Woof" />
-  <label>Birth Date </label>
+  <label>Name: </label>
+  <input v-model="newClientName" type="text" id="name" placeholder="NAME" />
+  <label>Birth Date: </label>
   <input
     v-model="newClientBirthDate"
     type="date"
     id="date"
     placeholder="123-46-6789"
   />
-  <button @click="addClient">Add new client.</button>
+  <button @click="addClient">Add Client</button>
 </template>
 <style scoped>
 h1 {
