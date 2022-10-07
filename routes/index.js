@@ -19,9 +19,11 @@ app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });
 
-app.get("/", (request, response) => {
-  response.json({ info: "Node.js, Express, and Postgres trainingapp" });
-});
+app.use(express.static("ui/dist"));
+
+// app.get("/", (request, response) => {
+//   response.json({ info: "Node.js, Express, and Postgres trainingapp" });
+// });
 
 app.get("/clients", db.getClients);
 
