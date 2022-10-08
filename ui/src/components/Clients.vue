@@ -61,12 +61,12 @@ export default {
     <tr>
       <th>Client</th>
       <th>Birth date</th>
-      <th>Delete</th>
+      <th></th>
     </tr>
     <tr v-for="client in clients">
       <td>{{ client.client_name }}</td>
       <td>{{ newDate(client.birth_day) }}</td>
-      <td><button @click="deleteClient(client.id)">Delete Client</button></td>
+      <td><button @click="deleteClient(client.id)">Delete</button></td>
     </tr>
   </table>
   <label>Name: </label>
