@@ -35,7 +35,7 @@ export default {
 }
   methods: {
     getClients() {
-      axios.get("http://localhost:3000/clients").then((response) => {
+      axios.get(`${API_URL}/clients`).then((response) => {
         this.clients = response.data;
       });
     },
@@ -49,7 +49,7 @@ export default {
         birth_day: this.newClientBirthDate,
       };
       axios
-        .post("http://localhost:3000/clients", requestBody)
+        .post(`${API_URL}/clients`, requestBody)
         .then((response) => {
           console.log(response);
           this.getClients();
@@ -62,7 +62,7 @@ export default {
       console.log("delete");
       console.log(clientId);
       axios
-        .delete(`http://localhost:3000/clients/${clientId}`)
+        .delete(`${API_URL}/clients/${clientId}`)
         .then((response) => {
           console.log(response);
           this.getClients();
