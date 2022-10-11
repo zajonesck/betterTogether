@@ -25,10 +25,6 @@ export default {
     newDate(birthDay) {
       const date = format(parseISO(birthDay), "MMM do yyyy");
       return date;
-      const dtDateOnly = date(
-        date.valueOf() + date.getTimezoneOffset() * 60 * 1000
-      );
-      return dtDateOnly;
     },
     addClient() {
       const requestBody = {
