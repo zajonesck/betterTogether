@@ -4,15 +4,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "build:stage": "env-cmd -f ./.env.prod npm run-script build" 
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "vue": "^3.2.38",
-    "date-fns": "^2.29.3"
+    "date-fns": "^2.29.3",
+    "vue": "^3.2.38"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
+    "env-cmd": "^10.1.0",
     "vite": "^3.0.9"
   }
 }

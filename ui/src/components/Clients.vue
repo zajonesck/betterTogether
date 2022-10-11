@@ -23,7 +23,7 @@ export default {
       });
     },
     newDate(birthDay) {
-      const date = format(parseISO(birthDay), " MMM, dd, yyyy");
+      const date = format(parseISO(birthDay), "MMM do yyyy");
       return date;
     },
     addClient() {
@@ -64,9 +64,11 @@ export default {
       <th></th>
     </tr>
     <tr v-for="client in clients">
-      <td>{{ client.client_name }}</td>
+      <td>
+        {{ client.client_name }}
+      </td>
       <td>{{ newDate(client.birth_day) }}</td>
-      <td><button @click="deleteClient(client.id)">Delete</button></td>
+      <td><button @click="deleteClient(client.id)">🗑</button></td>
     </tr>
   </table>
   <label>Name: </label>
@@ -78,7 +80,7 @@ export default {
     id="date"
     placeholder="123-46-6789"
   />
-  <button @click="addClient">Add Client</button>
+  <button @click="addClient">✔</button>
 </template>
 <style scoped>
 h1 {

@@ -21,10 +21,6 @@ app.listen(port, () => {
 
 app.use(express.static("ui/dist"));
 
-// app.get("/", (request, response) => {
-//   response.json({ info: "Node.js, Express, and Postgres trainingapp" });
-// });
-
 app.get("/clients", db.getClients);
 
 app.post("/clients", db.addClient);
