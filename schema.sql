@@ -2,7 +2,7 @@
 CREATE TABLE clients (
     id integer DEFAULT nextval('clients_data_id_seq'::regclass) PRIMARY KEY,
     client_name character varying(50) NOT NULL,
-    birth_day date NOT NULL
+    birth_day timestamp without time zone NOT NULL
 );
 
 CREATE UNIQUE INDEX clients_data_pkey ON clients(id int4_ops);
