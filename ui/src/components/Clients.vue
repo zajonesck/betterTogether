@@ -1,6 +1,5 @@
 <script>
 import axios from "axios";
-//import { format, parseISO } from "date-fns";
 
 export default {
   data() {
@@ -23,15 +22,13 @@ export default {
       });
     },
 
-    // newDate(birthDay) {
-    //   const date = format(parseISO(birthDay), "MMM do yyyy");
-    //   return date;
-    // },
     newDate(birthDay) {
-      let date = birthDay.split("", 10);
-      let stringDate = date.toString();
-      let realDate = stringDate.replaceAll(",", "");
-      return realDate;
+      let date = birthDay.split("-");
+      console.log(date);
+      let day = date[2].split("", 2).toString().replaceAll(",", "");
+      console.log(day);
+      let stringDate = date[1] + "-" + day + "-" + date[0];
+      return stringDate;
     },
 
     addClient() {
