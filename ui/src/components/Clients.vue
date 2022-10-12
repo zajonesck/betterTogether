@@ -22,10 +22,18 @@ export default {
         this.clients = response.data;
       });
     },
+
+    // newDate(birthDay) {
+    //   const date = format(parseISO(birthDay), "MMM do yyyy");
+    //   return date;
+    // },
     newDate(birthDay) {
-      const date = format(parseISO(birthDay), "MMM do yyyy");
-      return date;
+      let date = birthDay.split("", 10);
+      let stringDate = date.toString();
+      let realDate = stringDate.replaceAll(",", "");
+      return realDate;
     },
+
     addClient() {
       const requestBody = {
         client_name: this.newClientName,
