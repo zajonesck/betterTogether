@@ -7,6 +7,20 @@ export default {
       clients: [],
       newClientName: "",
       newClientBirthDate: "",
+      months: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
     };
   },
   mounted() {
@@ -15,19 +29,16 @@ export default {
 
   methods: {
     getClients() {
-      console.log("cope", import.meta.env.VITE_API_URL);
       axios.get(`${import.meta.env.VITE_API_URL}clients`).then((response) => {
-        console.log("response", response);
         this.clients = response.data;
       });
     },
 
     newDate(birthDay) {
       let date = birthDay.split("-");
-      console.log(date);
       let day = date[2].split("", 2).toString().replaceAll(",", "");
-      console.log(day);
-      let stringDate = date[1] + "-" + day + "-" + date[0];
+      const month = this.months[+date[1] - 1];
+      let stringDate = month + " " + day + ", " + date[0];
       return stringDate;
     },
 
