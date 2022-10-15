@@ -5,12 +5,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "build:stage": "env-cmd -f ./.env.prod npm run-script build" 
+    "build:stage": "env-cmd -f ./.env.prod npm run-script build"
   },
   "dependencies": {
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",
-    "vue": "^3.2.38"
+    "vue": "^3.2.38",
+    "vue-router": "^4.1.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",

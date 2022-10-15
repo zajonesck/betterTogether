@@ -69,43 +69,74 @@ export default {
     },
   },
 };
+const Home = { template: "<div>Home</div>" };
+const About = { template: "<div>About</div>" };
+
+const routes = [
+  { path: "/Clients", component: Home },
+  { path: "/Weight", component: About },
+];
 </script>
 
 <template>
-  <h1>Clients</h1>
-  <table>
-    <tr>
-      <th>Client</th>
-      <th>Birth date</th>
-      <th></th>
-    </tr>
-    <tr v-for="client in clients">
-      <td>
-        {{ client.client_name }}
-      </td>
-      <td>{{ newDate(client.birth_day) }}</td>
-      <td><button @click="deleteClient(client.id)">🗑</button></td>
-    </tr>
-  </table>
-  <label>Name: </label>
-  <input v-model="newClientName" type="text" id="name" placeholder="NAME" />
-  <label>Birth Date: </label>
-  <input
-    v-model="newClientBirthDate"
-    type="date"
-    id="date"
-    placeholder="123-46-6789"
-  />
-  <button @click="addClient">✔</button>
+  <div id="app">
+    <h1>Clients</h1>
+    <p>
+      <!-- use the router-link component for navigation. -->
+      <!-- specify the link by passing the `to` prop. -->
+      <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
+      <router-link to="/Clients">Home </router-link>
+
+      <router-link to="/Weights">About</router-link>
+    </p>
+    <table>
+      <tr>
+        <th>Client</th>
+        <th>Birth date</th>
+        <th></th>
+      </tr>
+      <tr v-for="client in clients">
+        <td>
+          {{ client.client_name }}
+        </td>
+        <td>{{ newDate(client.birth_day) }}</td>
+        <td><button @click="deleteClient(client.id)">🗑</button></td>
+      </tr>
+    </table>
+    <label>Name: </label>
+    <input v-model="newClientName" type="text" id="name" placeholder="NAME" />
+    <label>Birth Date: </label>
+    <input
+      v-model="newClientBirthDate"
+      type="date"
+      id="date"
+      placeholder="123-46-6789"
+    />
+    <button @click="addClient">✔</button>
+  </div>
 </template>
 <style scoped>
 h1 {
-  color: red;
+  color: white;
   font-weight: 500;
   font-size: 2.6rem;
   text-align: center;
   margin: auto;
-  width: 50%;
+  width: 100%;
   padding: 10px;
+}
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04aa6d;
+  color: white;
+}
+
+tr {
+}
+
+td {
+  text-align: left;
 }
 </style>
