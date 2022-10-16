@@ -69,26 +69,11 @@ export default {
     },
   },
 };
-const Home = { template: "<div>Home</div>" };
-const About = { template: "<div>About</div>" };
-
-const routes = [
-  { path: "/Clients", component: Home },
-  { path: "/Weight", component: About },
-];
 </script>
 
 <template>
   <div id="app">
     <h1>Clients</h1>
-    <p>
-      <!-- use the router-link component for navigation. -->
-      <!-- specify the link by passing the `to` prop. -->
-      <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
-      <router-link to="/Clients">Home </router-link>
-
-      <router-link to="/Weights">About</router-link>
-    </p>
     <table>
       <tr>
         <th>Client</th>
