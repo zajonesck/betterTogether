@@ -2,18 +2,18 @@ import { createRouter, createWebHistory } from "vue-router";
 import Clients from "../views/Clients.vue";
 const routes = [
   {
-    path: "/clients",
+    path: "/client-roster",
     name: "Clients",
     component: Clients,
   },
   {
-    path: "/weights",
+    path: "/weight-history",
     name: "Weights",
 
     component: () => import("../views/Weights.vue"),
   },
   {
-    path: "/workouts",
+    path: "/workout-rx",
     name: "Workouts",
 
     component: () => import("../views/Workouts.vue"),
