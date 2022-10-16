@@ -3,7 +3,8 @@
 <template>
   <div id="nav">
     <router-link to="/clients">Clients</router-link> |
-    <router-link to="/weights">Weights</router-link>
+    <router-link to="/weights">Weights</router-link> |
+    <router-link to="/workouts">Workouts</router-link>
   </div>
   <router-view />
 </template>

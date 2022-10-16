@@ -12,6 +12,12 @@ const routes = [
 
     component: () => import("../views/Weights.vue"),
   },
+  {
+    path: "/workouts",
+    name: "Workouts",
+
+    component: () => import("../views/Workouts.vue"),
+  },
 ];
 const router = createRouter({
   history: createWebHistory("my_amazing"),
