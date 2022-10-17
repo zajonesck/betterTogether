@@ -19,6 +19,14 @@ $ heroku logs --tail
 ```
 
 ```
-run app
-$ npm start:watch
+run app on localhost:5173
+$ npm run start:watch
+```
+
+run on localhost:3000
+$ npm run build
+
+```
+run live
+$ npm run build:stage
 ```
