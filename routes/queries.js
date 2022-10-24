@@ -63,11 +63,29 @@ const addClient = (request, response) => {
 };
 
 const getWeights = (request, response) => {
+  const clientId = request.params.clientId;
   pool.query(
-    "SELECT * FROM clients_weights ORDER BY date DESC",
+    "SELECT * FROM clients_weights WHERE client_id = $1",
+    [clientId],
     (error, results) => {
       if (error) {
         throw error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
+const addWeight = (request, response) => {
+  const clientId = request.params.clientId;
+  const weight = request.body.weight;
+  pool.query(
+    "INSERT INTO clients_weights (weight, date, client_id) VALUES($1, now(), $2)",
+    [weight, clientId],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return error;
       }
       response.status(200).json(results.rows);
     }
@@ -79,4 +97,5 @@ module.exports = {
   addClient,
   deleteClient,
   getWeights,
+  addWeight,
 };
