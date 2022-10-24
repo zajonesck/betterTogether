@@ -92,10 +92,26 @@ const addWeight = (request, response) => {
   );
 };
 
+const deleteWeight = (request, response) => {
+  const weightId = request.params.weightId;
+  pool.query(
+    "DELETE FROM clients_weights WHERE id = $1",
+    [weightId],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
 module.exports = {
   getClients,
   addClient,
   deleteClient,
   getWeights,
   addWeight,
+  deleteWeight,
 };

@@ -1,1 +1,0 @@
-import{_ as e,o,c as s,a as t}from"./index.14aa87b5.js";const c={},n={id:"app"},_=t("h1",null,"Go to the gym!",-1),a=t("table",null,null,-1),r=[_,a];function d(i,l,p,h,u,f){return o(),s("div",n,r)}const $=e(c,[["render",d]]);export{$ as default};

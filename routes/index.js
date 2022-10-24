@@ -30,3 +30,5 @@ app.post("/clients_weights/:clientId", db.addWeight);
 app.post("/clients", db.addClient);
 
 app.delete("/clients/:clientId", db.deleteClient);
+
+app.delete("/clients_weights/:weightId", db.deleteWeight);
