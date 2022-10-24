@@ -7,7 +7,7 @@ const routes = [
     component: Clients,
   },
   {
-    path: "/weight-history",
+    path: "/weight-history/:clientId",
     name: "Weights",
 
     component: () => import("../views/Weights.vue"),

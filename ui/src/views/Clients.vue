@@ -82,7 +82,13 @@ export default {
       </tr>
       <tr v-for="client in clients">
         <td>
-          {{ client.client_name }}
+          <router-link
+            :to="{
+              name: 'Weights',
+              params: { clientId: client.id },
+            }"
+            >{{ client.client_name }}</router-link
+          >
         </td>
         <td>{{ newDate(client.birth_day) }}</td>
         <td><button @click="deleteClient(client.id)">🗑</button></td>

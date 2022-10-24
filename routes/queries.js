@@ -62,8 +62,21 @@ const addClient = (request, response) => {
   );
 };
 
+const getWeights = (request, response) => {
+  pool.query(
+    "SELECT * FROM clients_weights ORDER BY date DESC",
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
 module.exports = {
   getClients,
   addClient,
   deleteClient,
+  getWeights,
 };

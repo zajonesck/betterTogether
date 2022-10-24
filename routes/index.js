@@ -23,6 +23,8 @@ app.use(express.static("ui/dist"));
 
 app.get("/clients", db.getClients);
 
+app.get("/clients_weights/:clientId", db.getWeights);
+
 app.post("/clients", db.addClient);
 
 app.delete("/clients/:clientId", db.deleteClient);
