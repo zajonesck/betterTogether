@@ -4,9 +4,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      clientId: [],
       clientWeights: [],
-      client_name: " ",
     };
   },
 
@@ -15,7 +13,7 @@ export default {
   },
 
   methods: {
-    getWeights(clientId) {
+    getWeights() {
       axios
         .get(
           `${import.meta.env.VITE_API_URL}clients_weights/${
@@ -43,11 +41,10 @@ export default {
         </td>
         <td>{{ weight.date }}</td>
 
-        <td><button @click="deleteWeight(client.id)">🗑</button></td>
+        <td><button>🗑</button></td>
       </tr>
     </table>
     <label>Weight: </label>
-    <input v-model="newClientName" type="text" id="name" placeholder="Weight" />
     <button @click="addWeight">✔</button>
   </div>
 </template>
