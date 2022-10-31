@@ -2,7 +2,12 @@
 import axios from "axios";
 
 export default {
-  data() {},
+  data() {
+    return {
+      clientWeights: [],
+    };
+  },
+
   mounted() {
     this.getWeights();
   },
@@ -10,47 +15,37 @@ export default {
   methods: {
     getWeights() {
       axios
-        .get(`${import.meta.env.VITE_API_URL}clients_weights/${clientId}`)
-        .then((response) => {
-          this.clients = response.data;
-        });
-    },
-
-    addWeight() {
-      const requestBody = {
-        client_name: this.newClientName,
-        birth_day: this.newClientBirthDate,
-      };
-      axios
-        .post(
-          `${import.meta.env.VITE_API_URL}clients_weights/${clientId}`,
-          requestBody
+        .get(
+          `${import.meta.env.VITE_API_URL}clients_weights/${
+            this.$route.params.clientId
+          }`
         )
         .then((response) => {
-          console.log(response);
-          this.getWeights();
-          this.newClientName = "";
-          this.newClientBirthDate = "";
+          this.clientWeights = response.data;
         });
     },
   },
 };
-
-// deleteWeight(clientId) {
-//   console.log("delete");
-//   console.log(clientId);
-//   axios
-//     .delete(`${import.meta.env.VITE_API_URL}clients/${clientId}`)
-//     .then((response) => {
-//       console.log(response);
-//       this.getClients();
-//     });
-// },
 </script>
 <template>
   <div id="app">
-    <h1>Go to the gym!</h1>
-    <table></table>
+    <h1>Weights</h1>
+    <table>
+      <tr>
+        <th>Weight</th>
+        <th>Date</th>
+      </tr>
+      <tr v-for="weight in clientWeights">
+        <td>
+          {{ weight.weight }}
+        </td>
+        <td>{{ weight.date }}</td>
+
+        <td><button>🗑</button></td>
+      </tr>
+    </table>
+    <label>Weight: </label>
+    <button @click="addWeight">✔</button>
   </div>
 </template>
 <style scoped></style>
