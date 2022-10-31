@@ -78,7 +78,6 @@ export default {
       <tr>
         <th>Client</th>
         <th>Birth date</th>
-        <th></th>
       </tr>
       <tr v-for="client in clients">
         <td>
