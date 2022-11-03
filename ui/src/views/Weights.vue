@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import { format, parseISO } from "date-fns";
 
 export default {
   data() {
@@ -13,6 +14,11 @@ export default {
   },
 
   methods: {
+    newDate(weighDay) {
+      const date = format(parseISO(weighDay), "MMM dd, yyyy");
+      return date;
+    },
+
     getWeights() {
       axios
         .get(
@@ -39,7 +45,7 @@ export default {
         <td>
           {{ weight.weight }}
         </td>
-        <td>{{ weight.date }}</td>
+        <td>{{ newDate(weight.date) }}</td>
 
         <td><button>🗑</button></td>
       </tr>
