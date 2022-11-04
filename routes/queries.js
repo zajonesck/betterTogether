@@ -36,6 +36,20 @@ const deleteClient = (request, response) => {
   );
 };
 
+const getClient = (request, response) => {
+  const clientId = request.params.clientId;
+  pool.query(
+    "SELECT client_name FROM clients WHERE id = $1",
+    [clientId],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
 const getClients = (request, response) => {
   pool.query(
     "SELECT * FROM clients ORDER BY birth_day DESC",
@@ -47,6 +61,7 @@ const getClients = (request, response) => {
     }
   );
 };
+
 const addClient = (request, response) => {
   const { client_name, birth_day } = request.body;
   pool.query(
@@ -114,4 +129,5 @@ module.exports = {
   getWeights,
   addWeight,
   deleteWeight,
+  getClient,
 };
