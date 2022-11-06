@@ -8,12 +8,30 @@ export default {
       clientWeights: [],
       newWeight: "",
       newWeighDate: "",
+      clientName: "",
+      clientBirthDay: "",
+      loading: true,
+      months: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
     };
   },
 
-  mounted() {
-    this.getWeights();
-    this.getClient();
+  async mounted() {
+    await this.getClient();
+    await this.getWeights();
+    this.loading = false;
   },
 
   methods: {
@@ -30,7 +48,8 @@ export default {
           }`
         )
         .then((response) => {
-          this.client = response.data;
+          this.clientName = response.data[0].client_name;
+          this.clientBirthDay = response.data[0].birth_day;
         });
     },
 
@@ -40,9 +59,16 @@ export default {
       axios
         .delete(`${import.meta.env.VITE_API_URL}clients_weights/${weightId}`)
         .then((response) => {
-          console.log(response);
           this.getWeights();
         });
+    },
+
+    newBDate(clientBirthDay) {
+      let date = clientBirthDay.split("-");
+      let day = date[2].split("", 2).toString().replaceAll(",", "");
+      const month = this.months[+date[1] - 1];
+      let stringDate = month + " " + day + ", " + date[0];
+      return stringDate;
     },
 
     getWeights() {
@@ -61,24 +87,27 @@ export default {
 </script>
 <template>
   <div id="app">
-    <h1>Weights</h1>
-    <h2>{{ this.client }}</h2>
-    <table>
-      <tr>
-        <th>Weight</th>
-        <th>Date</th>
-      </tr>
-      <tr v-for="weight in clientWeights">
-        <td>
-          {{ weight.weight }}
-        </td>
-        <td>{{ newDate(weight.date) }}</td>
+    <div v-if="loading">LOADING...cope</div>
+    <div v-else>
+      <h1>Weights</h1>
+      <h2>{{ clientName }} {{ newBDate(clientBirthDay) }}</h2>
+      <table>
+        <tr>
+          <th>Weight</th>
+          <th>Date</th>
+        </tr>
+        <tr v-for="weight in clientWeights">
+          <td>
+            {{ weight.weight }}
+          </td>
+          <td>{{ newDate(weight.date) }}</td>
 
-        <td><button @click="deleteWeight(weight.id)">🗑</button></td>
-      </tr>
-    </table>
-    <label>Weight: </label>
-    <button @click="addWeight">✔</button>
+          <td><button @click="deleteWeight(weight.id)">🗑</button></td>
+        </tr>
+      </table>
+      <label>Weight: </label>
+      <button @click="addWeight">✔</button>
+    </div>
   </div>
 </template>
 <style scoped></style>

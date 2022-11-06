@@ -39,7 +39,7 @@ const deleteClient = (request, response) => {
 const getClient = (request, response) => {
   const clientId = request.params.clientId;
   pool.query(
-    "SELECT client_name FROM clients WHERE id = $1",
+    "SELECT client_name, birth_day FROM clients WHERE id = $1",
     [clientId],
     (error, results) => {
       if (error) {

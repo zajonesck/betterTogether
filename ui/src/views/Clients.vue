@@ -34,7 +34,7 @@ export default {
       });
     },
 
-    newDate(birthDay) {
+    newBDate(birthDay) {
       let date = birthDay.split("-");
       let day = date[2].split("", 2).toString().replaceAll(",", "");
       const month = this.months[+date[1] - 1];
@@ -89,7 +89,7 @@ export default {
             >{{ client.client_name }}</router-link
           >
         </td>
-        <td>{{ newDate(client.birth_day) }}</td>
+        <td>{{ newBDate(client.birth_day) }}</td>
         <td><button @click="deleteClient(client.id)">🗑</button></td>
       </tr>
     </table>
