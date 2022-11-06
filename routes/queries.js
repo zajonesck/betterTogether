@@ -61,7 +61,6 @@ const getClients = (request, response) => {
     }
   );
 };
-
 const addClient = (request, response) => {
   const { client_name, birth_day } = request.body;
   pool.query(

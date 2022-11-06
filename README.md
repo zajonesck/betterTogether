@@ -12,7 +12,11 @@ $ curl -H "Content-Type: application/json" -X POST -d '{"client_name":"Lizzy", "
 
 $ curl -H "Content-Type: application/json" -X POST -d '{"weight":10}' localhost:3000/clients_weights/318
 
+curl -H "Content-Type: application/json" -X POST -d '{"weight":100}' localhost:3000/clients_weights/318
+
 $ curl -X "DELETE" localhost:3000/clients/'id'
+
+$ curl -X "DELETE" localhost:3000/clients_weights/14
 
 view heroku logs
 

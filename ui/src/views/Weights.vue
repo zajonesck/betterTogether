@@ -13,12 +13,36 @@ export default {
 
   mounted() {
     this.getWeights();
+    this.getClient();
   },
 
   methods: {
     newDate(weighDay) {
       const date = format(parseISO(weighDay), "MMM dd, yyyy");
       return date;
+    },
+
+    getClient() {
+      axios
+        .get(
+          `${import.meta.env.VITE_API_URL}clients/${
+            this.$route.params.clientId
+          }`
+        )
+        .then((response) => {
+          this.client = response.data;
+        });
+    },
+
+    deleteWeight(weightId) {
+      console.log("delete");
+      console.log(weightId);
+      axios
+        .delete(`${import.meta.env.VITE_API_URL}clients_weights/${weightId}`)
+        .then((response) => {
+          console.log(response);
+          this.getWeights();
+        });
     },
 
     getWeights() {
@@ -38,6 +62,7 @@ export default {
 <template>
   <div id="app">
     <h1>Weights</h1>
+    <h2>{{ this.client }}</h2>
     <table>
       <tr>
         <th>Weight</th>
@@ -49,7 +74,7 @@ export default {
         </td>
         <td>{{ newDate(weight.date) }}</td>
 
-        <td><button>🗑</button></td>
+        <td><button @click="deleteWeight(weight.id)">🗑</button></td>
       </tr>
     </table>
     <label>Weight: </label>
