@@ -49,7 +49,7 @@ export default {
         )
         .then((response) => {
           this.clientName = response.data[0].client_name;
-          this.clientBirthDay = response.data[0].birth_day;
+          this.clientBirthDay = this.newBDate(response.data[0].birth_day);
         });
     },
 
@@ -63,14 +63,6 @@ export default {
         });
     },
 
-    newBDate(clientBirthDay) {
-      let date = clientBirthDay.split("-");
-      let day = date[2].split("", 2).toString().replaceAll(",", "");
-      const month = this.months[+date[1] - 1];
-      let stringDate = month + " " + day + ", " + date[0];
-      return stringDate;
-    },
-
     getWeights() {
       axios
         .get(
@@ -82,15 +74,26 @@ export default {
           this.clientWeights = response.data;
         });
     },
+    newBDate(clientBirthDay) {
+      if (clientBirthDay.length == 0) {
+        return "No birthday on file.";
+      } else {
+        const date = clientBirthDay.split("-");
+        const day = date[2].split("", 2).toString().replaceAll(",", "");
+        const month = this.months[+date[1] - 1];
+        const stringDate = month + " " + day + ", " + date[0];
+        return stringDate;
+      }
+    },
   },
 };
 </script>
 <template>
   <div id="app">
-    <div v-if="loading">LOADING...cope</div>
+    <div v-if="loading">LOADING...</div>
     <div v-else>
       <h1>Weights</h1>
-      <h2>{{ clientName }} {{ newBDate(clientBirthDay) }}</h2>
+      <h2>{{ clientName }} {{ clientBirthDay }}</h2>
       <table>
         <tr>
           <th>Weight</th>
