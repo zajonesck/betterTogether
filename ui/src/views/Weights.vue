@@ -1,6 +1,7 @@
 <script>
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import { newBDate } from "../shared.js";
 
 export default {
   data() {
@@ -11,20 +12,6 @@ export default {
       clientName: "",
       clientBirthDay: "",
       loading: true,
-      months: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
     };
   },
 
@@ -49,7 +36,7 @@ export default {
         )
         .then((response) => {
           this.clientName = response.data[0].client_name;
-          this.clientBirthDay = this.newBDate(response.data[0].birth_day);
+          this.clientBirthDay = newBDate(response.data[0].birth_day);
         });
     },
 
@@ -73,17 +60,6 @@ export default {
         .then((response) => {
           this.clientWeights = response.data;
         });
-    },
-    newBDate(clientBirthDay) {
-      if (clientBirthDay.length == 0) {
-        return "No birthday on file.";
-      } else {
-        const date = clientBirthDay.split("-");
-        const day = date[2].split("", 2).toString().replaceAll(",", "");
-        const month = this.months[+date[1] - 1];
-        const stringDate = month + " " + day + ", " + date[0];
-        return stringDate;
-      }
     },
   },
 };
