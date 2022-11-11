@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import { newBDate } from "../shared.js";
 
 export default {
   data() {
@@ -7,23 +8,10 @@ export default {
       clients: [],
       newClientName: "",
       newClientBirthDate: "",
-      months: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
     };
   },
   mounted() {
+    this.newBDate = newBDate;
     this.getClients();
   },
 
@@ -32,14 +20,6 @@ export default {
       axios.get(`${import.meta.env.VITE_API_URL}clients`).then((response) => {
         this.clients = response.data;
       });
-    },
-
-    newBDate(birthDay) {
-      let date = birthDay.split("-");
-      let day = date[2].split("", 2).toString().replaceAll(",", "");
-      const month = this.months[+date[1] - 1];
-      let stringDate = month + " " + day + ", " + date[0];
-      return stringDate;
     },
 
     addClient() {
@@ -58,12 +38,9 @@ export default {
     },
 
     deleteClient(clientId) {
-      console.log("delete");
-      console.log(clientId);
       axios
         .delete(`${import.meta.env.VITE_API_URL}clients/${clientId}`)
         .then((response) => {
-          console.log(response);
           this.getClients();
         });
     },

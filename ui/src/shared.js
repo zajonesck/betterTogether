@@ -14,7 +14,6 @@ const months = [
 ];
 
 export function newBDate(clientBirthDay) {
-  console.log("we are in");
   if (clientBirthDay.length == 0) {
     return "No birthday on file.";
   } else {
