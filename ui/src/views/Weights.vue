@@ -50,6 +50,23 @@ export default {
         });
     },
 
+    addWeight() {
+      const requestBody = {
+        weight: this.newWeight,
+      };
+      axios
+        .post(
+          `${import.meta.env.VITE_API_URL}clients_weights/${
+            this.$route.params.clientId
+          }`,
+          requestBody
+        )
+        .then((response) => {
+          this.getWeights();
+          this.newWeight = "";
+        });
+    },
+
     getWeights() {
       axios
         .get(
@@ -85,6 +102,13 @@ export default {
         </tr>
       </table>
       <label>Weight: </label>
+      <input
+        v-model="newWeight"
+        type="integer"
+        id="weight"
+        placeholder="Weight"
+      />
+
       <button @click="addWeight">✔</button>
     </div>
   </div>
