@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
+const { nextDay } = require("date-fns");
 
 const port = process.env.PORT || 3000;
 
@@ -21,7 +22,11 @@ app.listen(port, () => {
 
 app.use(express.static("ui/dist"));
 
-app.get("/clients", db.getClients);
+app.get("/clients", (req, res, next) => {
+  db.getClients(req, res);
+  // res.status(400);
+  // next("notworking");
+});
 
 app.get("/clients/:clientId", db.getClient);
 
