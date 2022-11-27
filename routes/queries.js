@@ -59,6 +59,7 @@ const getClients = (request, response) => {
         throw error;
       }
       if (results.rows.length == 0) {
+        console.log("400 ERROR!");
         response.status(400).send("400 ERROR!");
       } else {
         response.status(200).json(results.rows);

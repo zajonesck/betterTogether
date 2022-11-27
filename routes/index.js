@@ -22,11 +22,7 @@ app.listen(port, () => {
 
 app.use(express.static("ui/dist"));
 
-app.get("/clients", (req, res, next) => {
-  db.getClients(req, res);
-  // res.status(400);
-  // next("notworking");
-});
+app.get("/clients", db.getClients);
 
 app.get("/clients/:clientId", db.getClient);
 
