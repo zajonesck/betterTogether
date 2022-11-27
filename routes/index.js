@@ -30,7 +30,27 @@ app.get("/clients_weights/:clientId", db.getWeights);
 
 app.post("/clients_weights/:clientId", db.addWeight);
 
-app.post("/clients", db.addClient);
+app.post("/clients", (req, res, next) => {
+  //req.body.client_name = client name
+  if (!req.body.client_name) {
+    console.log("Client name required.");
+    res.status(400).send("Client name required.");
+  }
+  if (!req.body.birth_day) {
+    res.status(400).send("Valid birthday required.");
+  }
+  if (isNaN(Date.parse(req.body.birth_day))) {
+    console.log("woof");
+    res.status(400).send("Valid birthday required.");
+  } else {
+    console.log("else");
+    console.log(Date.parse(req.body.birth_day));
+    db.addClient(req, res);
+  }
+  //name duplicate, name is null
+  //req.body.birth_day - birth day
+  //birthday empty string, null, undefined, and "good date", if birthday parameter exists
+});
 
 app.delete("/clients/:clientId", db.deleteClient);
 

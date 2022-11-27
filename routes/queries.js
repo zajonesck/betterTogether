@@ -75,7 +75,6 @@ const addClient = (request, response) => {
     [client_name, birth_day],
     (error, results) => {
       if (error) {
-        console.log(error);
         return error;
       }
       response.status(200).json(results.rows);
