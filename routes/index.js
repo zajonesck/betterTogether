@@ -38,15 +38,16 @@ app.post("/clients", (req, res, next) => {
   if (!req.body.birth_day) {
     res.status(400).send("Birthday required.");
   }
-  if (Date.parse(req.body.birth_day) < Date.parse(new Date()) - 2208967764000) {
-    console.log(Date.parse(req.body.birth_day));
+  if (
+    new Date(req.body.birth_day).getFullYear() <
+    new Date().getFullYear() - 200
+  ) {
+    console.log(req.body.birth_day);
     res.status(400).send("Are you really that old?");
   }
   if (isNaN(Date.parse(req.body.birth_day))) {
     res.status(400).send("Valid birthday required.");
   } else {
-    console.log("else");
-    console.log(Date.parse(req.body.birth_day));
     db.addClient(req, res);
   }
   //name duplicate, name is null

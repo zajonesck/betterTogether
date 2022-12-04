@@ -8,9 +8,8 @@ describe("POST /clients", () => {
     const numberOfClients = response.body.length;
     const newClient = await request(baseURL).post("/clients").send({
       client_name: "New client",
-      birth_day: "10/10/1010",
+      birth_day: "10/10/2010",
     });
-    //todo: fix test
     const newResponse = await request(baseURL).get("/clients");
     expect(newResponse.body.length).toBe(numberOfClients + 1);
     expect(newClient.body).toStrictEqual([]);
@@ -22,7 +21,6 @@ describe("POST /clients", () => {
       birth_day: "10/10/1010",
     });
     expect(newClient.body).toStrictEqual({});
-    console.log(newClient, "newclient.text");
     expect(newClient.text).toEqual("Client name required.");
     expect(newClient.statusCode).toBe(400);
   });
@@ -32,7 +30,6 @@ describe("POST /clients", () => {
       birth_day: "",
     });
     expect(newClient.body).toStrictEqual({});
-    console.log(newClient, "newclient.text");
     expect(newClient.text).toEqual("Birthday required.");
     expect(newClient.statusCode).toBe(400);
   });
@@ -42,17 +39,15 @@ describe("POST /clients", () => {
       birth_day: "abcd",
     });
     expect(newClient.body).toStrictEqual({});
-    console.log(newClient.body, "newclient.text");
     expect(newClient.text).toEqual("Valid birthday required.");
     expect(newClient.statusCode).toBe(400);
   });
-  test("Throws 400 error when birth_day is before 1900", async () => {
+  test("Throws 400 error when birth_day is more than 200 years ago", async () => {
     const newClient = await request(baseURL).post("/clients").send({
       client_name: "New Client",
       birth_day: "10/10/1010",
     });
     expect(newClient.body).toStrictEqual({});
-    console.log(newClient.body, "newclient.text");
     expect(newClient.text).toEqual("Are you really that old?");
     expect(newClient.statusCode).toBe(400);
   });
