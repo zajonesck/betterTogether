@@ -53,14 +53,21 @@ const getClient = (request, response) => {
 const getClients = (request, response) => {
   pool.query(
     "SELECT * FROM clients ORDER BY birth_day DESC",
+
     (error, results) => {
       if (error) {
         throw error;
       }
-      response.status(200).json(results.rows);
+      if (results.rows.length == 0) {
+        console.log("400 ERROR!");
+        response.status(400).send("400 ERROR!");
+      } else {
+        response.status(200).json(results.rows);
+      }
     }
   );
 };
+
 const addClient = (request, response) => {
   const { client_name, birth_day } = request.body;
   pool.query(
@@ -68,7 +75,6 @@ const addClient = (request, response) => {
     [client_name, birth_day],
     (error, results) => {
       if (error) {
-        console.log(error);
         return error;
       }
       response.status(200).json(results.rows);

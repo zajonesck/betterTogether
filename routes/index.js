@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
+const { nextDay } = require("date-fns");
 
 const port = process.env.PORT || 3000;
 
@@ -29,7 +30,30 @@ app.get("/clients_weights/:clientId", db.getWeights);
 
 app.post("/clients_weights/:clientId", db.addWeight);
 
-app.post("/clients", db.addClient);
+app.post("/clients", (req, res, next) => {
+  //req.body.client_name = client name
+  if (!req.body.client_name) {
+    res.status(400).send("Client name required.");
+  }
+  if (!req.body.birth_day) {
+    res.status(400).send("Birthday required.");
+  }
+  if (
+    new Date(req.body.birth_day).getFullYear() <
+    new Date().getFullYear() - 200
+  ) {
+    console.log(req.body.birth_day);
+    res.status(400).send("Are you really that old?");
+  }
+  if (isNaN(Date.parse(req.body.birth_day))) {
+    res.status(400).send("Valid birthday required.");
+  } else {
+    db.addClient(req, res);
+  }
+  //name duplicate, name is null
+  //req.body.birth_day - birth day
+  //birthday empty string, null, undefined, and "good date", if birthday parameter exists
+});
 
 app.delete("/clients/:clientId", db.deleteClient);
 
