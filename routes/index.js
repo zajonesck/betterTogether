@@ -33,14 +33,16 @@ app.post("/clients_weights/:clientId", db.addWeight);
 app.post("/clients", (req, res, next) => {
   //req.body.client_name = client name
   if (!req.body.client_name) {
-    console.log("Client name required.");
     res.status(400).send("Client name required.");
   }
   if (!req.body.birth_day) {
-    res.status(400).send("Valid birthday required.");
+    res.status(400).send("Birthday required.");
+  }
+  if (Date.parse(req.body.birth_day) < -2208967764000) {
+    console.log(Date.parse(req.body.birth_day));
+    res.status(400).send("Are you really that old?");
   }
   if (isNaN(Date.parse(req.body.birth_day))) {
-    console.log("woof");
     res.status(400).send("Valid birthday required.");
   } else {
     console.log("else");

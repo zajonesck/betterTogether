@@ -26,6 +26,36 @@ describe("POST /clients", () => {
     expect(newClient.text).toEqual("Client name required.");
     expect(newClient.statusCode).toBe(400);
   });
+  test("Throws 400 error when there is no birth_day", async () => {
+    const newClient = await request(baseURL).post("/clients").send({
+      client_name: "New Client",
+      birth_day: "",
+    });
+    expect(newClient.body).toStrictEqual({});
+    console.log(newClient, "newclient.text");
+    expect(newClient.text).toEqual("Birthday required.");
+    expect(newClient.statusCode).toBe(400);
+  });
+  test("Throws 400 error when birth_day is an invalid date", async () => {
+    const newClient = await request(baseURL).post("/clients").send({
+      client_name: "New Client",
+      birth_day: "abcd",
+    });
+    expect(newClient.body).toStrictEqual({});
+    console.log(newClient.body, "newclient.text");
+    expect(newClient.text).toEqual("Valid birthday required.");
+    expect(newClient.statusCode).toBe(400);
+  });
+  test("Throws 400 error when birth_day is before 1900", async () => {
+    const newClient = await request(baseURL).post("/clients").send({
+      client_name: "New Client",
+      birth_day: "10/10/1010",
+    });
+    expect(newClient.body).toStrictEqual({});
+    console.log(newClient.body, "newclient.text");
+    expect(newClient.text).toEqual("Are you really that old?");
+    expect(newClient.statusCode).toBe(400);
+  });
 });
 
 describe("GET /clients", () => {
