@@ -38,7 +38,7 @@ app.post("/clients", (req, res, next) => {
   if (!req.body.birth_day) {
     res.status(400).send("Birthday required.");
   }
-  if (Date.parse(req.body.birth_day) < -2208967764000) {
+  if (Date.parse(req.body.birth_day) < Date.parse(new Date()) - 2208967764000) {
     console.log(Date.parse(req.body.birth_day));
     res.status(400).send("Are you really that old?");
   }
