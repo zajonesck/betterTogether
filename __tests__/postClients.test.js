@@ -74,4 +74,14 @@ describe("POST /clients_weights/:clientId", () => {
     expect(newClient.text).toEqual("Client weight required.");
     expect(newClient.statusCode).toBe(400);
   });
+  test("Throws 400 error when clients_weights is an invalid weight", async () => {
+    const newClient = await request(baseURL)
+      .post("/clients_weights/:clientId")
+      .send({
+        weight: "abcd",
+      });
+    expect(newClient.body).toStrictEqual({});
+    expect(newClient.text).toEqual("Valid weight required.");
+    expect(newClient.statusCode).toBe(400);
+  });
 });

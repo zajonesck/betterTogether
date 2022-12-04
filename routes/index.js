@@ -32,6 +32,9 @@ app.post("/clients_weights/:clientId", (req, res, next) => {
   console.log(req.body.weight);
   if (!req.body.weight) {
     res.status(400).send("Client weight required.");
+  }
+  if (isNaN(req.body.weight)) {
+    res.status(400).send("Valid weight required.");
   } else {
     db.addWeight(req, res);
   }
