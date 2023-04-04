@@ -2,6 +2,7 @@
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
+import * as d3 from "d3";
 
 export default {
   data() {
