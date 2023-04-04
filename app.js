@@ -6,33 +6,74 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-
 var app = express();
 
+const db = require("./routes/queries");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { nextDay } = require("date-fns");
+
+const port = process.env.PORT || 3000;
+
+// Add Access Control Allow Origin headers
+app.use(cors());
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+app.use(express.static("ui/dist"));
+
+app.get("/clients", db.getClients);
+
+app.get("/clients/:clientId", db.getClient);
+
+app.get("/clients_weights/:clientId", db.getWeights);
+
+app.post("/clients_weights/:clientId", (req, res, next) => {
+  console.log(req.body.weight);
+  if (!req.body.weight) {
+    res.status(400).send("Client weight required.");
+  }
+  if (isNaN(req.body.weight)) {
+    res.status(400).send("Valid weight required.");
+  } else {
+    db.addWeight(req, res);
+  }
+});
+app.post("/clients", (req, res, next) => {
+  //req.body.client_name = client name
+  if (!req.body.client_name) {
+    res.status(400).send("Client name required.");
+  }
+  if (!req.body.birth_day) {
+    res.status(400).send("Birthday required.");
+  }
+  if (
+    new Date(req.body.birth_day).getFullYear() <
+    new Date().getFullYear() - 200
+  ) {
+    console.log(req.body.birth_day);
+    res.status(400).send("Are you really that old?");
+  }
+  if (isNaN(Date.parse(req.body.birth_day))) {
+    res.status(400).send("Valid birthday required.");
+  } else {
+    db.addClient(req, res);
+  }
+  //name duplicate, name is null
+  //req.body.birth_day - birth day
+  //birthday empty string, null, undefined, and "good date", if birthday parameter exists
+});
+
+app.delete("/clients/:clientId", db.deleteClient);
+
+app.delete("/clients_weights/:weightId", db.deleteWeight);
+
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
-});
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "jade");
 
 module.exports = app;
