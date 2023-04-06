@@ -3,10 +3,11 @@ import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 import * as d3 from "d3";
+import LineGraph from "@/views/LineGraph.vue";
 
 export default {
   data() {
-    return {
+    return {s
       clientWeights: [],
       newWeight: "",
       newWeighDate: "",
@@ -111,6 +112,10 @@ export default {
       />
 
       <button @click="addWeight">✔</button>
+      <div>
+        <h1>My Line Graph</h1>
+        <LineGraph />
+      </div>
     </div>
   </div>
 </template>
