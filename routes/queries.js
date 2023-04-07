@@ -8,7 +8,7 @@ if (process.env.NODE_ENV == "local") {
     host: "localhost",
     database: "trainingapp",
     password: "Copal3200!",
-    port: 5432,
+    port: 5431,
   });
 } else {
   pool = new Pool({
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV == "local") {
     database: "d5tbsn9k6iejgi",
     password:
       "53b9b10b6742d9d09890febc4fd2c44148bc64935e83bd230060b32deaec57d5",
-    port: 5432,
+    port: 5431,
     ssl: { rejectUnauthorized: false },
   });
 }
