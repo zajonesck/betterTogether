@@ -7,7 +7,7 @@ import LineGraph from "@/views/LineGraph.vue";
 
 export default {
   data() {
-    return {s
+    return {
       clientWeights: [],
       newWeight: "",
       newWeighDate: "",
