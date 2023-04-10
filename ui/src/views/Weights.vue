@@ -1,4 +1,5 @@
 <script>
+import React from "react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
@@ -129,7 +130,7 @@ export default {
 
       <button @click="addWeight">✔</button>
       <div>
-        <h1>My Line Graph</h1>
+        <h3>My Line Graph</h3>
         <weight-line-graph v-if="chartData" :chart-data="chartData" />
       </div>
     </div>
