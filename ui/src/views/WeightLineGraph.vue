@@ -1,21 +1,15 @@
 <template>
   <div>
-    <line-chart :chart-data="chartData" :options="chartOptions" />
+    <line-chart :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
 <script>
-import { Line, mixins } from "vue-chartjs";
+import { Line } from "vue3-chart-v2";
 
 export default {
   components: {
-    LineChart: Line.extend({
-      mixins: [mixins.reactiveProp],
-      props: ["options"],
-      mounted() {
-        this.renderChart(this.chartData, this.options);
-      },
-    }),
+    LineChart: Line,
   },
   props: {
     chartData: {

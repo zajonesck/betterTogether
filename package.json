@@ -28,7 +28,8 @@
     "pg": "^8.8.0",
     "vue-chartjs": "^5.2.0",
     "vue-date-fns": "^2.0.2",
-    "vue-fetch": "^0.4.1"
+    "vue-fetch": "^0.4.1",
+    "vue3-chart-v2": "^0.8.3"
   },
   "scripts": {
     "start:watch": "NODE_ENV=local nodemon app.js",
