@@ -93,7 +93,7 @@ export default {
               },
             ],
           };
-          this.$set(this, "chartData", chartData);
+          this.chartData = chartData;
         });
     },
   },
