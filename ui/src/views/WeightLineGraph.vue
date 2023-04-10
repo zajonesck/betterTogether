@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import React from "react";
 import { Line } from "vue3-chart-v2";
 
 export default {
