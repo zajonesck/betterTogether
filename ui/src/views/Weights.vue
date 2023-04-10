@@ -2,10 +2,12 @@
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
-import * as d3 from "d3";
-import LineGraph from "@/views/LineGraph.vue";
+import WeightLineGraph from "@/views/WeightLineGraph.vue";
 
 export default {
+  components: {
+    WeightLineGraph,
+  },
   data() {
     return {
       clientWeights: [],
@@ -14,6 +16,7 @@ export default {
       clientName: "",
       clientBirthDay: "",
       loading: true,
+      chartData: null,
     };
   },
 
@@ -78,6 +81,19 @@ export default {
         )
         .then((response) => {
           this.clientWeights = response.data;
+          const chartData = {
+            labels: response.data.map((w) => w.date),
+            datasets: [
+              {
+                label: "Weight",
+                data: response.data.map((w) => w.weight),
+                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill: false,
+              },
+            ],
+          };
+          this.$set(this, "chartData", chartData);
         });
     },
   },
@@ -114,7 +130,7 @@ export default {
       <button @click="addWeight">✔</button>
       <div>
         <h1>My Line Graph</h1>
-        <LineGraph />
+        <weight-line-graph v-if="chartData" :chart-data="chartData" />
       </div>
     </div>
   </div>
