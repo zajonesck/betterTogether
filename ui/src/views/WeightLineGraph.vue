@@ -1,6 +1,6 @@
 <template>
   <div>
-    <line-chart :chart-data="chartData" />
+    <line :chart-data="chartData" :options="options"></line>
   </div>
 </template>
 
@@ -8,14 +8,18 @@
 import { Line } from "vue3-chart-v2";
 
 export default {
+  components: {
+    Line,
+  },
   props: {
     chartData: {
       type: Object,
       required: true,
     },
-  },
-  components: {
-    LineChart: Line,
+    options: {
+      type: Object,
+      required: true,
+    },
   },
 };
 </script>

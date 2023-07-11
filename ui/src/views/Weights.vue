@@ -1,9 +1,8 @@
 <script>
-import React from "react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
-import WeightLineGraph from "@/views/WeightLineGraph.vue";
+import WeightLineGraph from "./WeightLineGraph.vue";
 
 export default {
   components: {
@@ -18,6 +17,18 @@ export default {
       clientBirthDay: "",
       loading: true,
       chartData: null,
+      defaultChartData: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
     };
   },
 
@@ -104,6 +115,7 @@ export default {
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
+      <router-link to="/workout-rx">Workouts</router-link>
       <h1>Weights</h1>
       <h2>{{ clientName }} {{ clientBirthDay }}</h2>
       <table>
@@ -131,7 +143,10 @@ export default {
       <button @click="addWeight">✔</button>
       <div>
         <h3>My Line Graph</h3>
-        <weight-line-graph v-if="chartData" :chart-data="chartData" />
+        <weight-line-graph
+          :chart-data="chartData || defaultChartData"
+          :options="chartOptions"
+        />
       </div>
     </div>
   </div>
