@@ -1,4 +1,4 @@
-# Better Together backend
+# Better Together backend-Node
 
 ## Trainer App
 

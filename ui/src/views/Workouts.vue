@@ -44,6 +44,24 @@ export default {
 
 <template>
   <div id="app">
-    <h1>dogs</h1>
+    <h1>Workouts</h1>
+    <h2>Coming Soon</h2>
   </div>
 </template>
+
+<style scoped>
+h1 {
+  text-align: center;
+  padding: 10px 0;
+  color: #04aa6d;
+  font-weight: 500;
+  font-size: 2.5rem;
+}
+h2 {
+  text-align: center;
+  padding: 10px 0;
+  color: #04aa6d;
+  font-weight: 500;
+  font-size: 2rem;
+}
+</style>

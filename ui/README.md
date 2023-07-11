@@ -1,4 +1,4 @@
-# Better Together UI
+# Better Together UI-Vue
 
 ## Recommended IDE Setup
 

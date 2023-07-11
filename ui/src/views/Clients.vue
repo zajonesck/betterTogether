@@ -85,7 +85,7 @@ export default {
 <style scoped>
 h1 {
   color: white;
-  font-weight: 500;
+  font-weight: 250;
   font-size: 2.6rem;
   text-align: center;
   margin: auto;
@@ -98,9 +98,6 @@ th {
   text-align: left;
   background-color: #04aa6d;
   color: white;
-}
-
-tr {
 }
 
 td {
