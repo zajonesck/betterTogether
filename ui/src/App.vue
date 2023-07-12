@@ -1,30 +1,22 @@
 <script setup></script>
 
 <template>
-  <div>
-    <header>
-      <h1>Better Together</h1>
-    </header>
-    <div id="nav">
-      <router-link class="nav-link" to="/client-roster"
-        >Client List</router-link
-      >
+  <v-app>
+    <v-app-bar app color="deep-purple accent-4" dark>
+      <v-toolbar-title class="white--text">Better Together</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn text to="/client-roster" color="white">Client List</v-btn>
+      <v-btn text to="/workout-rx" color="white">Workouts</v-btn>
+    </v-app-bar>
 
-      <router-link class="nav-link" to="/workout-rx">Workouts</router-link>
-    </div>
-    <router-view />
-  </div>
+    <v-main>
+      <v-container fluid>
+        <router-view />
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
-<style scoped>
-header h1 {
-  text-align: center;
-  padding: 10px 0;
-  color: #04aa6d;
-  font-weight: 500;
-  font-size: 3rem;
-}
-.nav-link {
-  margin-right: 10px;
-}
-</style>
+<script setup></script>
+
+<style scoped></style>

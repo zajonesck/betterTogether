@@ -115,7 +115,6 @@ export default {
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <router-link to="/workout-rx">Workouts</router-link>
       <h1>Weights</h1>
       <h2>{{ clientName }} {{ clientBirthDay }}</h2>
       <table>
