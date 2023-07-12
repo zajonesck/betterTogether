@@ -8,6 +8,7 @@
     "build:stage": "env-cmd -f ./.env.prod npm run-script build"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "axios": "^0.27.2",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
