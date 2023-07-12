@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <v-card class="mx-auto" color="deep-purple accent-4" dark>
+        <v-card class="mx-auto" dark>
           <v-card-title>
             <h1 class="text-h5 white--text">Workouts</h1>
           </v-card-title>
