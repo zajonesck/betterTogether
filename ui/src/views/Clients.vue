@@ -8,6 +8,12 @@ export default {
       clients: [],
       newClientName: "",
       newClientBirthDate: "",
+      headers: [
+        { text: "ID", value: "id" },
+        { text: "Client Name", value: "client_name" },
+        { text: "Birth Date", value: "birth_day" },
+        { text: "Actions", value: "actions", sortable: false },
+      ],
     };
   },
   mounted() {
@@ -49,38 +55,30 @@ export default {
 </script>
 
 <template>
-  <div id="app">
-    <h1>Clients</h1>
-    <table>
-      <tr>
-        <th>Client</th>
-        <th>Birth date</th>
-      </tr>
-      <tr v-for="client in clients">
-        <td>
-          <router-link
-            :to="{
-              name: 'Weights',
-              params: { clientId: client.id },
-            }"
-            >{{ client.client_name }}</router-link
-          >
-        </td>
-        <td>{{ newBDate(client.birth_day) }}</td>
-        <td><button @click="deleteClient(client.id)">🗑</button></td>
-      </tr>
-    </table>
-    <label>Name: </label>
-    <input v-model="newClientName" type="text" id="name" placeholder="NAME" />
-    <label>Birth Date: </label>
-    <input
-      v-model="newClientBirthDate"
-      type="date"
-      id="date"
-      placeholder="123-46-6789"
-    />
-    <button @click="addClient">✔</button>
-  </div>
+  <v-container>
+    <v-toolbar-title>Clients</v-toolbar-title>
+    <v-data-table
+      :headers="headers"
+      :items="clients"
+      item-key="id"
+      class="elevation-1"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="deleteClient(item.id)">
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
+    <v-form>
+      <v-text-field v-model="newClientName" label="Name"></v-text-field>
+      <v-text-field
+        v-model="newClientBirthDate"
+        label="Birth Date"
+        type="date"
+      ></v-text-field>
+      <v-btn @click="addClient">Add Client</v-btn>
+    </v-form>
+  </v-container>
 </template>
 <style scoped>
 h1 {

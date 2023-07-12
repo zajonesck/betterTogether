@@ -1,10 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar app color="deep-purple accent-4" dark>
-      <v-toolbar-title class="white--text">Better Together</v-toolbar-title>
+    <v-app-bar app dark>
+      <v-app-bar-title class="white--text">Better Together</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn text to="/client-roster" color="white">Client List</v-btn>
-      <v-btn text to="/workout-rx" color="white">Workouts</v-btn>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-btn text to="/client-roster" color="black">Client List</v-btn>
+      <v-btn text to="/workout-rx" color="black">Workouts</v-btn>
     </v-app-bar>
 
     <v-main>
@@ -12,7 +14,7 @@
         <router-view />
       </v-container>
     </v-main>
-    <v-footer padless color="deep-purple accent-4" dark>
+    <v-footer padless dark>
       <v-container fluid class="white--text">
         <v-row justify="space-between" align="center">
           <v-col cols="auto">
