@@ -56,7 +56,7 @@ export default {
 
 <template>
   <v-container>
-    <v-table>
+    <v-table theme="dark">
       <thead>
         <tr>
           <th>Client</th>

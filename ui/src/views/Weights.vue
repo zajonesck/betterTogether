@@ -115,28 +115,31 @@ export default {
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <h1>Weights</h1>
-      <h2>{{ clientName }} {{ clientBirthDay }}</h2>
-      <table>
+      <h1 style="text-align: center">Weights</h1>
+      <h2 style="text-align: center">
+        {{ clientName }} DOB:{{ clientBirthDay }}
+      </h2>
+      <v-table>
         <tr>
           <th>Weight</th>
           <th>Date</th>
         </tr>
-        <tr v-for="weight in clientWeights">
-          <td>
+        <tr v-for="weight in clientWeights" :key="weight.id">
+          <td style="text-align: center">
             {{ weight.weight }}
           </td>
-          <td>{{ newDate(weight.date) }}</td>
+          <td style="text-align: center">{{ newDate(weight.date) }}</td>
 
           <td><button @click="deleteWeight(weight.id)">🗑</button></td>
         </tr>
-      </table>
+      </v-table>
       <label>Weight: </label>
       <input
         v-model="newWeight"
         type="integer"
         id="weight"
         placeholder="Weight"
+        style="color: white"
       />
 
       <button @click="addWeight">✔</button>

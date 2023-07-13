@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app dark>
-      <v-app-bar-title class="white--text">Better Together</v-app-bar-title>
+      <v-app-bar-title theme="dark">Better Together</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
