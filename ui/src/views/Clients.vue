@@ -56,19 +56,36 @@ export default {
 
 <template>
   <v-container>
-    <v-toolbar-title>Clients</v-toolbar-title>
-    <v-data-table
+    <v-table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Birth date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="client in clients" :key="client.id">
+          <td>
+            <router-link
+              :to="{
+                name: 'Weights',
+                params: { clientId: client.id },
+              }"
+              >{{ client.client_name }}</router-link
+            >
+          </td>
+          <td>{{ newBDate(client.birth_day) }}</td>
+          <td><v-btn @click="deleteClient(client.id)">🗑</v-btn></td>
+        </tr>
+      </tbody>
+    </v-table>
+    <v-table
       :headers="headers"
       :items="clients"
       item-key="id"
       class="elevation-1"
     >
-      <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click="deleteClient(item.id)">
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
+    </v-table>
     <v-form>
       <v-text-field v-model="newClientName" label="Name"></v-text-field>
       <v-text-field
