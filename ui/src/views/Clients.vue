@@ -6,11 +6,13 @@ export default {
   data() {
     return {
       clients: [],
-      newClientName: "",
+      newClientFirstName: "",
+      newClientLastName: "",
       newClientBirthDate: "",
       headers: [
         { text: "ID", value: "id" },
-        { text: "Client Name", value: "client_name" },
+        { text: "First Name", value: "first_name" },
+        { text: "Last Name", value: "last_name" },
         { text: "Birth Date", value: "birth_day" },
         { text: "Actions", value: "actions", sortable: false },
       ],
@@ -30,7 +32,8 @@ export default {
 
     addClient() {
       const requestBody = {
-        client_name: this.newClientName,
+        first_name: this.newClientFirstName,
+        last_name: this.newClientLastName,
         birth_day: this.newClientBirthDate,
       };
       axios
@@ -38,7 +41,8 @@ export default {
         .then((response) => {
           console.log(response);
           this.getClients();
-          this.newClientName = "";
+          this.newClientFirstName = "";
+          this.newClientLastName = "";
           this.newClientBirthDate = "";
         });
     },
@@ -56,11 +60,12 @@ export default {
 
 <template>
   <v-container>
-    <v-table theme="dark">
+    <v-table>
       <thead>
         <tr>
-          <th>Client</th>
+          <th>Name</th>
           <th>Birth date</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -71,23 +76,23 @@ export default {
                 name: 'Weights',
                 params: { clientId: client.id },
               }"
-              >{{ client.client_name }}</router-link
+              >{{ client.first_name }} {{ client.last_name }}</router-link
             >
           </td>
           <td>{{ newBDate(client.birth_day) }}</td>
-          <td><v-btn @click="deleteClient(client.id)">🗑</v-btn></td>
+          <td><button @click="deleteClient(client.id)">🗑</button></td>
         </tr>
       </tbody>
     </v-table>
-    <v-table
-      :headers="headers"
-      :items="clients"
-      item-key="id"
-      class="elevation-1"
-    >
-    </v-table>
     <v-form>
-      <v-text-field v-model="newClientName" label="Name"></v-text-field>
+      <v-text-field
+        v-model="newClientFirstName"
+        label="First Name"
+      ></v-text-field>
+      <v-text-field
+        v-model="newClientLastName"
+        label="Last Name"
+      ></v-text-field>
       <v-text-field
         v-model="newClientBirthDate"
         label="Birth Date"
@@ -97,6 +102,7 @@ export default {
     </v-form>
   </v-container>
 </template>
+
 <style scoped>
 h1 {
   color: white;
