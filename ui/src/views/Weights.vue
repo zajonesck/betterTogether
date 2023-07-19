@@ -3,11 +3,10 @@ import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 
-
 export default {
-  components: {
-    WeightLineGraph,
-  },
+  // components: {
+  //   WeightLineGraph,
+  // },
   data() {
     return {
       clientWeights: [],
