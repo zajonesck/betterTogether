@@ -2,7 +2,7 @@
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
-import WeightLineGraph from "./WeightLineGraph.vue";
+
 
 export default {
   components: {

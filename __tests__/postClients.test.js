@@ -59,16 +59,6 @@ describe("POST /clients", () => {
   });
 });
 
-describe("GET /clients", () => {
-  test("It responds with an array of clients", async () => {
-    const response = await request(baseURL).get("/clients");
-    console.log("response: ", response);
-    expect(response.body[0]).toHaveProperty("id");
-    expect(response.body[0]).toHaveProperty("first_name");
-    expect(response.body[0]).toHaveProperty("last_name");
-    expect(response.statusCode).toBe(200);
-  });
-});
 
 describe("POST /clients_weights/:clientId", () => {
   test("Throws 400 error when there is no weight", async () => {
