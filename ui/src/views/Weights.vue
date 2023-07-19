@@ -13,7 +13,8 @@ export default {
       clientWeights: [],
       newWeight: "",
       newWeighDate: "",
-      clientName: "",
+      clientFirstName: "",
+      clientLastName: "",
       clientBirthDay: "",
       loading: true,
       chartData: null,
@@ -52,7 +53,8 @@ export default {
           }`
         )
         .then((response) => {
-          this.clientName = response.data[0].client_name;
+          this.clientFirstName = response.data[0].first_name;
+          this.clientLastName = response.data[0].last_name;
           this.clientBirthDay = newBDate(response.data[0].birth_day);
         });
     },
@@ -70,7 +72,9 @@ export default {
     addWeight() {
       const requestBody = {
         weight: this.newWeight,
+        date: this.newWeightDate,
       };
+
       axios
         .post(
           `${import.meta.env.VITE_API_URL}clients_weights/${
@@ -111,14 +115,15 @@ export default {
   },
 };
 </script>
+
 <template>
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <h1 style="text-align: center">Weights</h1>
-      <h2 style="text-align: center">
-        {{ clientName }} DOB:{{ clientBirthDay }}
-      </h2>
+      <h1 style="text-align: center">
+        Weight History for {{ clientFirstName }} {{ clientLastName }}
+      </h1>
+      <h2 style="text-align: center">DOB: {{ clientBirthDay }}</h2>
       <v-table>
         <tr>
           <th>Weight</th>
@@ -133,23 +138,30 @@ export default {
           <td><button @click="deleteWeight(weight.id)">🗑</button></td>
         </tr>
       </v-table>
-      <label>Weight: </label>
-      <input
-        v-model="newWeight"
-        type="integer"
-        id="weight"
-        placeholder="Weight"
-        style="color: white"
-      />
+      <v-row>
+        <v-col cols="10">
+          <v-text-field
+            v-model="newWeight"
+            type="integer"
+            id="weight"
+            placeholder="Weight"
+            style="color: white"
+            @keyup.enter="addWeight"
+          />
+        </v-col>
 
-      <button @click="addWeight">✔</button>
-      <div>
+        <v-col cols="2" class="d-flex align-self-center">
+          <v-btn @click="addWeight">✔</v-btn>
+        </v-col>
+      </v-row>
+
+      <!-- <div>
         <h3>My Line Graph</h3>
         <weight-line-graph
           :chart-data="chartData || defaultChartData"
           :options="chartOptions"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
