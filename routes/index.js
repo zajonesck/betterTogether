@@ -37,7 +37,7 @@ app.post("/clients_weights/:clientId", (req, res, next) => {
 });
 app.post("/clients", (req, res, next) => {
   //req.body.client_name = client name
-  if (!req.body.client_name) {
+  if (!req.body.first_name || !req.body.last_name) {
     res.status(400).send("Client name required.");
   }
   if (!req.body.birth_day) {

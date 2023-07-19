@@ -2,9 +2,12 @@
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
-import * as d3 from "d3";
+
 
 export default {
+  components: {
+    WeightLineGraph,
+  },
   data() {
     return {
       clientWeights: [],
@@ -13,6 +16,19 @@ export default {
       clientName: "",
       clientBirthDay: "",
       loading: true,
+      chartData: null,
+      defaultChartData: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
     };
   },
 
@@ -77,6 +93,19 @@ export default {
         )
         .then((response) => {
           this.clientWeights = response.data;
+          const chartData = {
+            labels: response.data.map((w) => w.date),
+            datasets: [
+              {
+                label: "Weight",
+                data: response.data.map((w) => w.weight),
+                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill: false,
+              },
+            ],
+          };
+          this.chartData = chartData;
         });
     },
   },
@@ -86,31 +115,41 @@ export default {
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <h1>Weights</h1>
-      <h2>{{ clientName }} {{ clientBirthDay }}</h2>
-      <table>
+      <h1 style="text-align: center">Weights</h1>
+      <h2 style="text-align: center">
+        {{ clientName }} DOB:{{ clientBirthDay }}
+      </h2>
+      <v-table>
         <tr>
           <th>Weight</th>
           <th>Date</th>
         </tr>
-        <tr v-for="weight in clientWeights">
-          <td>
+        <tr v-for="weight in clientWeights" :key="weight.id">
+          <td style="text-align: center">
             {{ weight.weight }}
           </td>
-          <td>{{ newDate(weight.date) }}</td>
+          <td style="text-align: center">{{ newDate(weight.date) }}</td>
 
           <td><button @click="deleteWeight(weight.id)">🗑</button></td>
         </tr>
-      </table>
+      </v-table>
       <label>Weight: </label>
       <input
         v-model="newWeight"
         type="integer"
         id="weight"
         placeholder="Weight"
+        style="color: white"
       />
 
       <button @click="addWeight">✔</button>
+      <div>
+        <h3>My Line Graph</h3>
+        <weight-line-graph
+          :chart-data="chartData || defaultChartData"
+          :options="chartOptions"
+        />
+      </div>
     </div>
   </div>
 </template>

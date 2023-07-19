@@ -1,6 +1,20 @@
-# Better Together
+# Better Together backend-Node
 
-## Trainer App with PAWS
+## Trainer App
+
+## Project Setup
+
+### Compile and Hot-Reload for Development on localhost:5173
+
+```
+$ npm run start:watch
+```
+
+### Compile and Minify for Production
+
+```
+$ npm run build:stage
+```
 
 ### Example post request:
 
@@ -18,21 +32,8 @@ $ curl -X "DELETE" localhost:3000/clients/'id'
 
 $ curl -X "DELETE" localhost:3000/clients_weights/14
 
-view heroku logs
+### view heroku logs
 
 ```
 $ heroku logs --tail
-```
-
-```
-run app on localhost:5173
-$ npm run start:watch
-```
-
-run on localhost:3000
-$ npm run build
-
-```
-run live
-$ npm run build:stage
 ```
