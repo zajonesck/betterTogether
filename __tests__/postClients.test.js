@@ -9,7 +9,7 @@ describe("POST /clients", () => {
     const newClient = await request(baseURL).post("/clients").send({
       first_name: "New",
       last_name: "Client",
-      birth_day: "10/10/2010",,
+      birth_day: "10/10/2010",
     });
 
     const newResponse = await request(baseURL).get("/clients");
@@ -58,7 +58,6 @@ describe("POST /clients", () => {
     expect(newClient.statusCode).toBe(400);
   });
 });
-
 
 describe("POST /clients_weights/:clientId", () => {
   test("Throws 400 error when there is no weight", async () => {
