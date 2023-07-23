@@ -1,1 +1,1 @@
-web: node server.js; vite build
+web: NODE_ENV=production node server.js; vite build
