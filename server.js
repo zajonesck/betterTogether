@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const app = require("./app");
 
 // Use process.env.PORT if it's available (in Heroku's environment), otherwise fall back to 3000
