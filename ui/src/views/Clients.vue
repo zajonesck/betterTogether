@@ -59,7 +59,7 @@ export default {
 </script>
 
 <template>
-  <v-container>
+  <v-container style="min-height: calc(100vh - 100px)">
     <v-table>
       <thead>
         <tr>
@@ -113,15 +113,13 @@ h1 {
   width: 100%;
   padding: 10px;
 }
-th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: white;
-  color: white;
-}
 
 td {
   text-align: left;
+}
+#app {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 </style>

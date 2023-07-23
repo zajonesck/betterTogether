@@ -48,4 +48,10 @@
 
 <script setup></script>
 
-<style scoped></style>
+<style scoped>
+#app {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+</style>

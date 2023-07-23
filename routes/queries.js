@@ -1,21 +1,26 @@
+require("dotenv").config();
+
 const Pool = require("pg").Pool;
+let pool;
 
-// const pool = new Pool({
-//   user: "zacharyjones",
-//   host: "localhost",
-//   database: "trainingapp",
-//   password: "",
-//   port: 5431,
-// });
-
-const pool = new Pool({
-  user: "grcehhiyecqnhx",
-  host: "ec2-3-210-173-88.compute-1.amazonaws.com",
-  database: "d5hjor6r53un6c",
-  password: "ac15a788b07914017a4785ada8644e90ca2f7eb7f501699d27b372da3eea05e0",
-  port: 5432,
-  ssl: { rejectUnauthorized: false },
-});
+if (process.env.NODE_ENV === "local") {
+  pool = new Pool({
+    user: process.env.LOCAL_USER,
+    host: process.env.LOCAL_HOST,
+    database: process.env.LOCAL_DATABASE,
+    password: process.env.LOCAL_PASSWORD,
+    port: process.env.LOCAL_PORT,
+  });
+} else {
+  pool = new Pool({
+    user: process.env.PROD_USER,
+    host: process.env.PROD_HOST,
+    database: process.env.PROD_DATABASE,
+    password: process.env.PROD_PASSWORD,
+    port: process.env.PROD_PORT,
+    ssl: { rejectUnauthorized: false },
+  });
+}
 
 const deleteClient = (request, response) => {
   const clientId = request.params.clientId;

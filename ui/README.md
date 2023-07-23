@@ -25,3 +25,9 @@ npm run dev
 ```
 npm run build
 ```
+
+### I have to run this to update my dist folder and then push the to my main branch and heroku uses that.
+
+```
+
+```
