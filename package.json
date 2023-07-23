@@ -35,7 +35,8 @@
   },
   "scripts": {
     "start:watch": "NODE_ENV=local nodemon server.js",
-    "start": "node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "start-local": "NODE_ENV=local node server.js",
     "test": "jest --runInBand"
   }
 }
