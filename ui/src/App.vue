@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app dark>
+    <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer">
-        <v-icon color="black">mdi-menu</v-icon>
+        <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-      <v-app-bar-title theme="dark">Better Together</v-app-bar-title>
+      <v-app-bar-title>Better Together</v-app-bar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
 
@@ -33,7 +33,7 @@
       </v-container>
     </v-main>
 
-    <v-footer padless dark>
+    <v-footer padless>
       <v-container fluid class="white--text">
         <v-row justify="space-between" align="center">
           <v-col cols="auto">

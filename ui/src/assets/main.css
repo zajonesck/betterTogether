@@ -8,19 +8,6 @@
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: black;
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(226, 36%, 53%, 0.2);
-  }
-}
-
 @media (min-width: 1024px) {
   body {
     display: flex;

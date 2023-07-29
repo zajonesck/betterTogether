@@ -105,7 +105,6 @@ export default {
 
 <style scoped>
 h1 {
-  color: white;
   font-weight: 250;
   font-size: 2.6rem;
   text-align: center;
