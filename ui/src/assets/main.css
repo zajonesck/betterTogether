@@ -1,22 +1,19 @@
 @import "./base.css";
+/* main.css */
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.v-main {
+  flex-grow: 1;
 }

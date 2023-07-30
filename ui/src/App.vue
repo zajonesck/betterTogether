@@ -66,10 +66,4 @@ import { ref } from "vue";
 const drawer = ref(false);
 </script>
 
-<style scoped>
-#app {
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-</style>
+<style scoped></style>
