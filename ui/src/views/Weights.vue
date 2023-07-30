@@ -120,7 +120,6 @@ export default {
     Weight History for {{ clientFirstName }} {{ clientLastName }}
   </v-card-title>
   <v-container style="min-height: calc(100vh - 100px)">
-    >
     <div v-if="loading">LOADING...</div>
     <div v-else>
       <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
