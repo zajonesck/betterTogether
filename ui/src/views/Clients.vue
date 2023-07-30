@@ -59,13 +59,14 @@ export default {
 </script>
 
 <template>
+  <v-card-title>Clients</v-card-title>
+
   <v-container style="min-height: calc(100vh - 100px)">
-    <v-table>
+    <v-table fixed-header>
       <thead>
         <tr>
           <th>Name</th>
           <th>Birth date</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -84,7 +85,9 @@ export default {
         </tr>
       </tbody>
     </v-table>
+
     <v-form>
+      <v-card-title style="padding-top: 25px">Add New Client</v-card-title>
       <v-text-field
         v-model="newClientFirstName"
         label="First Name"
@@ -103,22 +106,4 @@ export default {
   </v-container>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 250;
-  font-size: 2.6rem;
-  text-align: center;
-  margin: auto;
-  width: 100%;
-  padding: 10px;
-}
-
-td {
-  text-align: left;
-}
-#app {
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-</style>
+<style scoped></style>

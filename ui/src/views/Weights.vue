@@ -119,23 +119,27 @@ export default {
   <div id="app">
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <h1 style="text-align: center">
+      <v-card-title>
         Weight History for {{ clientFirstName }} {{ clientLastName }}
-      </h1>
-      <h2 style="text-align: center">DOB: {{ clientBirthDay }}</h2>
+      </v-card-title>
+      <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
       <v-table>
-        <tr>
-          <th>Weight</th>
-          <th>Date</th>
-        </tr>
-        <tr v-for="weight in clientWeights" :key="weight.id">
-          <td style="text-align: center">
-            {{ weight.weight }}
-          </td>
-          <td style="text-align: center">{{ newDate(weight.date) }}</td>
+        <thead>
+          <tr>
+            <th>Weight</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="weight in clientWeights" :key="weight.id">
+            <td>
+              {{ weight.weight }}
+            </td>
+            <td>{{ newDate(weight.date) }}</td>
 
-          <td><button @click="deleteWeight(weight.id)">🗑</button></td>
-        </tr>
+            <td><button @click="deleteWeight(weight.id)">🗑</button></td>
+          </tr>
+        </tbody>
       </v-table>
       <v-row>
         <v-col cols="10">
