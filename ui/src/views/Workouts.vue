@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="min-height: calc(100vh - 100px)">
     <v-row class="text-center">
       <v-col>
         <v-card class="mx-auto" dark>

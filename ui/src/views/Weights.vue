@@ -116,12 +116,13 @@ export default {
 </script>
 
 <template>
-  <div id="app">
+  <v-card-title>
+    Weight History for {{ clientFirstName }} {{ clientLastName }}
+  </v-card-title>
+  <v-container style="min-height: calc(100vh - 100px)">
+    >
     <div v-if="loading">LOADING...</div>
     <div v-else>
-      <v-card-title>
-        Weight History for {{ clientFirstName }} {{ clientLastName }}
-      </v-card-title>
       <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
       <v-table>
         <thead>
@@ -141,22 +142,12 @@ export default {
           </tr>
         </tbody>
       </v-table>
-      <v-row>
-        <v-col cols="10">
-          <v-text-field
-            v-model="newWeight"
-            type="integer"
-            id="weight"
-            placeholder="Weight"
-            style="color: white"
-            @keyup.enter="addWeight"
-          />
-        </v-col>
 
-        <v-col cols="2" class="d-flex align-self-center">
-          <v-btn @click="addWeight">✔</v-btn>
-        </v-col>
-      </v-row>
+      <v-form>
+        <v-card-title style="padding-top: 25px"> Weight Check-In</v-card-title>
+        <v-text-field v-model="newWeight" label="Today's Weight"></v-text-field>
+        <v-btn @click="addWeight">Log Weight</v-btn>
+      </v-form>
 
       <!-- <div>
         <h3>My Line Graph</h3>
@@ -166,6 +157,6 @@ export default {
         />
       </div> -->
     </div>
-  </div>
+  </v-container>
 </template>
 <style scoped></style>
