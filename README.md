@@ -10,7 +10,7 @@ Better Together is a comprehensive fitness application designed to bring trainer
 
 ## Production Overview on Heroku
 
-- **UI**: Vue.js, accessible at `bettertogether.day`
+- **UI**: Vue.js, accessible at [bettertogether.day](https://www.bettertogether.day/#/client-roster)
 - **API**: Node.js, hosted by Heroku and available at `https://better-together-f87fbab820d6.herokuapp.com/`
 - **Database**: PostgreSQL, hosted by Heroku and running on port `5432`
 
