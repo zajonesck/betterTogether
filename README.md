@@ -1,70 +1,64 @@
 # Better Together - Full Stack Application
 
-This repository contains both the frontend UI and the backend server for the Better Together application.
+Better Together is a comprehensive fitness application designed to bring trainers and clients closer to their fitness goals. As a fitness professional, you can use Better Together to track client weights and workouts over time effortlessly. This repository contains both the frontend UI built with Vue.js and the backend server developed with Node.js.
 
-## Overview local on my computer
+## Local Development Overview 
 
---UI is VUE and ran on locahhost:5173
---API is NODE.js and ran on localhost:3000
---DB is POSTGRESQL and ran on localhost:5431
+- **UI**: Vue.js, running on `localhost:5173`
+- **API**: Node.js, running on `localhost:3000`
+- **Database**: PostgreSQL, running on `localhost:5431`
 
-## Overview prod on heroku
+## Production Overview on Heroku
 
---UI is VUE and ran on bettertogether.day
---API is hosted by heroku and ran on https://better-together-f87fbab820d6.herokuapp.com/
---DB is hosted by heroku on 5432
+- **UI**: Vue.js, accessible at `bettertogether.day`
+- **API**: Node.js, hosted by Heroku and available at `https://better-together-f87fbab820d6.herokuapp.com/`
+- **Database**: PostgreSQL, hosted by Heroku and running on port `5432`
 
 ## Frontend - Better Together UI (Vue.js)
 
-The frontend is built with Vue.js and uses Vite for build process.
+The frontend UI of Better Together is built using Vue.js and leverages Vite for the build process.
 
-### Recommended IDE Setup
+### Install app dependencies
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+```
+$ cd ui
+```
 
-### Project Setup
+```
+$ npm install
+```
 
-\```
-npm install
-\```
+### Compile and hot-reload for development
 
-### Compile and Hot-Reload for Development
+```
+$ npm run dev
+```
 
-\```
-npm run dev
-\```
+### Compile and minify for production
 
-### Compile and Minify for Production
-
-\```
-npm run build
-\```
-
-> Note: After running `npm run build`, push to your main branch. Heroku uses the contents of the `dist` folder for deployment.
+```
+$ npm run build
+```
 
 For additional customization, see the [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Backend - Better Together Server (Node.js)
+## API - Better Together Server (Node.js)
 
-The backend server for Better Together.
+### Compile and hot-reload for development
 
-### Project Setup
-
-### Compile and Hot-Reload for Development on localhost:5173
-
-\```
+```
 $ npm run start:watch
-\```
+```
 
-### Compile and Minify for Production
+### Run tests
 
-\```
-$ npm run build:stage
-\```
+```
+$ npm run test
+```
 
-### Example post request:
+### Example API requests
 
-\```
+```
 $ curl -H "Content-Type: application/json" -X POST -d '{"client_name":"Big Boy Cope", "birth_day":"03/20/2016"}' https://better-together-f87fbab820d6.herokuapp.com/clients
 
 $ curl -H "Content-Type: application/json" -X POST -d '{"client_name":"Lizzy", "birth_day":"01/17/1990"}' localhost:3000/clients
@@ -76,10 +70,22 @@ $ curl -H "Content-Type: application/json" -X POST -d '{"weight":100}' localhost
 $ curl -X "DELETE" localhost:3000/clients/'id'
 
 $ curl -X "DELETE" localhost:3000/clients_weights/14
-\```
+```
+
+## Recommended IDE Setup
+
+We recommend using [VSCode](https://code.visualstudio.com/) with the following extensions for the best development experience:
+
+- [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (Remember to disable Vetur)
+- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
+
+## Deployments
+
+Frontend: After running `npm run build`, push to your `main` branch to deploy the app. Heroku uses the contents of the `dist` folder for deployment.
+Backend: Pushing to the `main` branch will automatically trigger a new Heroku build. 
 
 ### View Heroku logs
 
-\```
+```
 $ heroku logs --tail
-\```
+```
