@@ -61,7 +61,7 @@ export default {
 <template>
   <v-card-title>Clients</v-card-title>
 
-  <v-container style="min-height: calc(100vh - 100px)">
+  <v-container style="min-height: calc(100vh - 250px)">
     <v-table fixed-header>
       <thead>
         <tr>

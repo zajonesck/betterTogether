@@ -28,35 +28,31 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container style="min-height: calc(100vh - 14o)">
         <router-view />
       </v-container>
     </v-main>
 
-    <v-footer padless>
-      <v-container fluid>
-        <v-row justify="space-between" align="center">
-          <v-col cols="auto">
-            <p>&copy; 2023 Zack Jones</p>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn
-              href="https://zackjones.xyz/"
-              class="px-1 py-1 ml-3"
-              target="_blank"
-            >
-              About Zack
-            </v-btn>
-            <v-btn
-              href="https://github.com/zajonesck/betterTogether.git"
-              class="px-1 py-1 ml-3"
-              target="_blank"
-            >
-              About Better Together
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
+    <v-footer>
+      <v-row justify="center" no-gutters>
+        <v-btn
+          href="https://zackjones.xyz/"
+          class="px-1 py-1 ml-3"
+          target="_blank"
+        >
+          About Me
+        </v-btn>
+        <v-btn
+          href="https://github.com/zajonesck/betterTogether.git"
+          class="px-1 py-1 ml-3"
+          target="_blank"
+        >
+          About Better Together
+        </v-btn>
+        <v-col class="text-center mt-4" cols="12"
+          >&copy; {{ new Date().getFullYear() }} — <strong>Zack Jones</strong>
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
 </template>
@@ -66,4 +62,4 @@ import { ref } from "vue";
 const drawer = ref(false);
 </script>
 
-<style scoped></style>
+<style></style>
