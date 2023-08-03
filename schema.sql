@@ -39,3 +39,61 @@ CREATE TABLE workouts (
 
 CREATE UNIQUE INDEX workouts_pkey ON workouts(id int4_ops);
 
+-- body_parts table
+
+CREATE TABLE body_parts (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    bodypart_name character varying(50) NOT NULL
+);
+
+-- Indices -------------------------------------------------------
+
+CREATE UNIQUE INDEX body_part_pkey ON body_parts(id int4_ops);
+
+-- exercises table
+
+CREATE TABLE exercises (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name character varying(50) NOT NULL,
+    description character varying(50) NOT NULL,
+    primary_body_part_id character varying(50) NOT NULL,
+    secondary_body_part_id character varying(50) NOT NULL,
+    "Movement_type" character varying(50) NOT NULL
+);
+
+-- Indices -------------------------------------------------------
+
+CREATE UNIQUE INDEX exercise_pkey ON exercises(id int4_ops);
+
+-- workouts table
+
+CREATE TABLE workouts (
+    id SERIAL PRIMARY KEY,
+    workout_name character varying(255) NOT NULL,
+    description character varying(255) NOT NULL,
+    difficulty pg_enum NOT NULL
+);
+
+-- Indices -------------------------------------------------------
+
+CREATE UNIQUE INDEX workout_pkey ON workouts(id int4_ops);
+
+-- workouts_exercises table
+
+CREATE TABLE workouts_exercises (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    workout_id integer NOT NULL REFERENCES workouts(id),
+    exercise_id integer NOT NULL REFERENCES exercises(id),
+    sets integer NOT NULL,
+    reps integer NOT NULL,
+    rpe integer NOT NULL
+);
+COMMENT ON CONSTRAINT workout_exercise_workout_id_fkey ON workouts_exercises IS 'workout.id';
+COMMENT ON CONSTRAINT workout_exercise_exercise_id_fkey ON workouts_exercises IS 'exercise.id';
+
+-- Indices -------------------------------------------------------
+
+CREATE UNIQUE INDEX workout_exercise_pkey ON workouts_exercises(id int4_ops);
+
+
+
