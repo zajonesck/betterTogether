@@ -41,9 +41,9 @@ CREATE UNIQUE INDEX workouts_pkey ON workouts(id int4_ops);
 
 -- body_parts table
 
-CREATE TABLE body_parts (
+REATE TABLE body_parts (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    bodypart_name character varying(50) NOT NULL
+    body_part_name character varying(50) NOT NULL
 );
 
 -- Indices -------------------------------------------------------
@@ -56,10 +56,12 @@ CREATE TABLE exercises (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name character varying(50) NOT NULL,
     description character varying(50) NOT NULL,
-    primary_body_part_id character varying(50) NOT NULL,
-    secondary_body_part_id character varying(50) NOT NULL,
-    "Movement_type" character varying(50) NOT NULL
+    primary_body_part_id integer NOT NULL REFERENCES body_parts(id),
+    secondary_body_part_id integer NOT NULL REFERENCES body_parts(id),
+    movement_type character varying(50) NOT NULL
 );
+COMMENT ON CONSTRAINT exercises_primary_body_part_id_fkey ON exercises IS 'primary body part';
+COMMENT ON CONSTRAINT exercises_secondary_body_part_id_fkey ON exercises IS 'secondary body part';
 
 -- Indices -------------------------------------------------------
 
