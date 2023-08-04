@@ -1,14 +1,10 @@
 <template>
   <v-container style="min-height: calc(100vh - 250px)">
-    <v-row class="text-center">
+    <v-row>
       <v-col>
-        <v-card class="mx-auto" dark>
-          <v-card-title>
-            <h1 class="text-h5 white--text">Workouts</h1>
-          </v-card-title>
-          <v-card-text>
-            <h2 class="text-h6 white--text">Coming Soon</h2>
-          </v-card-text>
+        <v-card>
+          <v-card-title> Workouts </v-card-title>
+          <v-card-text> Coming Soon </v-card-text>
         </v-card>
       </v-col>
     </v-row>
