@@ -70,30 +70,56 @@ const getClients = (request, response) => {
 };
 
 const getWorkouts = (request, response) => {
-  pool.query("SELECT * FROM workouts", (error, results) => {
-    if (error) {
-      console.log(error);
-      response.status(500).send("An error occurred");
-      return;
+  pool.query(
+    `SELECT workouts.id, workouts.workout_name, workouts.description, workouts.difficulty, 
+      array_agg(json_build_object(
+        'id', exercises.id, 
+        'name', exercises.name, 
+        'description', exercises.description, 
+        'primary_body_part_id', exercises.primary_body_part_id,
+        'secondary_body_part_id', exercises.secondary_body_part_id
+      )) as exercises 
+    FROM workouts 
+    INNER JOIN workouts_exercises ON workouts.id = workouts_exercises.workout_id 
+    INNER JOIN exercises ON workouts_exercises.exercise_id = exercises.id 
+    GROUP BY workouts.id`,
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        response.status(500).send("An error occurred");
+        return;
+      }
+      response.status(200).json(results.rows);
     }
-    response.status(200).json(results.rows);
-  });
+  );
 };
 
 const getWorkout = (request, response) => {
   const workoutId = request.params.workoutId;
+
   pool.query(
-    "SELECT workout_name, description, difficulty FROM workouts WHERE id = $1",
+    `SELECT workouts.workout_name, workouts.description, workouts.difficulty, 
+      array_agg(json_build_object(
+        'id', exercises.id, 
+        'name', exercises.name, 
+        'description', exercises.description, 
+        'primary_body_part_id', exercises.primary_body_part_id,
+        'secondary_body_part_id', exercises.secondary_body_part_id
+      )) as exercises 
+    FROM workouts 
+    INNER JOIN workouts_exercises ON workouts.id = workouts_exercises.workout_id 
+    INNER JOIN exercises ON workouts_exercises.exercise_id = exercises.id 
+    WHERE workouts.id = $1
+    GROUP BY workouts.id`,
     [workoutId],
     (error, results) => {
       if (error) {
         throw error;
       }
-      // If no workout was found, send a 404 status
       if (results.rows.length === 0) {
         response.status(404).json({ message: "Workout not found" });
       } else {
-        response.status(200).json(results.rows);
+        response.status(200).json(results.rows[0]);
       }
     }
   );
