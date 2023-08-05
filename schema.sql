@@ -41,7 +41,7 @@ CREATE UNIQUE INDEX workouts_pkey ON workouts(id int4_ops);
 
 -- body_parts table
 
-REATE TABLE body_parts (
+CREATE TABLE body_parts (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     body_part_name character varying(50) NOT NULL
 );
@@ -105,7 +105,6 @@ INSERT INTO body_parts (body_part_name) VALUES ('Biceps');
 INSERT INTO body_parts (body_part_name) VALUES ('Quads');
 INSERT INTO body_parts (body_part_name) VALUES ('Triceps');
 INSERT INTO body_parts (body_part_name) VALUES ('Abs');
-INSERT INTO body_parts (body_part_name) VALUES ('Calves');
 INSERT INTO body_parts (body_part_name) VALUES ('Glutes');
 INSERT INTO body_parts (body_part_name) VALUES ('Deltoids');
 INSERT INTO body_parts (body_part_name) VALUES ('Traps');

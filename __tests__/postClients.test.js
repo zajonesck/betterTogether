@@ -1,24 +1,23 @@
 const request = require("supertest");
-const baseURL = "http://localhost:3000";
 const app = require("../app");
 
 describe("POST /clients", () => {
   test("It responds with the newly created client", async () => {
-    const response = await request(baseURL).get("/clients");
+    const response = await request(app).get("/clients");
     const numberOfClients = response.body.length;
-    const newClient = await request(baseURL).post("/clients").send({
+    const newClient = await request(app).post("/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "10/10/2010",
     });
 
-    const newResponse = await request(baseURL).get("/clients");
+    const newResponse = await request(app).get("/clients");
     expect(newResponse.body.length).toBe(numberOfClients + 1);
     expect(newClient.body).toStrictEqual([]);
     expect(newClient.statusCode).toBe(200);
   });
   test("Throws 400 error when there is no client_name", async () => {
-    const newClient = await request(baseURL).post("/clients").send({
+    const newClient = await request(app).post("/clients").send({
       first_name: "",
       last_name: "Client",
       birth_day: "10/10/2010",
@@ -28,17 +27,17 @@ describe("POST /clients", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when there is no birth_day", async () => {
-    const newClient = await request(baseURL).post("/clients").send({
+    const newClient = await request(app).post("/clients").send({
       first_name: "New",
-      last_name: "",
-      birth_day: "10/10/2010",
+      last_name: "Client",
+      birth_day: "",
     });
     expect(newClient.body).toStrictEqual({});
     expect(newClient.text).toEqual("Birthday required.");
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when birth_day is an invalid date", async () => {
-    const newClient = await request(baseURL).post("/clients").send({
+    const newClient = await request(app).post("/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "abcd",
@@ -48,7 +47,7 @@ describe("POST /clients", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when birth_day is more than 200 years ago", async () => {
-    const newClient = await request(baseURL).post("/clients").send({
+    const newClient = await request(app).post("/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "10/10/1010",
@@ -61,7 +60,7 @@ describe("POST /clients", () => {
 
 describe("POST /clients_weights/:clientId", () => {
   test("Throws 400 error when there is no weight", async () => {
-    const newClient = await request(baseURL)
+    const newClient = await request(app)
       .post("/clients_weights/:clientId")
       .send({
         weight: "",
@@ -71,7 +70,7 @@ describe("POST /clients_weights/:clientId", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when clients_weights is an invalid weight", async () => {
-    const newClient = await request(baseURL)
+    const newClient = await request(app)
       .post("/clients_weights/:clientId")
       .send({
         weight: "abcd",

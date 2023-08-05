@@ -34,6 +34,10 @@ app.get("/clients/:clientId", db.getClient);
 
 app.get("/clients_weights/:clientId", db.getWeights);
 
+app.get("/workouts", db.getWorkouts);
+
+app.get("/workout/:workoutId", db.getWorkout);
+
 app.post("/clients_weights/:clientId", (req, res, next) => {
   console.log(req.body.weight);
   if (!req.body.weight) {
