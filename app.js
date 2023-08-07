@@ -49,6 +49,9 @@ app.post("/clients_weights/:clientId", (req, res, next) => {
     db.addWeight(req, res);
   }
 });
+
+app.post("/search/workouts", db.searchWorkouts);
+
 app.post("/clients", (req, res, next) => {
   //req.body.client_name = client name
   if (!req.body.first_name || !req.body.last_name) {

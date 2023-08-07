@@ -1,7 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Clients from "../views/Clients.vue";
+import WorkoutDetail from "../views/WorkoutDetail.vue";
 
 const routes = [
+  {
+    path: "/workout/:id",
+    name: "workout-detail",
+    component: WorkoutDetail,
+    props: true,
+  },
   {
     path: "/",
     redirect: "/client-roster", // This will automatically redirect from the root to /client-roster

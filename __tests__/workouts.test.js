@@ -22,6 +22,7 @@ describe("GET /workout/:workoutId", () => {
     expect(response.body.exercises[0]).toHaveProperty("description");
     expect(response.body.exercises[0]).toHaveProperty("primary_body_part_id");
     expect(response.body.exercises[0]).toHaveProperty("secondary_body_part_id");
+    expect(response.body.workout_name).toBe("Upper Body");
   });
 });
 

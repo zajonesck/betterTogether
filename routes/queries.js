@@ -104,7 +104,11 @@ const getWorkout = (request, response) => {
         'name', exercises.name, 
         'description', exercises.description, 
         'primary_body_part_id', exercises.primary_body_part_id,
-        'secondary_body_part_id', exercises.secondary_body_part_id
+        'secondary_body_part_id', exercises.secondary_body_part_id,
+        'sets', workouts_exercises.sets,
+        'reps', workouts_exercises.reps,
+        'rpe', workouts_exercises.rpe,
+        'duration', workouts_exercises.duration
       )) as exercises 
     FROM workouts 
     INNER JOIN workouts_exercises ON workouts.id = workouts_exercises.workout_id 
@@ -133,6 +137,35 @@ const addClient = (request, response) => {
     (error, results) => {
       if (error) {
         return error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
+const searchWorkouts = (request, response) => {
+  const { difficulty } = request.body;
+
+  pool.query(
+    `SELECT workouts.id, workouts.workout_name, workouts.description, workouts.difficulty, 
+        array_agg(json_build_object(
+          'id', exercises.id, 
+          'name', exercises.name, 
+          'description', exercises.description, 
+          'primary_body_part_id', exercises.primary_body_part_id,
+          'secondary_body_part_id', exercises.secondary_body_part_id
+        )) as exercises 
+      FROM workouts 
+      INNER JOIN workouts_exercises ON workouts.id = workouts_exercises.workout_id 
+      INNER JOIN exercises ON workouts_exercises.exercise_id = exercises.id 
+      WHERE workouts.difficulty = $1
+      GROUP BY workouts.id`,
+    [difficulty],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        response.status(500).send("An error occurred");
+        return;
       }
       response.status(200).json(results.rows);
     }
@@ -191,6 +224,7 @@ module.exports = {
   getWeights,
   getWorkouts,
   getWorkout,
+  searchWorkouts,
   addWeight,
   deleteWeight,
   getClient,
