@@ -41,6 +41,11 @@ export default {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}workout/${this.id}`
     );
+
+    if (response.data && response.data.exercises) {
+      response.data.exercises.sort((a, b) => a.order - b.order);
+    }
+
     this.workout = response.data;
   },
 };

@@ -67,6 +67,7 @@ export default {
         <tr>
           <th>Name</th>
           <th>Birth date</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>

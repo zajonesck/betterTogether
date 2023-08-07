@@ -128,6 +128,7 @@ export default {
           <tr>
             <th>Weight</th>
             <th>Date</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

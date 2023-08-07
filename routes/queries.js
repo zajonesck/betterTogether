@@ -108,7 +108,8 @@ const getWorkout = (request, response) => {
         'sets', workouts_exercises.sets,
         'reps', workouts_exercises.reps,
         'rpe', workouts_exercises.rpe,
-        'duration', workouts_exercises.duration
+        'duration', workouts_exercises.duration,
+        'order', workouts_exercises.order
       )) as exercises 
     FROM workouts 
     INNER JOIN workouts_exercises ON workouts.id = workouts_exercises.workout_id 
