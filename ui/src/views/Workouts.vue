@@ -1,10 +1,11 @@
 <template>
   <v-card-title> Workouts </v-card-title>
+
   <v-container style="min-height: calc(100vh - 250px)">
-    <v-table fixed-header>
+    <v-table fixed-header="">
       <thead>
         <tr>
-          <th>Workout</th>
+          <th v-on:click="sortBy">Workout</th>
           <th>Description</th>
           <th>Difficulty</th>
         </tr>
@@ -30,25 +31,34 @@
 </template>
 
 <script>
-import { ref } from "vue";
 import axios from "axios";
-
 export default {
-  setup() {
-    const workouts = ref([]);
-
-    const getWorkouts = () => {
-      axios.get(`${import.meta.env.VITE_API_URL}workouts`).then((response) => {
-        workouts.value = response.data;
-      });
-    };
-
+  data() {
     return {
-      workouts,
-      getWorkouts,
+      sortAscending: true,
+      workouts: [],
     };
   },
-
+  methods: {
+    sortBy: function () {
+      console.log("idiot");
+      this.workouts.sort(function (a, b) {
+        var textA = a.workout_name.toUpperCase();
+        var textB = b.workout_name.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+      if (!this.sortAscending) {
+        this.workouts.reverse();
+      }
+      console.log("copeouts", this.workouts);
+      this.sortAscending = !this.sortAscending;
+    },
+    getWorkouts() {
+      axios.get(`${import.meta.env.VITE_API_URL}workouts`).then((response) => {
+        this.workouts = response.data;
+      });
+    },
+  },
   async mounted() {
     await this.getWorkouts();
   },

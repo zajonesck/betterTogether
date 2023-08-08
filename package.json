@@ -31,7 +31,7 @@
     "vue-date-fns": "^2.0.2",
     "vue-fetch": "^0.4.1",
     "vue3-chart-v2": "^0.8.3",
-    "vuetify": "^3.3.7"
+    "vuetify": "^3.3.11"
   },
   "scripts": {
     "start:watch": "NODE_ENV=local nodemon server.js",
