@@ -147,5 +147,16 @@ INSERT INTO workouts_exercises (workout_id, exercise_id, sets, rpe, duration)
 VALUES 
 (2, 7, '4', '7', '60 seconds');
 
+-- Drop the existing constraint
+ALTER TABLE clients_weights DROP CONSTRAINT clients_weights_client_id_fkey;
+
+
+-- Recreate the foreign key constraint with CASCADE DELETE
+
+ALTER TABLE clients_weights 
+ADD CONSTRAINT clients_weights_client_id_fkey 
+FOREIGN KEY (client_id) 
+REFERENCES clients(id) 
+ON DELETE CASCADE;
 
 
