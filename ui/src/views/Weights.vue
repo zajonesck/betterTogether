@@ -33,9 +33,14 @@ export default {
   },
 
   async mounted() {
-    await this.getClient();
-    await this.getWeights();
-    this.loading = false;
+    try {
+      await Promise.all([this.getClient(), this.getWeights()]);
+    } catch (error) {
+      console.error("Failed to fetch data: ", error);
+      // Maybe set an error message here to inform the user.
+    } finally {
+      this.loading = false;
+    }
   },
 
   methods: {
@@ -120,7 +125,11 @@ export default {
     Weight History for {{ clientFirstName }} {{ clientLastName }}
   </v-card-title>
   <v-container style="min-height: calc(100vh - 250px)">
-    <div v-if="loading">LOADING...</div>
+    <v-progress-circular
+      v-if="loading"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
     <div v-else>
       <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
       <v-table>
