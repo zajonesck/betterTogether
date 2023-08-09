@@ -39,7 +39,6 @@ export default {
       axios
         .post(`${import.meta.env.VITE_API_URL}clients`, requestBody)
         .then((response) => {
-          console.log(response);
           this.getClients();
           this.newClientFirstName = "";
           this.newClientLastName = "";
@@ -82,7 +81,11 @@ export default {
             >
           </td>
           <td>{{ newBDate(client.birth_day) }}</td>
-          <td><button @click="deleteClient(client.id)">🗑</button></td>
+          <td>
+            <v-btn icon @click="deleteClient(client.id)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </td>
         </tr>
       </tbody>
     </v-table>

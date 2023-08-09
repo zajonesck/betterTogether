@@ -5,7 +5,7 @@
     <v-table fixed-header="">
       <thead>
         <tr>
-          <th v-on:click="sortBy">Workout</th>
+          <th v-on:click="sortBy">Workout <v-icon>mdi-arrow-down</v-icon></th>
           <th>Description</th>
           <th>Difficulty</th>
         </tr>

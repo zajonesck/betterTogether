@@ -138,7 +138,11 @@ export default {
             </td>
             <td>{{ newDate(weight.date) }}</td>
 
-            <td><button @click="deleteWeight(weight.id)">🗑</button></td>
+            <td>
+              <v-btn icon @click="deleteWeight(weight.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
           </tr>
         </tbody>
       </v-table>
