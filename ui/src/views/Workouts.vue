@@ -6,14 +6,18 @@
       <thead>
         <tr>
           <!-- if else statement v-if in html here for arrow to flip using sortAscending  -->
-          <th v-on:click="sortBy" class="clickable-header">
+          <th v-on:click="sortBy('workout_name')" class="clickable-header">
             Workout
             <v-icon v-if="sortAscending">mdi-arrow-down</v-icon>
             <v-icon v-else>mdi-arrow-up</v-icon>
           </th>
 
           <th>Description</th>
-          <th>Difficulty</th>
+          <th v-on:click="sortBy('difficulty')" class="clickable-header">
+            Difficulty
+            <v-icon v-if="sortAscending">mdi-arrow-down</v-icon>
+            <v-icon v-else>mdi-arrow-up</v-icon>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -46,17 +50,15 @@ export default {
     };
   },
   methods: {
-    sortBy: function () {
-      console.log("idiot");
+    sortBy: function (property) {
       this.workouts.sort(function (a, b) {
-        var textA = a.workout_name.toUpperCase();
-        var textB = b.workout_name.toUpperCase();
+        var textA = a[property].toString().toUpperCase();
+        var textB = b[property].toString().toUpperCase();
         return textA < textB ? -1 : textA > textB ? 1 : 0;
       });
       if (!this.sortAscending) {
         this.workouts.reverse();
       }
-      console.log("copeouts", this.workouts);
       this.sortAscending = !this.sortAscending;
     },
     getWorkouts() {
