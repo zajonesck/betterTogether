@@ -2,15 +2,17 @@
   <v-app>
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list-item link to="/client-roster">
-        <v-icon>mdi-account-group</v-icon>
         <v-list-item-content>
-          <v-list-item-title>Client List</v-list-item-title>
+          <v-list-item-title>
+            <v-icon>mdi-account-group</v-icon> Client List
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link to="/workout-rx">
-        <v-icon>mdi-dumbbell</v-icon>
         <v-list-item-content>
-          <v-list-item-title>Workouts</v-list-item-title>
+          <v-list-item-title>
+            <v-icon>mdi-dumbbell</v-icon> Workouts
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
