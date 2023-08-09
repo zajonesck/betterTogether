@@ -5,7 +5,13 @@
     <v-table fixed-header="">
       <thead>
         <tr>
-          <th v-on:click="sortBy">Workout <v-icon>mdi-arrow-down</v-icon></th>
+          <!-- if else statement v-if in html here for arrow to flip using sortAscending  -->
+          <th v-on:click="sortBy" class="clickable-header">
+            Workout
+            <v-icon v-if="sortAscending">mdi-arrow-down</v-icon>
+            <v-icon v-else>mdi-arrow-up</v-icon>
+          </th>
+
           <th>Description</th>
           <th>Difficulty</th>
         </tr>
@@ -65,4 +71,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.clickable-header:hover {
+  cursor: pointer;
+}
+</style>
