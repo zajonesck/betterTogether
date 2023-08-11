@@ -20,6 +20,9 @@ const vuetify = createVuetify({
   theme: {
     defaultTheme: "dark",
   },
+  icons: {
+    defaultSet: "mdi",
+  },
 });
 
 createApp(App).use(router).use(vuetify).mount("#app");

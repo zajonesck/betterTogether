@@ -19,7 +19,23 @@ export default {
       ],
       dialog: false,
       clientToDelete: null,
+      searchQuery: "",
+      sortAscending: true,
+      sortedColumn: "",
     };
+  },
+  computed: {
+    filteredClients() {
+      if (!this.searchQuery) {
+        return this.clients;
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.clients.filter(
+        (client) =>
+          client.first_name.toLowerCase().includes(query) ||
+          client.last_name.toLowerCase().includes(query)
+      );
+    },
   },
 
   mounted() {
@@ -37,7 +53,6 @@ export default {
         })
         .catch((error) => {
           console.error("Failed to fetch clients:", error);
-          // Handle error as you see fit
           this.loading = false; // Consider setting an error state here instead
         });
     },
@@ -76,6 +91,24 @@ export default {
           this.getClients();
         });
     },
+
+    sortBy(property) {
+      if (this.sortedColumn === property) {
+        this.sortAscending = !this.sortAscending;
+      } else {
+        this.sortAscending = true;
+      }
+
+      this.clients.sort((a, b) => {
+        const textA = a[property]?.toString().toUpperCase() || "";
+        const textB = b[property]?.toString().toUpperCase() || "";
+        return this.sortAscending
+          ? textA.localeCompare(textB)
+          : textB.localeCompare(textA);
+      });
+
+      this.sortedColumn = property;
+    },
   },
 };
 </script>
@@ -84,6 +117,12 @@ export default {
   <v-card-title>Clients</v-card-title>
 
   <v-container style="min-height: calc(100vh - 250px)">
+    <v-text-field
+      v-model="searchQuery"
+      clearable
+      label="Search Clients"
+      variant="outlined"
+    ></v-text-field>
     <v-progress-circular
       v-if="loading"
       indeterminate
@@ -93,13 +132,34 @@ export default {
       <v-table fixed-header>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Birth date</th>
+            <th @click="sortBy('first_name')" class="clickable-header">
+              Name
+              <v-icon v-if="sortedColumn === 'first_name' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'first_name'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+              <!-- Default icon when neither ascending nor descending is active -->
+            </th>
+            <th @click="sortBy('birth_day')" class="clickable-header">
+              Birth date
+              <v-icon v-if="sortedColumn === 'birth_day' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'birth_day'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+              <!-- Default icon when neither ascending nor descending is active -->
+            </th>
             <th></th>
           </tr>
         </thead>
+
         <tbody>
-          <tr v-for="client in clients" :key="client.id">
+          <tr v-for="client in filteredClients" :key="client.id">
             <td>
               <router-link
                 :to="{

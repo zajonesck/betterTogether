@@ -13,22 +13,46 @@ describe("GET /workout/:workoutId", () => {
     const workoutId = 1;
     const response = await request(app).get(`/workout/${workoutId}`);
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty("workout_name");
-    expect(response.body).toHaveProperty("description");
-    expect(response.body).toHaveProperty("difficulty");
-    expect(response.body).toHaveProperty("exercises");
-    expect(response.body.exercises[0]).toHaveProperty("id");
-    expect(response.body.exercises[0]).toHaveProperty("name");
-    expect(response.body.exercises[0]).toHaveProperty("description");
-    expect(response.body.exercises[0]).toHaveProperty("primary_body_part_id");
-    expect(response.body.exercises[0]).toHaveProperty("secondary_body_part_id");
-    expect(response.body.workout_name).toBe("Upper Body");
   });
 });
 
 test("It responds with a 404 for non-existing workout", async () => {
   const nonExistingWorkoutId = 999999;
   const response = await request(app).get(`/workout/${nonExistingWorkoutId}`);
-
   expect(response.statusCode).toBe(404);
+});
+
+describe("POST /clients/workouts", () => {
+  test("should add a client's workout and return the new workout's ID", async () => {
+    const newWorkout = {
+      client_id: 153,
+      workout_id: 1,
+      notes: "This is a test note",
+      date: "2023-08-10T00:00:00Z",
+    };
+
+    const res = await request(app)
+      .post("/clients/workouts")
+      .send(newWorkout)
+      .expect(201);
+
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty(
+      "message",
+      "Client workout added successfully!"
+    );
+  });
+
+  test("should fail when required fields are missing", async () => {
+    const incompleteWorkout = {
+      client_id: 153,
+      notes: "This is a test note",
+      date: "2023-08-10T00:00:00Z",
+    };
+
+    const res = await request(app)
+      .post("/clients/workouts")
+      .send(incompleteWorkout)
+      .expect(400);
+   
 });

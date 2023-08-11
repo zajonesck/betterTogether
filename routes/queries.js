@@ -69,6 +69,31 @@ const getClients = (request, response) => {
   );
 };
 
+const addClientWorkout = (request, response) => {
+  const { client_id, workout_id, notes, date } = request.body;
+
+  // Validate request data
+  if (!client_id || !workout_id || !notes || !date) {
+    return response.status(400).send("Required fields are missing.");
+  }
+
+  pool.query(
+    "INSERT INTO client_workout (client_id, workout_id, notes, date) VALUES($1, $2, $3, $4) RETURNING id",
+    [client_id, workout_id, notes, date],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        response.status(500).send("An error occurred while adding the workout");
+        return;
+      }
+      response.status(201).json({
+        id: results.rows[0].id,
+        message: "Client workout added successfully!",
+      });
+    }
+  );
+};
+
 const getWorkouts = (request, response) => {
   pool.query(
     `SELECT workouts.id, workouts.workout_name, workouts.description, workouts.difficulty, 
@@ -229,4 +254,5 @@ module.exports = {
   addWeight,
   deleteWeight,
   getClient,
+  addClientWorkout,
 };

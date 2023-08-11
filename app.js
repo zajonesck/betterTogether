@@ -38,6 +38,8 @@ app.get("/workouts", db.getWorkouts);
 
 app.get("/workout/:workoutId", db.getWorkout);
 
+app.post("/clients/workouts", db.addClientWorkout);
+
 app.post("/clients_weights/:clientId", (req, res, next) => {
   console.log(req.body.weight);
   if (!req.body.weight) {

@@ -1,33 +1,49 @@
 <template>
-  <v-card-title> Workouts </v-card-title>
+  <v-card-title>Workouts</v-card-title>
 
   <v-container style="min-height: calc(100vh - 250px)">
+    <v-text-field
+      v-model="searchQuery"
+      clearable
+      label="Search Workouts"
+      variant="outlined"
+    ></v-text-field>
     <v-progress-circular
       v-if="loading"
       indeterminate
       color="primary"
     ></v-progress-circular>
+
     <div v-else>
       <v-table fixed-header="">
         <thead>
           <tr>
-            <!-- if else statement v-if in html here for arrow to flip using sortAscending  -->
-            <th v-on:click="sortBy('workout_name')" class="clickable-header">
+            <th @click="sortBy('workout_name')" class="clickable-header">
               Workout
-              <v-icon v-if="sortAscending">mdi-arrow-down</v-icon>
-              <v-icon v-else>mdi-arrow-up</v-icon>
+              <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'workout_name'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
             </th>
-
             <th>Description</th>
-            <th v-on:click="sortBy('difficulty')" class="clickable-header">
+            <th @click="sortBy('difficulty')" class="clickable-header">
               Difficulty
-              <v-icon v-if="sortAscending">mdi-arrow-down</v-icon>
-              <v-icon v-else>mdi-arrow-up</v-icon>
+              <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'difficulty'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
             </th>
           </tr>
         </thead>
+
         <tbody>
-          <tr v-for="workout in workouts" :key="workout.id">
+          <tr v-for="workout in filteredWorkouts" :key="workout.id">
             <td>
               <router-link
                 :to="{
@@ -49,38 +65,59 @@
 
 <script>
 import axios from "axios";
+
 export default {
   data() {
     return {
       sortAscending: true,
       workouts: [],
       loading: true,
+      searchQuery: "",
+      sortedColumn: null,
     };
   },
   methods: {
-    sortBy: function (property) {
-      this.workouts.sort(function (a, b) {
-        var textA = a[property].toString().toUpperCase();
-        var textB = b[property].toString().toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
-      if (!this.sortAscending) {
-        this.workouts.reverse();
+    async getWorkouts() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}workouts`
+        );
+        this.workouts = response.data;
+      } catch (error) {
+        console.error("Failed to fetch workouts:", error);
+      } finally {
+        this.loading = false;
       }
-      this.sortAscending = !this.sortAscending;
     },
-    getWorkouts() {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}workouts`)
-        .then((response) => {
-          this.workouts = response.data;
-          this.loading = false; // Set loading state to false once data is fetched
-        })
-        .catch((error) => {
-          console.error("Failed to fetch workouts:", error);
-          // Additional error handling can go here
-          this.loading = false; // Also set loading to false in case of an error
-        });
+    sortBy(property) {
+      if (this.sortedColumn === property) {
+        this.sortAscending = !this.sortAscending;
+      } else {
+        this.sortedColumn = property;
+        this.sortAscending = true; // default to ascending when changing columns
+      }
+
+      this.workouts.sort((a, b) => {
+        const textA = a[property].toString().toUpperCase();
+        const textB = b[property].toString().toUpperCase();
+        return this.sortAscending
+          ? textA.localeCompare(textB)
+          : textB.localeCompare(textA);
+      });
+    },
+  },
+  computed: {
+    filteredWorkouts() {
+      if (!this.searchQuery) {
+        return this.workouts;
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.workouts.filter(
+        (workout) =>
+          workout.workout_name.toLowerCase().includes(query) ||
+          workout.description.toLowerCase().includes(query) ||
+          workout.difficulty.toLowerCase().includes(query)
+      );
     },
   },
   async mounted() {
