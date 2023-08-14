@@ -180,6 +180,7 @@ export default {
         <v-tabs v-model="tab">
           <v-tab value="weights">Weights</v-tab>
           <v-tab value="workouts">Workouts</v-tab>
+          <v-tab value="notes">Goals</v-tab>
         </v-tabs>
         <v-card-text>
           <v-window v-model="tab">
