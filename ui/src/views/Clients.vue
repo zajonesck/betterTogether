@@ -22,6 +22,8 @@ export default {
       searchQuery: "",
       sortAscending: true,
       sortedColumn: "",
+      errorDialog: false,
+      errorMessage: "",
     };
   },
   computed: {
@@ -50,10 +52,13 @@ export default {
         .then((response) => {
           this.clients = response.data;
           this.loading = false;
+          this.errorDialog = false;
         })
         .catch((error) => {
-          console.error("Failed to fetch clients:", error);
-          this.loading = false; // Consider setting an error state here instead
+          console.error("Failed to add client:", error);
+          this.errorMessage =
+            "Failed to fetch clients. Please try again later.";
+          this.errorDialog = true; // Open the error dialog
         });
     },
 
@@ -70,6 +75,13 @@ export default {
           this.newClientFirstName = "";
           this.newClientLastName = "";
           this.newClientBirthDate = "";
+          this.errorDialog = false; // Close any error dialog
+        })
+        .catch((error) => {
+          console.error("Failed to add client:", error);
+          this.errorMessage =
+            "Failed to add the client. Please try again later.";
+          this.errorDialog = true; // Open the error dialog
         });
     },
 
@@ -89,6 +101,12 @@ export default {
         .delete(`${import.meta.env.VITE_API_URL}clients/${clientId}`)
         .then((response) => {
           this.getClients();
+          this.errorDialog = false; // Close any error dialog
+        })
+        .catch((error) => {
+          console.error("Failed to delete client:", error);
+          this.errorMessage = `Failed to delete the client with ID ${clientId}. Please try again later.`;
+          this.errorDialog = true; // Open the error dialog
         });
     },
 
@@ -114,8 +132,20 @@ export default {
 </script>
 
 <template>
-  <v-card-title>Clients</v-card-title>
-
+  <v-dialog v-model="errorDialog" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Error</v-card-title>
+      <v-card-text>
+        {{ errorMessage }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="errorDialog = false"
+          >Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-container style="min-height: calc(100vh - 250px)">
     <v-text-field
       v-model="searchQuery"

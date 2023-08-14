@@ -6,6 +6,9 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
+      tab: null,
+      errorDialog: false,
+      errorMessage: "",
       clientWeights: [],
       clientWorkouts: [],
       newWeight: "",
@@ -44,7 +47,20 @@ export default {
     }
   },
 
+  computed: {
+    capitalizedFirstName() {
+      return this.capitalize(this.clientFirstName);
+    },
+    capitalizedLastName() {
+      return this.capitalize(this.clientLastName);
+    },
+  },
+
   methods: {
+    capitalize(text) {
+      if (!text) return "";
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    },
     newDate(weighDay) {
       const date = format(parseISO(weighDay), "MMM dd, yyyy");
       return date;
@@ -60,6 +76,8 @@ export default {
         this.clientWorkouts = response.data;
       } catch (error) {
         console.error("Error fetching client workouts: ", error);
+        this.errorMessage = "Failed to fetch client workouts.";
+        this.errorDialog = true;
       }
     },
 
@@ -76,6 +94,8 @@ export default {
         this.clientBirthDay = newBDate(birth_day);
       } catch (error) {
         console.error("Error fetching client data: ", error);
+        this.errorMessage = "Failed to fetch client data.";
+        this.errorDialog = true;
       }
     },
 
@@ -96,6 +116,8 @@ export default {
         this.newWeightDate = "";
       } catch (error) {
         console.error("Error adding weight data: ", error);
+        this.errorMessage = "Failed to add weight data.";
+        this.errorDialog = true;
       }
     },
 
@@ -107,6 +129,8 @@ export default {
         this.getWeights();
       } catch (error) {
         console.error("Error deleting weight data: ", error);
+        this.errorMessage = "Failed to delete weight data.";
+        this.errorDialog = true;
       }
     },
 
@@ -132,6 +156,8 @@ export default {
         };
       } catch (error) {
         console.error("Error fetching weight data: ", error);
+        this.errorMessage = "Failed to fetch weight data.";
+        this.errorDialog = true;
       }
     },
   },
@@ -139,9 +165,21 @@ export default {
 </script>
 
 <template>
-  <v-card-title>
-    Training History for {{ clientFirstName }} {{ clientLastName }}
-  </v-card-title>
+  <v-dialog v-model="errorDialog" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Error</v-card-title>
+      <v-card-text>
+        {{ errorMessage }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red darken-1" text @click="errorDialog = false"
+          >Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-container style="min-height: calc(100vh - 250px)">
     <v-progress-circular
       v-if="loading"
@@ -149,23 +187,29 @@ export default {
       color="primary"
     ></v-progress-circular>
     <div v-else>
-      <v-table>
+      <v-card-title>
+        {{ capitalizedFirstName }} {{ capitalizedLastName }}
+      </v-card-title>
+      <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
+      <v-table class="mb-10">
         <thead>
           <tr>
-            <th>Workout ID</th>
+            <th>Workout</th>
+            <th>Difficulty</th>
             <th>Notes</th>
-            <th>Date</th>
+            <th>Date Assigned</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="workout in clientWorkouts" :key="workout.id">
-            <td>{{ workout.workout_id }}</td>
+            <td>{{ workout.workout_name }}</td>
+            <td>{{ workout.difficulty }}</td>
             <td>{{ workout.notes }}</td>
             <td>{{ newDate(workout.date) }}</td>
           </tr>
         </tbody>
       </v-table>
-      <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
+      <v-card-title> Weight History </v-card-title>
       <v-table>
         <thead>
           <tr>

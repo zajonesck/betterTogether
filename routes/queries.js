@@ -126,6 +126,9 @@ const getClientWorkouts = (request, response) => {
     `
     SELECT 
     cw.workout_id, 
+    w.workout_name,
+    w.description,
+    w.difficulty,
     cw.notes, 
     cw.date,
     array_agg(
@@ -143,8 +146,9 @@ const getClientWorkouts = (request, response) => {
   FROM client_workout cw
   LEFT JOIN workouts_exercises we ON cw.workout_id = we.workout_id
   LEFT JOIN exercises e ON we.exercise_id = e.id
+  LEFT JOIN workouts w ON cw.workout_id = w.id
   WHERE cw.client_id = $1
-  GROUP BY cw.workout_id, cw.notes, cw.date
+  GROUP BY cw.workout_id, cw.notes, cw.date, w.workout_name, w.description, w.difficulty
   ORDER BY cw.date DESC
     `,
     [clientId],
