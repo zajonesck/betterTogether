@@ -119,7 +119,51 @@ const getWorkouts = (request, response) => {
   );
 };
 
-const getWorkout = (request, response) => {
+const getClientWorkouts = (request, response) => {
+  const clientId = parseInt(request.params.clientId);
+
+  pool.query(
+    `
+    SELECT 
+    cw.workout_id, 
+    cw.notes, 
+    cw.date,
+    array_agg(
+      json_build_object(
+        'exercise_id', we.exercise_id,
+        'sets', we.sets,
+        'reps', we.reps,
+        'rpe', we.rpe,
+        'duration', we.duration,
+        'order', we."order",
+        'exercise_name', e.name,
+        'exercise_description', e.description
+      )
+    ) as exercises
+  FROM client_workout cw
+  LEFT JOIN workouts_exercises we ON cw.workout_id = we.workout_id
+  LEFT JOIN exercises e ON we.exercise_id = e.id
+  WHERE cw.client_id = $1
+  GROUP BY cw.workout_id, cw.notes, cw.date
+  ORDER BY cw.date DESC
+    `,
+    [clientId],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      if (results.rows.length === 0) {
+        response
+          .status(404)
+          .json({ message: "No workouts found for this client." });
+      } else {
+        response.status(200).json(results.rows);
+      }
+    }
+  );
+};
+
+function getWorkout(request, response) {
   const workoutId = request.params.workoutId;
 
   pool.query(
@@ -153,7 +197,7 @@ const getWorkout = (request, response) => {
       }
     }
   );
-};
+}
 
 const addClient = (request, response) => {
   const { first_name, last_name, birth_day } = request.body;
@@ -255,4 +299,5 @@ module.exports = {
   deleteWeight,
   getClient,
   addClientWorkout,
+  getClientWorkouts,
 };

@@ -30,6 +30,8 @@ app.use(express.static("ui/dist"));
 
 app.get("/clients", db.getClients);
 
+app.get("/client-workouts/:clientId", db.getClientWorkouts);
+
 app.get("/clients/:clientId", db.getClient);
 
 app.get("/clients_weights/:clientId", db.getWeights);
@@ -41,7 +43,6 @@ app.get("/workout/:workoutId", db.getWorkout);
 app.post("/clients/workouts", db.addClientWorkout);
 
 app.post("/clients_weights/:clientId", (req, res, next) => {
-  console.log(req.body.weight);
   if (!req.body.weight) {
     res.status(400).send("Client weight required.");
   }

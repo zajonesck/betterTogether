@@ -159,4 +159,19 @@ FOREIGN KEY (client_id)
 REFERENCES clients(id) 
 ON DELETE CASCADE;
 
+-- client workout table creation ----------------------------------------------
+
+
+CREATE TABLE client_workout (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    client_id integer REFERENCES clients(id) ON DELETE CASCADE,
+    workout_id integer REFERENCES workouts(id),
+    notes character varying(500),
+    date timestamp without time zone NOT NULL
+);
+COMMENT ON CONSTRAINT client_workout_client_id_fkey ON client_workout IS 'client id from clients table';
+
+-- Indices -------------------------------------------------------
+
+CREATE UNIQUE INDEX client_workout_pkey ON client_workout(id int4_ops);
 

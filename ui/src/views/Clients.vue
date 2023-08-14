@@ -141,7 +141,6 @@ export default {
                 >mdi-arrow-up</v-icon
               >
               <v-icon v-else>mdi-sort</v-icon>
-              <!-- Default icon when neither ascending nor descending is active -->
             </th>
             <th @click="sortBy('birth_day')" class="clickable-header">
               Birth date
@@ -152,7 +151,6 @@ export default {
                 >mdi-arrow-up</v-icon
               >
               <v-icon v-else>mdi-sort</v-icon>
-              <!-- Default icon when neither ascending nor descending is active -->
             </th>
             <th></th>
           </tr>
@@ -166,8 +164,9 @@ export default {
                   name: 'Weights',
                   params: { clientId: client.id },
                 }"
-                >{{ client.first_name }} {{ client.last_name }}</router-link
               >
+                {{ client.first_name }} {{ client.last_name }}
+              </router-link>
             </td>
             <td>{{ newBDate(client.birth_day) }}</td>
             <td>

@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: "/",
-    redirect: "/client-roster", // This will automatically redirect from the root to /client-roster
+    redirect: "/client-roster",
   },
   {
     path: "/client-roster",
@@ -28,6 +28,12 @@ const routes = [
     name: "Workouts",
     component: () => import("../views/Workouts.vue"),
   },
+  // {
+  //   path: "/client-detail/:clientId",
+  //   name: "ClientDetail",
+  //   component: () => import("../views/ClientDetail.vue"),
+  //   props: true,
+  // },
 ];
 
 const router = createRouter({

@@ -4,12 +4,10 @@ import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 
 export default {
-  // components: {
-  //   WeightLineGraph,
-  // },
   data() {
     return {
       clientWeights: [],
+      clientWorkouts: [],
       newWeight: "",
       newWeighDate: "",
       clientFirstName: "",
@@ -34,10 +32,13 @@ export default {
 
   async mounted() {
     try {
-      await Promise.all([this.getClient(), this.getWeights()]);
+      await Promise.all([
+        this.getClient(),
+        this.getWeights(),
+        this.getClientWorkouts(),
+      ]);
     } catch (error) {
       console.error("Failed to fetch data: ", error);
-      // Maybe set an error message here to inform the user.
     } finally {
       this.loading = false;
     }
@@ -49,72 +50,89 @@ export default {
       return date;
     },
 
-    getClient() {
-      axios
-        .get(
+    async getClientWorkouts() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}client-workouts/${
+            this.$route.params.clientId
+          }`
+        );
+        this.clientWorkouts = response.data;
+      } catch (error) {
+        console.error("Error fetching client workouts: ", error);
+      }
+    },
+
+    async getClient() {
+      try {
+        const response = await axios.get(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }`
-        )
-        .then((response) => {
-          this.clientFirstName = response.data[0].first_name;
-          this.clientLastName = response.data[0].last_name;
-          this.clientBirthDay = newBDate(response.data[0].birth_day);
-        });
+        );
+        const { first_name, last_name, birth_day } = response.data[0];
+        this.clientFirstName = first_name;
+        this.clientLastName = last_name;
+        this.clientBirthDay = newBDate(birth_day);
+      } catch (error) {
+        console.error("Error fetching client data: ", error);
+      }
     },
 
-    deleteWeight(weightId) {
-      console.log("delete");
-      console.log(weightId);
-      axios
-        .delete(`${import.meta.env.VITE_API_URL}clients_weights/${weightId}`)
-        .then((response) => {
-          this.getWeights();
-        });
-    },
-
-    addWeight() {
+    async addWeight() {
       const requestBody = {
         weight: this.newWeight,
         date: this.newWeightDate,
       };
-
-      axios
-        .post(
+      try {
+        await axios.post(
           `${import.meta.env.VITE_API_URL}clients_weights/${
             this.$route.params.clientId
           }`,
           requestBody
-        )
-        .then((response) => {
-          this.getWeights();
-          this.newWeight = "";
-        });
+        );
+        this.getWeights();
+        this.newWeight = "";
+        this.newWeightDate = "";
+      } catch (error) {
+        console.error("Error adding weight data: ", error);
+      }
     },
 
-    getWeights() {
-      axios
-        .get(
+    async deleteWeight(weightId) {
+      try {
+        await axios.delete(
+          `${import.meta.env.VITE_API_URL}clients_weights/${weightId}`
+        );
+        this.getWeights();
+      } catch (error) {
+        console.error("Error deleting weight data: ", error);
+      }
+    },
+
+    async getWeights() {
+      try {
+        const response = await axios.get(
           `${import.meta.env.VITE_API_URL}clients_weights/${
             this.$route.params.clientId
           }`
-        )
-        .then((response) => {
-          this.clientWeights = response.data;
-          const chartData = {
-            labels: response.data.map((w) => w.date),
-            datasets: [
-              {
-                label: "Weight",
-                data: response.data.map((w) => w.weight),
-                borderColor: "rgba(75, 192, 192, 1)",
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                fill: false,
-              },
-            ],
-          };
-          this.chartData = chartData;
-        });
+        );
+        this.clientWeights = response.data;
+        this.chartData = {
+          labels: response.data.map((w) => w.date),
+          datasets: [
+            {
+              label: "Weight",
+              data: response.data.map((w) => w.weight),
+              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              fill: false,
+            },
+          ],
+        };
+      } catch (error) {
+        console.error("Error fetching weight data: ", error);
+      }
     },
   },
 };
@@ -122,7 +140,7 @@ export default {
 
 <template>
   <v-card-title>
-    Weight History for {{ clientFirstName }} {{ clientLastName }}
+    Training History for {{ clientFirstName }} {{ clientLastName }}
   </v-card-title>
   <v-container style="min-height: calc(100vh - 250px)">
     <v-progress-circular
@@ -131,6 +149,22 @@ export default {
       color="primary"
     ></v-progress-circular>
     <div v-else>
+      <v-table>
+        <thead>
+          <tr>
+            <th>Workout ID</th>
+            <th>Notes</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="workout in clientWorkouts" :key="workout.id">
+            <td>{{ workout.workout_id }}</td>
+            <td>{{ workout.notes }}</td>
+            <td>{{ newDate(workout.date) }}</td>
+          </tr>
+        </tbody>
+      </v-table>
       <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
       <v-table>
         <thead>
@@ -156,19 +190,15 @@ export default {
         </tbody>
       </v-table>
 
-      <v-form>
+      <v-form @submit.prevent="addWeight">
         <v-card-title style="padding-top: 25px"> Weight Check-In</v-card-title>
-        <v-text-field v-model="newWeight" label="Today's Weight"></v-text-field>
-        <v-btn @click="addWeight">Log Weight</v-btn>
+        <v-text-field
+          v-model="newWeight"
+          label="Today's Weight"
+          required
+        ></v-text-field>
+        <v-btn type="submit">Log Weight</v-btn>
       </v-form>
-
-      <!-- <div>
-        <h3>My Line Graph</h3>
-        <weight-line-graph
-          :chart-data="chartData || defaultChartData"
-          :options="chartOptions"
-        />
-      </div> -->
     </div>
   </v-container>
 </template>
