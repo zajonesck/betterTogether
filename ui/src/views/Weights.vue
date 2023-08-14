@@ -165,102 +165,100 @@ export default {
 </script>
 
 <template>
-  <v-card>
-    <v-container style="min-height: calc(100vh - 250px)">
-      <v-progress-circular
-        v-if="loading"
-        indeterminate
-        color="primary"
-      ></v-progress-circular>
-      <div v-else>
-        <v-card-title>
-          {{ capitalizedFirstName }} {{ capitalizedLastName }}
-        </v-card-title>
-        <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
-        <v-tabs v-model="tab">
-          <v-tab value="weights">Weights</v-tab>
-          <v-tab value="workouts">Workouts</v-tab>
-          <v-tab value="notes">Goals</v-tab>
-        </v-tabs>
-        <v-card-text>
-          <v-window v-model="tab">
-            <v-window-item value="weights">
-              <v-card-title> Weight History </v-card-title>
-              <v-table>
-                <thead>
-                  <tr>
-                    <th>Weight</th>
-                    <th>Date</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="weight in clientWeights" :key="weight.id">
-                    <td>
-                      {{ weight.weight }}
-                    </td>
-                    <td>{{ newDate(weight.date) }}</td>
+  <v-container style="min-height: calc(100vh - 250px)">
+    <v-progress-circular
+      v-if="loading"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
+    <div v-else>
+      <v-card-title>
+        {{ capitalizedFirstName }} {{ capitalizedLastName }}
+      </v-card-title>
+      <v-card-subtitle>Birth Day: {{ clientBirthDay }}</v-card-subtitle>
+      <v-tabs v-model="tab">
+        <v-tab value="weights">Weights</v-tab>
+        <v-tab value="workouts">Workouts</v-tab>
+        <v-tab value="notes">Goals</v-tab>
+      </v-tabs>
+      <v-card-text>
+        <v-window v-model="tab">
+          <v-window-item value="weights">
+            <v-card-title> Weight History </v-card-title>
+            <v-table>
+              <thead>
+                <tr>
+                  <th>Weight</th>
+                  <th>Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="weight in clientWeights" :key="weight.id">
+                  <td>
+                    {{ weight.weight }}
+                  </td>
+                  <td>{{ newDate(weight.date) }}</td>
 
-                    <td>
-                      <v-btn icon @click="deleteWeight(weight.id)">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table>
+                  <td>
+                    <v-btn icon @click="deleteWeight(weight.id)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
 
-              <v-form @submit.prevent="addWeight">
-                <v-card-title style="padding-top: 25px">
-                  Weight Check-In</v-card-title
-                >
-                <v-text-field
-                  v-model="newWeight"
-                  label="Today's Weight"
-                  required
-                ></v-text-field>
-                <v-btn type="submit">Log Weight</v-btn>
-              </v-form>
-            </v-window-item>
-
-            <v-window-item value="workouts">
-              <v-table>
-                <thead>
-                  <tr>
-                    <th>Workout</th>
-                    <th>Difficulty</th>
-                    <th>Notes</th>
-                    <th>Date Assigned</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="workout in clientWorkouts" :key="workout.id">
-                    <td>{{ workout.workout_name }}</td>
-                    <td>{{ workout.difficulty }}</td>
-                    <td>{{ workout.notes }}</td>
-                    <td>{{ newDate(workout.date) }}</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-window-item>
-          </v-window>
-        </v-card-text>
-        <v-dialog v-model="errorDialog" max-width="500px">
-          <v-card>
-            <v-card-title class="headline">Error</v-card-title>
-            <v-card-text>
-              {{ errorMessage }}
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="errorDialog = false"
-                >Close</v-btn
+            <v-form @submit.prevent="addWeight">
+              <v-card-title style="padding-top: 25px">
+                Weight Check-In</v-card-title
               >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
-    </v-container>
-  </v-card>
+              <v-text-field
+                v-model="newWeight"
+                label="Today's Weight"
+                required
+              ></v-text-field>
+              <v-btn @click="addWeight">Add Weight</v-btn>
+            </v-form>
+          </v-window-item>
+
+          <v-window-item value="workouts">
+            <v-table>
+              <thead>
+                <tr>
+                  <th>Workout</th>
+                  <th>Difficulty</th>
+                  <th>Notes</th>
+                  <th>Date Assigned</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="workout in clientWorkouts" :key="workout.id">
+                  <td>{{ workout.workout_name }}</td>
+                  <td>{{ workout.difficulty }}</td>
+                  <td>{{ workout.notes }}</td>
+                  <td>{{ newDate(workout.date) }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-window-item>
+        </v-window>
+      </v-card-text>
+      <v-dialog v-model="errorDialog" max-width="500px">
+        <v-card>
+          <v-card-title class="headline">Error</v-card-title>
+          <v-card-text>
+            {{ errorMessage }}
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="errorDialog = false"
+              >Close</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </v-container>
 </template>
 <style scoped></style>
