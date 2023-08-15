@@ -59,7 +59,13 @@
 
           <tbody>
             <tr v-for="exercise in filteredExercises" :key="exercise.id">
-              <td>{{ exercise.name }}</td>
+              <td>
+                <router-link
+                  :to="{ name: 'ExerciseDetail', params: { id: exercise.id } }"
+                >
+                  {{ exercise.name }}
+                </router-link>
+              </td>
               <td>{{ exercise.description }}</td>
               <td>{{ exercise.primary_body_part }}</td>
               <td>{{ exercise.secondary_body_part }}</td>

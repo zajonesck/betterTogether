@@ -48,7 +48,9 @@ CREATE TABLE exercises (
     name character varying(50) NOT NULL,
     description character varying(255) NOT NULL,
     primary_body_part_id integer NOT NULL REFERENCES body_parts(id),
-    secondary_body_part_id integer REFERENCES body_parts(id)
+    secondary_body_part_id integer REFERENCES body_parts(id),
+    example_link character varying(500)
+
 );
 COMMENT ON CONSTRAINT exercises_primary_body_part_id_fkey ON exercises IS 'primary body part';
 COMMENT ON CONSTRAINT exercises_secondary_body_part_id_fkey ON exercises IS 'secondary body part';

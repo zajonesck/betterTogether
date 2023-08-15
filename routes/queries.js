@@ -304,7 +304,7 @@ const deleteWeight = (request, response) => {
 
 const getAllExercises = (request, response) => {
   pool.query(
-    `SELECT e.id, e.name, e.description, 
+    `SELECT e.id, e.name, e.description, e.example_link,
             bp1.body_part_name as primary_body_part, 
             bp2.body_part_name as secondary_body_part
      FROM exercises e
