@@ -27,6 +27,8 @@ app.use(
 );
 app.get("/exercises", db.getAllExercises);
 
+app.get("/exercises/:id", db.getExerciseById);
+
 app.use(express.static("ui/dist"));
 
 app.get("/clients", db.getClients);

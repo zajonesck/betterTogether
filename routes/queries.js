@@ -302,6 +302,25 @@ const deleteWeight = (request, response) => {
   );
 };
 
+const getExerciseById = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  pool.query(
+    "SELECT * FROM exercises WHERE id = $1",
+    [id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      if (results.rows.length === 0) {
+        res.status(404).send("Exercise not found");
+      } else {
+        res.status(200).json(results.rows[0]);
+      }
+    }
+  );
+};
+
 const getAllExercises = (request, response) => {
   pool.query(
     `SELECT e.id, e.name, e.description, e.example_link,
@@ -371,4 +390,5 @@ module.exports = {
   getClientWorkouts,
   getAllExercises,
   updateClientNotes,
+  getExerciseById,
 };
