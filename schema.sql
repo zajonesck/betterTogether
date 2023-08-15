@@ -2,8 +2,11 @@
 CREATE TABLE clients (
     id SERIAL PRIMARY KEY,
     first_name character varying(50) NOT NULL,
-    last_name character varying(255) NOT NULL,
-    birth_day timestamp without time zone NOT NULL
+    last_name character varying(50) NOT NULL,
+    birth_day timestamp without time zone NOT NULL,
+    health_note character varying(500),
+    goal_note character varying(500),
+    misc_note character varying(500)
 );
 
 -- Indices -------------------------------------------------------
@@ -26,18 +29,6 @@ COMMENT ON CONSTRAINT clients_weights_client_id_fkey ON clients_weights IS 'clie
 
 CREATE UNIQUE INDEX clients_weights_pkey ON clients_weights(id int4_ops);
 
-
--- workouts table
-
-CREATE TABLE workouts (
-    id SERIAL PRIMARY KEY,
-    workout_name character varying(255) NOT NULL,
-    client_id integer NOT NULL REFERENCES clients(id)
-);
-
--- Indices -------------------------------------------------------
-
-CREATE UNIQUE INDEX workouts_pkey ON workouts(id int4_ops);
 
 -- body_parts table
 
@@ -89,7 +80,8 @@ CREATE TABLE workouts_exercises (
     sets character varying(50),
     reps character varying(50),
     rpe character varying(50),
-    duration character varying(50)
+    duration character varying(50),
+    "order" integer
 );
 COMMENT ON CONSTRAINT workout_exercise_workout_id_fkey ON workouts_exercises IS 'workout.id';
 COMMENT ON CONSTRAINT workout_exercise_exercise_id_fkey ON workouts_exercises IS 'exercise.id';
