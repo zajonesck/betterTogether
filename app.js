@@ -25,6 +25,7 @@ app.use(
     extended: true,
   })
 );
+app.get("/exercises", db.getAllExercises);
 
 app.use(express.static("ui/dist"));
 

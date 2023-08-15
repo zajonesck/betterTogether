@@ -28,6 +28,11 @@ const routes = [
     name: "Workouts",
     component: () => import("../views/Workouts.vue"),
   },
+  {
+    path: "/exercises",
+    name: "Exercises",
+    component: () => import("../views/Exercise.vue"), // Adjust the path if your component is stored elsewhere
+  },
   // {
   //   path: "/client-detail/:clientId",
   //   name: "ClientDetail",

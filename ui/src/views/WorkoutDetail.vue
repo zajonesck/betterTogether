@@ -47,8 +47,10 @@ export default {
   },
   async created() {
     try {
+      const workoutId = this.$route.params.id; // get the ID from the route parameter
+
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}workout/${this.id}`
+        `${import.meta.env.VITE_API_URL}workout/${workoutId}` // use the workoutId
       );
 
       if (response.data && response.data.exercises) {

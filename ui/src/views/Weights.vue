@@ -6,6 +6,9 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
+      healthMedsNote: "",
+      goalsNote: "",
+      miscNote: "",
       tab: null,
       errorDialog: false,
       errorMessage: "",
@@ -179,7 +182,7 @@ export default {
       <v-tabs v-model="tab">
         <v-tab value="weights">Weights</v-tab>
         <v-tab value="workouts">Workouts</v-tab>
-        <v-tab value="notes">Goals</v-tab>
+        <v-tab value="goals">Goals</v-tab>
       </v-tabs>
       <v-card-text>
         <v-window v-model="tab">
@@ -233,14 +236,38 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="workout in clientWorkouts" :key="workout.id">
-                  <td>{{ workout.workout_name }}</td>
+                <tr v-for="workout in clientWorkouts" :key="workout.workout_id">
+                  <td>
+                    <router-link
+                      :to="{
+                        name: 'workout-detail',
+                        params: { id: workout.workout_id },
+                      }"
+                    >
+                      {{ workout.workout_name }}
+                    </router-link>
+                  </td>
                   <td>{{ workout.difficulty }}</td>
                   <td>{{ workout.notes }}</td>
                   <td>{{ newDate(workout.date) }}</td>
                 </tr>
               </tbody>
             </v-table>
+          </v-window-item>
+          <v-window-item value="goals">
+            <v-card-title> Health/Meds </v-card-title>
+            <v-textarea
+              v-model="healthMedsNote"
+              label="Add Health/Meds Notes"
+            ></v-textarea>
+
+            <v-card-title> Goals </v-card-title>
+            <v-textarea v-model="goalsNote" label="Add Goals"></v-textarea>
+
+            <v-card-title> Misc. </v-card-title>
+            <v-textarea v-model="miscNote" label="Add Misc. Notes"></v-textarea>
+
+            <v-btn @click="addNotes">Save Notes</v-btn>
           </v-window-item>
         </v-window>
       </v-card-text>

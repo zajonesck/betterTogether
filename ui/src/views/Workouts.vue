@@ -1,5 +1,8 @@
 <template>
   <v-card-title>Workouts</v-card-title>
+  <v-list-subheader>
+    <router-link to="/exercises">View Exercises</router-link>
+  </v-list-subheader>
 
   <v-container style="min-height: calc(100vh - 250px)">
     <v-text-field
