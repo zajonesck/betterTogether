@@ -58,7 +58,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="exercise in exercises" :key="exercise.id">
+            <tr v-for="exercise in filteredExercises" :key="exercise.id">
               <td>{{ exercise.name }}</td>
               <td>{{ exercise.description }}</td>
               <td>{{ exercise.primary_body_part }}</td>
@@ -85,14 +85,30 @@ export default {
   },
   computed: {
     filteredExercises() {
+      if (!this.searchQuery) {
+        return this.exercises; // Return all exercises if no search query
+      }
+
       const query = this.searchQuery.toLowerCase();
-      return this.exercises.filter(
-        (exercise) =>
-          exercise.name.toLowerCase().includes(query) ||
-          exercise.description.toLowerCase().includes(query) ||
-          exercise.primary_body_part.toLowerCase().includes(query) ||
-          exercise.secondary_body_part.toLowerCase().includes(query)
-      );
+      return this.exercises.filter((exercise) => {
+        const name = exercise.name ? exercise.name.toLowerCase() : "";
+        const description = exercise.description
+          ? exercise.description.toLowerCase()
+          : "";
+        const primaryBodyPart = exercise.primary_body_part
+          ? exercise.primary_body_part.toLowerCase()
+          : "";
+        const secondaryBodyPart = exercise.secondary_body_part
+          ? exercise.secondary_body_part.toLowerCase()
+          : "";
+
+        return (
+          name.includes(query) ||
+          description.includes(query) ||
+          primaryBodyPart.includes(query) ||
+          secondaryBodyPart.includes(query)
+        );
+      });
     },
   },
   methods: {
