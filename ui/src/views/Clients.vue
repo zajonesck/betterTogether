@@ -255,7 +255,8 @@ export default {
 }
 .custom-link {
   display: inline-block;
-  text-decoration: none;
+  text-decoration: underline;
+
   color: inherit; /* This will make the link use the default text color of its parent */
   transition: color 0.3s ease; /* This will smoothly change the color when hovering */
 }

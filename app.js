@@ -1,14 +1,14 @@
 require("dotenv").config();
 
 var createError = require("http-errors");
-var express = require("express");
+const express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var app = express();
+const app = express();
 
 const db = require("./routes/queries");
 const bodyParser = require("body-parser");
@@ -84,6 +84,16 @@ app.post("/clients", (req, res, next) => {
 app.delete("/clients/:clientId", db.deleteClient);
 
 app.delete("/clients_weights/:weightId", db.deleteWeight);
+app.put("/clients/:clientId/notes", (req, res, next) => {
+  // You can add validation checks here as needed, similar to what you've done for other routes
+  const { health_note, goal_note, misc_note } = req.body;
+  if (!health_note && !goal_note && !misc_note) {
+    return res.status(400).send("At least one note field is required.");
+  }
+
+  // Assuming you have a `updateClientNotes` function in your `db` module
+  db.updateClientNotes(req, res);
+});
 
 // view engine setup
 // app.set("views", path.join(__dirname, "views"));

@@ -60,6 +60,7 @@ export default {
   },
 
   methods: {
+    updateNotes() {},
     capitalize(text) {
       if (!text) return "";
       return text.charAt(0).toUpperCase() + text.slice(1);
@@ -80,6 +81,30 @@ export default {
       } catch (error) {}
     },
 
+    async updateNotes() {
+      try {
+        const requestBody = {
+          health_note: this.healthMedsNote,
+          goal_note: this.goalsNote,
+          misc_note: this.miscNote,
+        };
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}clients/${
+            this.$route.params.clientId
+          }/notes`,
+          {
+            health_note: this.healthMedsNote,
+            goal_note: this.goalsNote,
+            misc_note: this.miscNote,
+          }
+        );
+      } catch (error) {
+        console.error("Error updating notes: ", error);
+        this.errorMessage = "Failed to update notes.";
+        this.errorDialog = true;
+      }
+    },
+
     async getClient() {
       try {
         const response = await axios.get(
@@ -87,10 +112,20 @@ export default {
             this.$route.params.clientId
           }`
         );
-        const { first_name, last_name, birth_day } = response.data[0];
+        const {
+          first_name,
+          last_name,
+          birth_day,
+          health_note,
+          goal_note,
+          misc_note,
+        } = response.data[0];
         this.clientFirstName = first_name;
         this.clientLastName = last_name;
         this.clientBirthDay = newBDate(birth_day);
+        this.healthMedsNote = health_note;
+        this.goalsNote = goal_note;
+        this.miscNote = misc_note;
       } catch (error) {
         console.error("Error fetching client data: ", error);
         this.errorMessage = "Failed to fetch client data.";
@@ -244,6 +279,7 @@ export default {
                 >
                   <td>
                     <router-link
+                      class="custom-link"
                       :to="{
                         name: 'workout-detail',
                         params: { id: workout.workout_id },
@@ -273,7 +309,7 @@ export default {
             <v-card-title> Misc. </v-card-title>
             <v-textarea v-model="miscNote" label="Add Misc. Notes"></v-textarea>
 
-            <v-btn @click="addNotes">Save Notes</v-btn>
+            <v-btn @click="updateNotes">Save Notes</v-btn>
           </v-window-item>
         </v-window>
       </v-card-text>
@@ -294,4 +330,23 @@ export default {
     </div>
   </v-container>
 </template>
-<style scoped></style>
+<style scoped>
+.clickable-header:hover {
+  cursor: pointer;
+}
+.custom-link {
+  display: inline-block;
+  text-decoration: underline;
+  color: inherit; /* This will make the link use the default text color of its parent */
+  transition: color 0.3s ease; /* This will smoothly change the color when hovering */
+}
+
+.custom-link:hover {
+  color: rgba(
+    101,
+    42,
+    127,
+    0.7
+  ); /* This will darken the color when hovering, change this value to your preference */
+}
+</style>

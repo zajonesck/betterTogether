@@ -40,7 +40,7 @@ const deleteClient = (request, response) => {
 const getClient = (request, response) => {
   const clientId = request.params.clientId;
   pool.query(
-    "SELECT first_name, last_name, birth_day FROM clients WHERE id = $1",
+    "SELECT first_name, last_name, birth_day, health_note, goal_note, misc_note FROM clients WHERE id = $1",
     [clientId],
     (error, results) => {
       if (error) {
@@ -204,15 +204,26 @@ function getWorkout(request, response) {
 }
 
 const addClient = (request, response) => {
-  const { first_name, last_name, birth_day } = request.body;
+  const {
+    first_name,
+    last_name,
+    birth_day,
+    health_note,
+    goal_note,
+    misc_note,
+  } = request.body;
+
   pool.query(
-    "INSERT INTO clients (first_name, last_name, birth_day) VALUES($1, $2, $3)",
-    [first_name, last_name, birth_day],
+    "INSERT INTO clients (first_name, last_name, birth_day, health_note, goal_note, misc_note) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+    [first_name, last_name, birth_day, health_note, goal_note, misc_note],
     (error, results) => {
       if (error) {
-        return error;
+        console.log(error);
+        response.status(500).send("An error occurred while adding the client.");
+        return;
       }
-      response.status(200).json(results.rows);
+      // Send back the newly added client's data.
+      response.status(201).json(results.rows[0]);
     }
   );
 };
@@ -316,6 +327,34 @@ const getAllExercises = (request, response) => {
     }
   );
 };
+const updateClientNotes = (req, res) => {
+  const clientId = req.params.clientId;
+  const { health_note, goal_note, misc_note } = req.body;
+
+  if (!health_note && !goal_note && !misc_note) {
+    return res.status(400).send("No data provided to update.");
+  }
+
+  pool.query(
+    "UPDATE clients SET health_note = $1, goal_note = $2, misc_note = $3 WHERE id = $4",
+    [health_note, goal_note, misc_note, clientId],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return res
+          .status(500)
+          .send("An error occurred while updating the client notes.");
+      }
+
+      if (results.rowCount === 0) {
+        // if no rows were updated
+        return res.status(404).send("Client not found.");
+      }
+
+      res.status(200).send("Client notes updated successfully.");
+    }
+  );
+};
 
 module.exports = {
   getClients,
@@ -331,4 +370,5 @@ module.exports = {
   addClientWorkout,
   getClientWorkouts,
   getAllExercises,
+  updateClientNotes,
 };
