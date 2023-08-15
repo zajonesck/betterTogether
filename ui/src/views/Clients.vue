@@ -194,6 +194,7 @@ export default {
                   name: 'Weights',
                   params: { clientId: client.id },
                 }"
+                class="custom-link"
               >
                 {{ client.first_name }} {{ client.last_name }}
               </router-link>
@@ -248,4 +249,23 @@ export default {
   </v-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.clickable-header:hover {
+  cursor: pointer;
+}
+.custom-link {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit; /* This will make the link use the default text color of its parent */
+  transition: color 0.3s ease; /* This will smoothly change the color when hovering */
+}
+
+.custom-link:hover {
+  color: rgba(
+    101,
+    42,
+    127,
+    0.7
+  ); /* This will darken the color when hovering, change this value to your preference */
+}
+</style>

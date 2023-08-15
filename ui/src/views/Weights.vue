@@ -77,11 +77,7 @@ export default {
           }`
         );
         this.clientWorkouts = response.data;
-      } catch (error) {
-        console.error("Error fetching client workouts: ", error);
-        this.errorMessage = "Failed to fetch client workouts.";
-        this.errorDialog = true;
-      }
+      } catch (error) {}
     },
 
     async getClient() {
@@ -226,6 +222,8 @@ export default {
           </v-window-item>
 
           <v-window-item value="workouts">
+            <v-card-title> Assigned Workouts </v-card-title>
+
             <v-table>
               <thead>
                 <tr>
@@ -236,7 +234,14 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="workout in clientWorkouts" :key="workout.workout_id">
+                <tr v-if="clientWorkouts.length === 0">
+                  <td colspan="4">No assigned workouts.</td>
+                </tr>
+                <tr
+                  v-else
+                  v-for="workout in clientWorkouts"
+                  :key="workout.workout_id"
+                >
                   <td>
                     <router-link
                       :to="{
@@ -254,6 +259,7 @@ export default {
               </tbody>
             </v-table>
           </v-window-item>
+
           <v-window-item value="goals">
             <v-card-title> Health/Meds </v-card-title>
             <v-textarea

@@ -1,8 +1,12 @@
 <template>
-  <v-card-title>Workouts</v-card-title>
-  <v-list-subheader>
-    <router-link to="/exercises">View Exercises</router-link>
-  </v-list-subheader>
+  <v-card-title>
+    Workouts
+    <v-list-subheader>
+      <router-link to="/exercises" class="custom-link"
+        >View Exercises</router-link
+      >
+    </v-list-subheader>
+  </v-card-title>
 
   <v-container style="min-height: calc(100vh - 250px)">
     <v-text-field
@@ -53,6 +57,7 @@
                   name: 'workout-detail',
                   params: { id: workout.id },
                 }"
+                class="custom-link"
               >
                 {{ workout.workout_name }}
               </router-link>
@@ -132,5 +137,20 @@ export default {
 <style scoped>
 .clickable-header:hover {
   cursor: pointer;
+}
+.custom-link {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit; /* This will make the link use the default text color of its parent */
+  transition: color 0.3s ease; /* This will smoothly change the color when hovering */
+}
+
+.custom-link:hover {
+  color: rgba(
+    101,
+    42,
+    127,
+    0.7
+  ); /* This will darken the color when hovering, change this value to your preference */
 }
 </style>
