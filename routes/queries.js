@@ -73,7 +73,7 @@ const addClientWorkout = (request, response) => {
   const { client_id, workout_id, notes, date } = request.body;
 
   // Validate request data
-  if (!client_id || !workout_id || !notes || !date) {
+  if (!client_id || !workout_id || !date) {
     return response.status(400).send("Required fields are missing.");
   }
 

@@ -6,6 +6,8 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
+      selectedWorkout: null,
+      availableWorkouts: [],
       healthMedsNote: "",
       goalsNote: "",
       miscNote: "",
@@ -42,6 +44,7 @@ export default {
         this.getClient(),
         this.getWeights(),
         this.getClientWorkouts(),
+        this.getAvailableWorkouts(),
       ]);
     } catch (error) {
       console.error("Failed to fetch data: ", error);
@@ -60,6 +63,33 @@ export default {
   },
 
   methods: {
+    async assignWorkoutToClient() {
+      if (!this.selectedWorkout) return;
+
+      const workout = this.availableWorkouts.find(
+        (w) => w.workout_name === this.selectedWorkout
+      );
+
+      if (!workout) return;
+
+      const requestBody = {
+        client_id: this.$route.params.clientId,
+        workout_id: workout.id,
+        notes: "",
+        date: new Date().toISOString(),
+      };
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}clients/workouts`,
+          requestBody
+        );
+        this.clientWorkouts.push(response.data);
+      } catch (error) {
+        console.error("Error assigning workout to client: ", error);
+      }
+    },
+
     updateNotes() {},
     capitalize(text) {
       if (!text) return "";
@@ -81,6 +111,16 @@ export default {
       } catch (error) {}
     },
 
+    async getAvailableWorkouts() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}workouts`
+        );
+        this.availableWorkouts = response.data;
+      } catch (error) {
+        console.error("Error fetching workouts: ", error);
+      }
+    },
     async updateNotes() {
       try {
         const requestBody = {
@@ -258,7 +298,13 @@ export default {
 
           <v-window-item value="workouts">
             <v-card-title> Assigned Workouts </v-card-title>
+            <v-select
+              v-model="selectedWorkout"
+              :items="availableWorkouts.map((workout) => workout.workout_name)"
+              label="Assign a workout"
+            ></v-select>
 
+            <v-btn @click="assignWorkoutToClient">Assign Workout</v-btn>
             <v-table>
               <thead>
                 <tr>
