@@ -302,6 +302,29 @@ const deleteWeight = (request, response) => {
   );
 };
 
+const deleteClientWorkout = (request, response) => {
+  const workoutId = parseInt(request.params.workoutId);
+  pool.query(
+    "DELETE FROM client_workout WHERE id = $1",
+    [workoutId],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        response
+          .status(500)
+          .send("An error occurred while deleting the workout.");
+        return;
+      }
+      if (results.rowCount === 0) {
+        // if no rows were deleted
+        response.status(404).send("Workout not found.");
+        return;
+      }
+      response.status(200).send("Workout deleted successfully.");
+    }
+  );
+};
+
 const getExerciseById = (req, res) => {
   const id = parseInt(req.params.id);
 
@@ -397,4 +420,5 @@ module.exports = {
   getAllExercises,
   updateClientNotes,
   getExerciseById,
+  deleteClientWorkout,
 };

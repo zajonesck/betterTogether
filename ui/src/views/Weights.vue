@@ -63,6 +63,19 @@ export default {
   },
 
   methods: {
+    async deleteClientWorkout(workoutId) {
+      try {
+        await axios.delete(
+          `${import.meta.env.VITE_API_URL}client_workout/${workoutId}`
+        );
+        this.getClientWorkouts(); // To refresh the client workouts after deletion
+      } catch (error) {
+        console.error("Error deleting client workout: ", error);
+        this.errorMessage = "Failed to delete client workout.";
+        this.errorDialog = true;
+      }
+    },
+
     async assignWorkoutToClient() {
       if (!this.selectedWorkout) return;
 
@@ -312,6 +325,7 @@ export default {
                   <th>Difficulty</th>
                   <th>Notes</th>
                   <th>Date Assigned</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -337,6 +351,14 @@ export default {
                   <td>{{ workout.difficulty }}</td>
                   <td>{{ workout.notes }}</td>
                   <td>{{ newDate(workout.date) }}</td>
+                  <td>
+                    <v-btn
+                      icon
+                      @click="deleteClientWorkout(workout.workout_id)"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
                 </tr>
               </tbody>
             </v-table>

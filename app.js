@@ -39,6 +39,8 @@ app.get("/clients/:clientId", db.getClient);
 
 app.get("/clients_weights/:clientId", db.getWeights);
 
+app.delete("/client_workout/:workoutId", db.deleteClientWorkout);
+
 app.get("/workouts", db.getWorkouts);
 
 app.get("/workout/:workoutId", db.getWorkout);
