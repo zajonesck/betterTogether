@@ -21,7 +21,13 @@
           </thead>
           <tbody>
             <tr v-for="exercise in workout.exercises" :key="exercise.id">
-              <td>{{ exercise.name }}</td>
+              <td>
+                <router-link
+                  :to="{ name: 'ExerciseDetail', params: { id: exercise.id } }"
+                >
+                  {{ exercise.name }}
+                </router-link>
+              </td>
               <td>{{ exercise.sets }}</td>
               <td>{{ exercise.reps }}</td>
               <td>{{ exercise.rpe }}</td>

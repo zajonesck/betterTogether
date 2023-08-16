@@ -306,7 +306,13 @@ const getExerciseById = (req, res) => {
   const id = parseInt(req.params.id);
 
   pool.query(
-    "SELECT * FROM exercises WHERE id = $1",
+    `SELECT e.id, e.name, e.description, e.example_link,
+            bp1.body_part_name as primary_body_part, 
+            bp2.body_part_name as secondary_body_part
+     FROM exercises e
+     LEFT JOIN body_parts bp1 ON e.primary_body_part_id = bp1.id
+     LEFT JOIN body_parts bp2 ON e.secondary_body_part_id = bp2.id
+     WHERE e.id = $1`,
     [id],
     (error, results) => {
       if (error) {

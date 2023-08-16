@@ -1,10 +1,34 @@
 <template>
   <div>
-    <h1>{{ exerciseDetail.name }}</h1>
-    <p>{{ exerciseDetail.description }}</p>
-    <p>{{ exerciseDetail.primary_body_part }}</p>
-    <p>{{ exerciseDetail.secondary_body_part }}</p>
-    <!-- Add more fields as necessary, e.g., images, etc. -->
+    <v-container style="min-height: calc(100vh - 250px)">
+      <v-card>
+        <v-card-title class="headline">{{ exerciseDetail.name }}</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <p>
+                <strong>Description:</strong> {{ exerciseDetail.description }}
+              </p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6">
+              <p>
+                <strong>Primary Body Part:</strong>
+                {{ exerciseDetail.primary_body_part }}
+              </p>
+            </v-col>
+            <v-col cols="6">
+              <p>
+                <strong>Secondary Body Part:</strong>
+                {{ exerciseDetail.secondary_body_part }}
+              </p>
+            </v-col>
+          </v-row>
+          <!-- Add more fields as necessary, e.g., images, etc. -->
+        </v-card-text>
+      </v-card>
+    </v-container>
   </div>
 </template>
 

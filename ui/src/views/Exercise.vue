@@ -28,7 +28,6 @@
                 >
                 <v-icon v-else>mdi-sort</v-icon>
               </th>
-              <th>Description</th>
               <th @click="sortBy('primary_body_part')" class="clickable-header">
                 Primary Body Part
                 <v-icon
@@ -66,7 +65,6 @@
                   {{ exercise.name }}
                 </router-link>
               </td>
-              <td>{{ exercise.description }}</td>
               <td>{{ exercise.primary_body_part }}</td>
               <td>{{ exercise.secondary_body_part }}</td>
             </tr>
@@ -146,7 +144,9 @@ export default {
 
     async getAllExercises() {
       try {
-        const response = await axios.get("http://localhost:3000/exercises");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}exercises`
+        );
         if (response.data && response.data.message) {
           console.error(response.data.message);
         } else {
