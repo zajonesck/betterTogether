@@ -117,19 +117,12 @@ export default {
           requestBody
         );
         this.clientWorkouts.push(response.data);
+
+        // Call getClientWorkouts after successfully adding a new workout
+        await this.getClientWorkouts();
       } catch (error) {
         console.error("Error assigning workout to client: ", error);
       }
-    },
-
-    updateNotes() {},
-    capitalize(text) {
-      if (!text) return "";
-      return text.charAt(0).toUpperCase() + text.slice(1);
-    },
-    newDate(weighDay) {
-      const date = format(parseISO(weighDay), "MMM dd, yyyy");
-      return date;
     },
 
     async getClientWorkouts() {
@@ -153,6 +146,17 @@ export default {
         console.error("Error fetching workouts: ", error);
       }
     },
+
+    updateNotes() {},
+    capitalize(text) {
+      if (!text) return "";
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    },
+    newDate(weighDay) {
+      const date = format(parseISO(weighDay), "MMM dd, yyyy");
+      return date;
+    },
+
     async updateNotes() {
       try {
         const requestBody = {

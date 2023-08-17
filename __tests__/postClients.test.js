@@ -17,6 +17,7 @@ describe("POST /clients", () => {
     expect(newClient.statusCode).toBe(200);
   });
   test("Throws 400 error when there is no client_name", async () => {
+    console.log(process.env.NODE_ENV, "woof");
     const newClient = await request(app).post("/clients").send({
       first_name: "",
       last_name: "Client",

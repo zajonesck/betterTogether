@@ -3,7 +3,7 @@ require("dotenv").config();
 const Pool = require("pg").Pool;
 let pool;
 
-if (process.env.NODE_ENV === "local") {
+if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
   pool = new Pool({
     user: process.env.LOCAL_USER,
     host: process.env.LOCAL_HOST,
