@@ -125,6 +125,7 @@ const getClientWorkouts = (request, response) => {
   pool.query(
     `
     SELECT 
+    cw.id AS client_workout_id,
     cw.workout_id, 
     w.workout_name,
     w.description,
@@ -148,7 +149,7 @@ const getClientWorkouts = (request, response) => {
   LEFT JOIN exercises e ON we.exercise_id = e.id
   LEFT JOIN workouts w ON cw.workout_id = w.id
   WHERE cw.client_id = $1
-  GROUP BY cw.workout_id, cw.notes, cw.date, w.workout_name, w.description, w.difficulty
+  GROUP BY cw.id, cw.workout_id, cw.notes, cw.date, w.workout_name, w.description, w.difficulty
   ORDER BY cw.date DESC
     `,
     [clientId],

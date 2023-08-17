@@ -6,6 +6,9 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
+      confirmDeleteDialog: false,
+      itemToDelete: null,
+      deleteType: "",
       selectedWorkout: null,
       availableWorkouts: [],
       healthMedsNote: "",
@@ -74,6 +77,22 @@ export default {
         this.errorMessage = "Failed to delete client workout.";
         this.errorDialog = true;
       }
+    },
+
+    confirmDelete(type, itemId) {
+      this.deleteType = type;
+      this.itemToDelete = itemId;
+      this.confirmDeleteDialog = true;
+    },
+    proceedToDelete() {
+      if (this.deleteType === "weight") {
+        this.deleteWeight(this.itemToDelete);
+      } else if (this.deleteType === "workout") {
+        this.deleteClientWorkout(this.itemToDelete);
+      }
+      this.confirmDeleteDialog = false;
+      this.itemToDelete = null;
+      this.deleteType = "";
     },
 
     async assignWorkoutToClient() {
@@ -288,7 +307,8 @@ export default {
                   <td>{{ newDate(weight.date) }}</td>
 
                   <td>
-                    <v-btn icon @click="deleteWeight(weight.id)">
+                    <!-- For Weights -->
+                    <v-btn icon @click="confirmDelete('weight', weight.id)">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </td>
@@ -317,7 +337,10 @@ export default {
               label="Assign a workout"
             ></v-select>
 
-            <v-btn @click="assignWorkoutToClient">Assign Workout</v-btn>
+            <v-btn @click="assignWorkoutToClient" class="mb-6"
+              >Assign Workout</v-btn
+            >
+
             <v-table>
               <thead>
                 <tr>
@@ -354,7 +377,9 @@ export default {
                   <td>
                     <v-btn
                       icon
-                      @click="deleteClientWorkout(workout.workout_id)"
+                      @click="
+                        confirmDelete('workout', workout.client_workout_id)
+                      "
                     >
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
@@ -396,6 +421,19 @@ export default {
         </v-card>
       </v-dialog>
     </div>
+    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="headline">Confirm Deletion</v-card-title>
+        <v-card-text> Are you sure you want to delete this item? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="proceedToDelete"
+            >Yes, Delete</v-btn
+          >
+          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <style scoped>
