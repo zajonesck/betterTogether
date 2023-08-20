@@ -357,20 +357,20 @@ export default {
               label="All workouts"
             ></v-select>
 
-            <v-text-field
+            <v-textarea
               id="workoutNote"
               placeholder="Add notes for this workout"
-            ></v-text-field>
+            ></v-textarea>
 
             <v-btn @click="assignWorkoutToClient" class="mb-6"
               >Assign Workout</v-btn
             >
 
+            <v-card-title> Assigned Workouts </v-card-title>
             <v-text-field
               v-model="searchQuery"
-              placeholder="Search Workouts"
+              placeholder="Search Assigned Workouts"
             ></v-text-field>
-            <v-card-title> Assigned Workouts </v-card-title>
             <v-table>
               <thead>
                 <tr>
