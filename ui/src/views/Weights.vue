@@ -349,22 +349,20 @@ export default {
           </v-window-item>
 
           <v-window-item value="workouts">
-            <v-card-title> Assigned Workouts </v-card-title>
-            <v-text-field
-              v-model="searchQuery"
-              placeholder="Search Workouts"
-            ></v-text-field>
-
             <v-select
               v-model="selectedWorkout"
               :items="availableWorkouts.map((workout) => workout.workout_name)"
-              label="Assign a workout"
+              label="All workouts"
             ></v-select>
 
             <v-btn @click="assignWorkoutToClient" class="mb-6"
               >Assign Workout</v-btn
             >
-
+            <v-text-field
+              v-model="searchQuery"
+              placeholder="Search Workouts"
+            ></v-text-field>
+            <v-card-title> Assigned Workouts </v-card-title>
             <v-table>
               <thead>
                 <tr>
