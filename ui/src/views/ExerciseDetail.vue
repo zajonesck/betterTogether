@@ -24,6 +24,19 @@
                 {{ exerciseDetail.secondary_body_part }}
               </p>
             </v-col>
+            <v-col cols="6">
+              <p>
+                <strong>Tutorial Video:</strong
+                ><iframe
+                  width="560"
+                  height="315"
+                  :src="exerciseDetail.example_link"
+                  frameborder="0"
+                  allowfullscreen
+                >
+                </iframe>
+              </p>
+            </v-col>
           </v-row>
           <!-- Add more fields as necessary, e.g., images, etc. -->
         </v-card-text>
