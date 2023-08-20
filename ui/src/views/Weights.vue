@@ -119,10 +119,12 @@ export default {
 
       if (!workout) return;
 
+      const workoutNote = document.getElementById("workoutNote").value;
+
       const requestBody = {
         client_id: this.$route.params.clientId,
         workout_id: workout.id,
-        notes: "",
+        notes: workoutNote,
         date: new Date().toISOString(),
       };
 
@@ -355,9 +357,15 @@ export default {
               label="All workouts"
             ></v-select>
 
+            <v-text-field
+              id="workoutNote"
+              placeholder="Add notes for this workout"
+            ></v-text-field>
+
             <v-btn @click="assignWorkoutToClient" class="mb-6"
               >Assign Workout</v-btn
             >
+
             <v-text-field
               v-model="searchQuery"
               placeholder="Search Workouts"
