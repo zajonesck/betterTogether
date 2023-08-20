@@ -17,7 +17,7 @@ const routes = [
   },
   {
     path: "/",
-    redirect: "/client-roster",
+    redirect: "/login",
   },
   {
     path: "/client-roster",
