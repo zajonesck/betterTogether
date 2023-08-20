@@ -1,7 +1,7 @@
 <!-- LoginPage.vue -->
 
 <template>
-  <v-container>
+  <v-container style="min-height: calc(100vh - 250px)">
     <v-row justify="center" align="center" class="fill-height">
       <v-col cols="12" sm="8" md="4">
         <v-card>
