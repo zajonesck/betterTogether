@@ -1,23 +1,25 @@
 require("dotenv").config();
 
-var createError = require("http-errors");
+let createError = require("http-errors");
 const express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+let path = require("path");
+let logger = require("morgan");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+let indexRouter = require("./routes/index");
+let usersRouter = require("./routes/users");
 const app = express();
 
 const db = require("./routes/queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { deleteClientForTest } = require("./routes/queries");
+
 const { nextDay } = require("date-fns");
 
 const port = process.env.PORT || 3000;
 
 // Add Access Control Allow Origin headers
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -49,40 +51,47 @@ app.post("/clients/workouts", db.addClientWorkout);
 
 app.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
-    res.status(400).send("Client weight required.");
+    return res.status(400).send("Client weight required.");
   }
   if (isNaN(req.body.weight)) {
-    res.status(400).send("Valid weight required.");
-  } else {
-    db.addWeight(req, res);
+    return res.status(400).send("Valid weight required.");
   }
+  db.addWeight(req, res);
 });
 
 app.post("/search/workouts", db.searchWorkouts);
 
 app.post("/clients", (req, res, next) => {
-  //req.body.client_name = client name
   if (!req.body.first_name || !req.body.last_name) {
-    res.status(400).send("Client name required.");
+    return res.status(400).send("Client name required.");
   }
   if (!req.body.birth_day) {
-    res.status(400).send("Birthday required.");
+    return res.status(400).send("Birthday required.");
   }
   if (
     new Date(req.body.birth_day).getFullYear() <
     new Date().getFullYear() - 200
   ) {
     console.log(req.body.birth_day);
-    res.status(400).send("Are you really that old?");
+    return res.status(400).send("Are you really that old?");
   }
   if (isNaN(Date.parse(req.body.birth_day))) {
-    res.status(400).send("Valid birthday required.");
+    return res.status(400).send("Valid birthday required.");
   } else {
     db.addClient(req, res);
   }
-  //name duplicate, name is null
-  //req.body.birth_day - birth day
-  //birthday empty string, null, undefined, and "good date", if birthday parameter exists
+});
+
+app.delete("/test/delete-client/:clientId", (req, res) => {
+  const clientId = req.params.clientId;
+
+  deleteClientForTest(clientId)
+    .then(() => {
+      res.status(200).send("Client deleted successfully.");
+    })
+    .catch((err) => {
+      res.status(500).send("Error deleting client.");
+    });
 });
 
 app.delete("/clients/:clientId", db.deleteClient);

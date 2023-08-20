@@ -37,6 +37,22 @@ const deleteClient = (request, response) => {
   );
 };
 
+const deleteClientForTest = (clientId) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "DELETE FROM clients WHERE id = $1",
+      [clientId],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          reject(error);
+        }
+        resolve(results.rows);
+      }
+    );
+  });
+};
+
 const getClient = (request, response) => {
   const clientId = request.params.clientId;
   pool.query(
@@ -422,4 +438,5 @@ module.exports = {
   updateClientNotes,
   getExerciseById,
   deleteClientWorkout,
+  deleteClientForTest,
 };

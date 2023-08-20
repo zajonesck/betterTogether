@@ -1,10 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Clients from "../views/Clients.vue";
 import WorkoutDetail from "../views/WorkoutDetail.vue";
-// import Exercise from "@/components/Exercise.vue";
-// import ExerciseDetail from "@/components/ExerciseDetail.vue";
+import LoginPage from "../views/LoginPage.vue";
 
 const routes = [
+  {
+    path: "/login",
+    name: "Login",
+    component: LoginPage,
+  },
   {
     path: "/workout/:id",
     name: "workout-detail",

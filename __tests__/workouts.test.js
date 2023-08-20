@@ -54,5 +54,5 @@ describe("POST /clients/workouts", () => {
       .post("/clients/workouts")
       .send(incompleteWorkout)
       .expect(400);
-   
+  });
 });

@@ -9,6 +9,8 @@ export default {
       confirmDeleteDialog: false,
       itemToDelete: null,
       deleteType: "",
+      workouts: [],
+      searchQuery: "",
       selectedWorkout: null,
       availableWorkouts: [],
       healthMedsNote: "",
@@ -62,6 +64,19 @@ export default {
     },
     capitalizedLastName() {
       return this.capitalize(this.clientLastName);
+    },
+    filteredWorkouts() {
+      if (!this.searchQuery) {
+        return this.clientWorkouts; // Return clientWorkouts instead of workouts
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.clientWorkouts.filter(
+        // Change this to clientWorkouts
+        (workout) =>
+          workout.workout_name.toLowerCase().includes(query) ||
+          workout.description.toLowerCase().includes(query) ||
+          workout.difficulty.toLowerCase().includes(query)
+      );
     },
   },
 
@@ -335,6 +350,11 @@ export default {
 
           <v-window-item value="workouts">
             <v-card-title> Assigned Workouts </v-card-title>
+            <v-text-field
+              v-model="searchQuery"
+              placeholder="Search Workouts"
+            ></v-text-field>
+
             <v-select
               v-model="selectedWorkout"
               :items="availableWorkouts.map((workout) => workout.workout_name)"
@@ -361,7 +381,7 @@ export default {
                 </tr>
                 <tr
                   v-else
-                  v-for="workout in clientWorkouts"
+                  v-for="workout in filteredWorkouts"
                   :key="workout.workout_id"
                 >
                   <td>

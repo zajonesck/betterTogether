@@ -1,23 +1,47 @@
 const request = require("supertest");
 const app = require("../app");
+const { deleteClientForTest } = require("../routes/queries");
+
+let createdClientIds = [];
 
 describe("POST /clients", () => {
+  afterEach(async () => {
+    for (let clientId of createdClientIds) {
+      try {
+        await deleteClientForTest(clientId);
+      } catch (error) {
+        console.error(`Failed to delete client with ID ${clientId}:`, error);
+      }
+    }
+    createdClientIds = []; // Reset after cleaning up
+  });
+
   test("It responds with the newly created client", async () => {
     const response = await request(app).get("/clients");
     const numberOfClients = response.body.length;
+
     const newClient = await request(app).post("/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "10/10/2010",
     });
 
+    if (newClient.body.id) {
+      createdClientIds.push(newClient.body.id);
+    }
+
     const newResponse = await request(app).get("/clients");
     expect(newResponse.body.length).toBe(numberOfClients + 1);
-    expect(newClient.body).toStrictEqual([]);
-    expect(newClient.statusCode).toBe(200);
+    expect(newClient.body).toHaveProperty("id");
+    expect(newClient.body).toHaveProperty("first_name", "New");
+    expect(newClient.body).toHaveProperty("last_name", "Client");
+    expect(newClient.body).toHaveProperty(
+      "birth_day",
+      "2010-10-10T05:00:00.000Z"
+    );
+    expect(newClient.statusCode).toBe(201);
   });
   test("Throws 400 error when there is no client_name", async () => {
-    console.log(process.env.NODE_ENV, "woof");
     const newClient = await request(app).post("/clients").send({
       first_name: "",
       last_name: "Client",
@@ -57,15 +81,23 @@ describe("POST /clients", () => {
     expect(newClient.text).toEqual("Are you really that old?");
     expect(newClient.statusCode).toBe(400);
   });
+  afterEach(async () => {
+    for (let clientId of createdClientIds) {
+      try {
+        await deleteClientForTest(clientId);
+      } catch (error) {
+        console.error(`Failed to delete client with ID ${clientId}:`, error);
+      }
+    }
+    createdClientIds = []; // Reset after cleaning
+  });
 });
 
 describe("POST /clients_weights/:clientId", () => {
   test("Throws 400 error when there is no weight", async () => {
-    const newClient = await request(app)
-      .post("/clients_weights/:clientId")
-      .send({
-        weight: "",
-      });
+    const newClient = await request(app).post("/clients_weights/:153").send({
+      weight: "",
+    });
     expect(newClient.body).toStrictEqual({});
     expect(newClient.text).toEqual("Client weight required.");
     expect(newClient.statusCode).toBe(400);
