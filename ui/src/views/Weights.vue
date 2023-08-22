@@ -4,11 +4,13 @@ import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 import ClientGoal from "../component/ClientGoal.vue";
 import ClientWorkout from "../component/ClientWorkout.vue";
+import ClientWeight from "../component/ClientWeight.vue";
 
 export default {
   components: {
     ClientGoal,
     ClientWorkout,
+    ClientWeight,
   },
   data() {
     return {
@@ -315,7 +317,9 @@ export default {
       </v-tabs>
       <v-card-text>
         <v-window v-model="tab">
-          <v-window-item value="weights">
+          <ClientWeight />
+
+          <!-- <v-window-item value="weights">
             <v-card-title> Weight History </v-card-title>
             <v-table>
               <thead>
@@ -333,7 +337,7 @@ export default {
                   <td>{{ newDate(weight.date) }}</td>
 
                   <td>
-                    <!-- For Weights -->
+                     For Weights
                     <v-btn icon @click="confirmDelete('weight', weight.id)">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
@@ -353,7 +357,7 @@ export default {
               ></v-text-field>
               <v-btn @click="addWeight">Add Weight</v-btn>
             </v-form>
-          </v-window-item>
+          </v-window-item> -->
           <ClientWorkout />
 
           <!-- <v-window-item value="workouts">
