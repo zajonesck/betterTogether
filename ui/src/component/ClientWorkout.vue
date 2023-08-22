@@ -1,0 +1,284 @@
+<template>
+  <v-window-item value="workouts">
+    <v-select
+      v-model="selectedWorkout"
+      :items="availableWorkouts.map((workout) => workout.workout_name)"
+      label="All workouts"
+    ></v-select>
+    <v-textarea
+      id="workoutNote"
+      placeholder="Add notes for this workout"
+    ></v-textarea>
+    <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
+    <v-card-title> Assigned Workouts </v-card-title>
+    <v-text-field
+      v-model="searchQuery"
+      placeholder="Search Assigned Workouts"
+    ></v-text-field>
+    <v-table>
+      <thead>
+        <tr>
+          <th>Workout</th>
+          <th>Difficulty</th>
+          <th>Notes</th>
+          <th>Date Assigned</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-if="clientWorkouts.length === 0">
+          <td colspan="4">No assigned workouts.</td>
+        </tr>
+        <tr
+          v-else
+          v-for="workout in filteredWorkouts"
+          :key="workout.workout_id"
+        >
+          <td>
+            <router-link
+              class="custom-link"
+              :to="{
+                name: 'workout-detail',
+                params: { id: workout.workout_id },
+              }"
+            >
+              {{ workout.workout_name }}
+            </router-link>
+          </td>
+          <td>{{ workout.difficulty }}</td>
+          <td>{{ workout.notes }}</td>
+          <td>{{ newDate(workout.date) }}</td>
+          <td>
+            <v-btn
+              icon
+              @click="confirmDelete('workout', workout.client_workout_id)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-window-item>
+  <v-dialog v-model="errorDialog" max-width="500px">
+    <v-card>
+      <v-card-title class="headline">Error</v-card-title>
+      <v-card-text>
+        {{ errorMessage }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red darken-1" text @click="errorDialog = false"
+          >Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="headline">Confirm Deletion</v-card-title>
+      <v-card-text> Are you sure you want to delete this item? </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red darken-1" text @click="proceedToDelete"
+          >Yes, Delete</v-btn
+        >
+        <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+import axios from "axios";
+import { newBDate } from "../shared.js";
+import { format, parseISO } from "date-fns";
+
+export default {
+  data() {
+    return {
+      confirmDeleteDialog: false,
+      itemToDelete: null,
+      deleteType: "",
+      workouts: [],
+      searchQuery: "",
+      selectedWorkout: null,
+      availableWorkouts: [],
+      healthMedsNote: "",
+      goalsNote: "",
+      miscNote: "",
+      tab: null,
+      errorDialog: false,
+      errorMessage: "",
+      clientWeights: [],
+      clientWorkouts: [],
+      newWeight: "",
+      newWeighDate: "",
+      clientFirstName: "",
+      clientLastName: "",
+      clientBirthDay: "",
+      loading: true,
+      chartData: null,
+      defaultChartData: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+  },
+
+  async mounted() {
+    try {
+      await Promise.all([
+        this.getClient(),
+        this.getClientWorkouts(),
+        this.getAvailableWorkouts(),
+      ]);
+    } catch (error) {
+      console.error("Failed to fetch data: ", error);
+    } finally {
+      this.loading = false;
+    }
+  },
+
+  computed: {
+    filteredWorkouts() {
+      if (!this.searchQuery) {
+        return this.clientWorkouts; // Return clientWorkouts instead of workouts
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.clientWorkouts.filter(
+        // Change this to clientWorkouts
+        (workout) =>
+          workout.workout_name.toLowerCase().includes(query) ||
+          workout.description.toLowerCase().includes(query) ||
+          workout.difficulty.toLowerCase().includes(query)
+      );
+    },
+  },
+
+  methods: {
+    async getClient() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}clients/${
+            this.$route.params.clientId
+          }`
+        );
+        const {
+          first_name,
+          last_name,
+          birth_day,
+          health_note,
+          goal_note,
+          misc_note,
+        } = response.data[0];
+        this.clientFirstName = first_name;
+        this.clientLastName = last_name;
+        this.clientBirthDay = newBDate(birth_day);
+        this.healthMedsNote = health_note;
+        this.goalsNote = goal_note;
+        this.miscNote = misc_note;
+      } catch (error) {
+        console.error("Error fetching client data: ", error);
+        this.errorMessage = "Failed to fetch client data.";
+        this.errorDialog = true;
+      }
+    },
+
+    updateNotes() {},
+    capitalize(text) {
+      if (!text) return "";
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    },
+    newDate(weighDay) {
+      const date = format(parseISO(weighDay), "MMM dd, yyyy");
+      return date;
+    },
+    async deleteClientWorkout(workoutId) {
+      try {
+        await axios.delete(
+          `${import.meta.env.VITE_API_URL}client_workout/${workoutId}`
+        );
+        this.getClientWorkouts(); // To refresh the client workouts after deletion
+      } catch (error) {
+        console.error("Error deleting client workout: ", error);
+        this.errorMessage = "Failed to delete client workout.";
+        this.errorDialog = true;
+      }
+    },
+    confirmDelete(type, itemId) {
+      this.deleteType = type;
+      this.itemToDelete = itemId;
+      this.confirmDeleteDialog = true;
+    },
+    proceedToDelete() {
+      if (this.deleteType === "weight") {
+        this.deleteWeight(this.itemToDelete);
+      } else if (this.deleteType === "workout") {
+        this.deleteClientWorkout(this.itemToDelete);
+      }
+      this.confirmDeleteDialog = false;
+      this.itemToDelete = null;
+      this.deleteType = "";
+    },
+    async assignWorkoutToClient() {
+      if (!this.selectedWorkout) return;
+
+      const workout = this.availableWorkouts.find(
+        (w) => w.workout_name === this.selectedWorkout
+      );
+
+      if (!workout) return;
+
+      const workoutNote = document.getElementById("workoutNote").value;
+
+      const requestBody = {
+        client_id: this.$route.params.clientId,
+        workout_id: workout.id,
+        notes: workoutNote,
+        date: new Date().toISOString(),
+      };
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}clients/workouts`,
+          requestBody
+        );
+        this.clientWorkouts.push(response.data);
+        await this.getClientWorkouts();
+      } catch (error) {
+        console.error("Error assigning workout to client: ", error);
+      }
+    },
+    async getClientWorkouts() {
+      console.log("in child", this.getClientWorkouts);
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}client-workouts/${
+            this.$route.params.clientId
+          }`
+        );
+        this.clientWorkouts = response.data;
+      } catch (error) {}
+    },
+    async getAvailableWorkouts() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}workouts`
+        );
+        this.availableWorkouts = response.data;
+      } catch (error) {
+        console.error("Error fetching workouts: ", error);
+      }
+    },
+  },
+};
+</script>

@@ -52,6 +52,16 @@ export default {
       },
     };
   },
+
+  async mounted() {
+    try {
+      await Promise.all([this.getClient()]);
+    } catch (error) {
+      console.error("Failed to fetch data: ", error);
+    } finally {
+      this.loading = false;
+    }
+  },
   methods: {
     async updateNotes() {
       try {

@@ -3,10 +3,12 @@ import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 import ClientGoal from "../component/ClientGoal.vue";
+import ClientWorkout from "../component/ClientWorkout.vue";
 
 export default {
   components: {
     ClientGoal,
+    ClientWorkout,
   },
   data() {
     return {
@@ -138,8 +140,6 @@ export default {
           requestBody
         );
         this.clientWorkouts.push(response.data);
-
-        // Call getClientWorkouts after successfully adding a new workout
         await this.getClientWorkouts();
       } catch (error) {
         console.error("Error assigning workout to client: ", error);
@@ -147,6 +147,7 @@ export default {
     },
 
     async getClientWorkouts() {
+      console.log("in parent", this.getClientWorkouts);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}client-workouts/${
@@ -353,8 +354,9 @@ export default {
               <v-btn @click="addWeight">Add Weight</v-btn>
             </v-form>
           </v-window-item>
+          <ClientWorkout />
 
-          <v-window-item value="workouts">
+          <!-- <v-window-item value="workouts">
             <v-select
               v-model="selectedWorkout"
               :items="availableWorkouts.map((workout) => workout.workout_name)"
@@ -421,25 +423,9 @@ export default {
                 </tr>
               </tbody>
             </v-table>
-          </v-window-item>
+          </v-window-item> -->
 
           <ClientGoal />
-
-          <!-- <v-window-item value="goals">
-            <v-card-title> Health/Meds </v-card-title>
-            <v-textarea
-              v-model="healthMedsNote"
-              label="Add Health/Meds Notes"
-            ></v-textarea>
-
-            <v-card-title> Goals </v-card-title>
-            <v-textarea v-model="goalsNote" label="Add Goals"></v-textarea>
-
-            <v-card-title> Misc. </v-card-title>
-            <v-textarea v-model="miscNote" label="Add Misc. Notes"></v-textarea>
-
-            <v-btn @click="updateNotes">Save Notes</v-btn>
-          </v-window-item> -->
         </v-window>
       </v-card-text>
       <v-dialog v-model="errorDialog" max-width="500px">
