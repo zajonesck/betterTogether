@@ -259,7 +259,6 @@ export default {
       }
     },
     async getClientWorkouts() {
-      console.log("in child", this.getClientWorkouts);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}client-workouts/${

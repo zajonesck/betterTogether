@@ -17,20 +17,10 @@ export default {
       confirmDeleteDialog: false,
       itemToDelete: null,
       deleteType: "",
-      workouts: [],
       searchQuery: "",
-      selectedWorkout: null,
-      availableWorkouts: [],
-      healthMedsNote: "",
-      goalsNote: "",
-      miscNote: "",
       tab: null,
       errorDialog: false,
       errorMessage: "",
-      clientWeights: [],
-      clientWorkouts: [],
-      newWeight: "",
-      newWeighDate: "",
       clientFirstName: "",
       clientLastName: "",
       clientBirthDay: "",
@@ -53,12 +43,7 @@ export default {
 
   async mounted() {
     try {
-      await Promise.all([
-        this.getClient(),
-        this.getWeights(),
-        this.getClientWorkouts(),
-        this.getAvailableWorkouts(),
-      ]);
+      await Promise.all([this.getClient()]);
     } catch (error) {
       console.error("Failed to fetch data: ", error);
     } finally {
@@ -73,104 +58,9 @@ export default {
     capitalizedLastName() {
       return this.capitalize(this.clientLastName);
     },
-    filteredWorkouts() {
-      if (!this.searchQuery) {
-        return this.clientWorkouts; // Return clientWorkouts instead of workouts
-      }
-      const query = this.searchQuery.toLowerCase();
-      return this.clientWorkouts.filter(
-        // Change this to clientWorkouts
-        (workout) =>
-          workout.workout_name.toLowerCase().includes(query) ||
-          workout.description.toLowerCase().includes(query) ||
-          workout.difficulty.toLowerCase().includes(query)
-      );
-    },
   },
 
   methods: {
-    async deleteClientWorkout(workoutId) {
-      try {
-        await axios.delete(
-          `${import.meta.env.VITE_API_URL}client_workout/${workoutId}`
-        );
-        this.getClientWorkouts(); // To refresh the client workouts after deletion
-      } catch (error) {
-        console.error("Error deleting client workout: ", error);
-        this.errorMessage = "Failed to delete client workout.";
-        this.errorDialog = true;
-      }
-    },
-
-    confirmDelete(type, itemId) {
-      this.deleteType = type;
-      this.itemToDelete = itemId;
-      this.confirmDeleteDialog = true;
-    },
-    proceedToDelete() {
-      if (this.deleteType === "weight") {
-        this.deleteWeight(this.itemToDelete);
-      } else if (this.deleteType === "workout") {
-        this.deleteClientWorkout(this.itemToDelete);
-      }
-      this.confirmDeleteDialog = false;
-      this.itemToDelete = null;
-      this.deleteType = "";
-    },
-
-    async assignWorkoutToClient() {
-      if (!this.selectedWorkout) return;
-
-      const workout = this.availableWorkouts.find(
-        (w) => w.workout_name === this.selectedWorkout
-      );
-
-      if (!workout) return;
-
-      const workoutNote = document.getElementById("workoutNote").value;
-
-      const requestBody = {
-        client_id: this.$route.params.clientId,
-        workout_id: workout.id,
-        notes: workoutNote,
-        date: new Date().toISOString(),
-      };
-
-      try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}clients/workouts`,
-          requestBody
-        );
-        this.clientWorkouts.push(response.data);
-        await this.getClientWorkouts();
-      } catch (error) {
-        console.error("Error assigning workout to client: ", error);
-      }
-    },
-
-    async getClientWorkouts() {
-      console.log("in parent", this.getClientWorkouts);
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}client-workouts/${
-            this.$route.params.clientId
-          }`
-        );
-        this.clientWorkouts = response.data;
-      } catch (error) {}
-    },
-
-    async getAvailableWorkouts() {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}workouts`
-        );
-        this.availableWorkouts = response.data;
-      } catch (error) {
-        console.error("Error fetching workouts: ", error);
-      }
-    },
-
     updateNotes() {},
     capitalize(text) {
       if (!text) return "";
@@ -181,30 +71,6 @@ export default {
       return date;
     },
 
-    async updateNotes() {
-      try {
-        const requestBody = {
-          health_note: this.healthMedsNote,
-          goal_note: this.goalsNote,
-          misc_note: this.miscNote,
-        };
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}clients/${
-            this.$route.params.clientId
-          }/notes`,
-          {
-            health_note: this.healthMedsNote,
-            goal_note: this.goalsNote,
-            misc_note: this.miscNote,
-          }
-        );
-      } catch (error) {
-        console.error("Error updating notes: ", error);
-        this.errorMessage = "Failed to update notes.";
-        this.errorDialog = true;
-      }
-    },
-
     async getClient() {
       try {
         const response = await axios.get(
@@ -212,85 +78,13 @@ export default {
             this.$route.params.clientId
           }`
         );
-        const {
-          first_name,
-          last_name,
-          birth_day,
-          health_note,
-          goal_note,
-          misc_note,
-        } = response.data[0];
+        const { first_name, last_name, birth_day } = response.data[0];
         this.clientFirstName = first_name;
         this.clientLastName = last_name;
         this.clientBirthDay = newBDate(birth_day);
-        this.healthMedsNote = health_note;
-        this.goalsNote = goal_note;
-        this.miscNote = misc_note;
       } catch (error) {
         console.error("Error fetching client data: ", error);
         this.errorMessage = "Failed to fetch client data.";
-        this.errorDialog = true;
-      }
-    },
-
-    async addWeight() {
-      const requestBody = {
-        weight: this.newWeight,
-        date: this.newWeightDate,
-      };
-      try {
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}clients_weights/${
-            this.$route.params.clientId
-          }`,
-          requestBody
-        );
-        this.getWeights();
-        this.newWeight = "";
-        this.newWeightDate = "";
-      } catch (error) {
-        console.error("Error adding weight data: ", error);
-        this.errorMessage = "Failed to add weight data.";
-        this.errorDialog = true;
-      }
-    },
-
-    async deleteWeight(weightId) {
-      try {
-        await axios.delete(
-          `${import.meta.env.VITE_API_URL}clients_weights/${weightId}`
-        );
-        this.getWeights();
-      } catch (error) {
-        console.error("Error deleting weight data: ", error);
-        this.errorMessage = "Failed to delete weight data.";
-        this.errorDialog = true;
-      }
-    },
-
-    async getWeights() {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}clients_weights/${
-            this.$route.params.clientId
-          }`
-        );
-        this.clientWeights = response.data;
-        this.chartData = {
-          labels: response.data.map((w) => w.date),
-          datasets: [
-            {
-              label: "Weight",
-              data: response.data.map((w) => w.weight),
-              borderColor: "rgba(75, 192, 192, 1)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              fill: false,
-            },
-          ],
-        };
-      } catch (error) {
-        console.error("Error fetching weight data: ", error);
-        this.errorMessage = "Failed to fetch weight data.";
         this.errorDialog = true;
       }
     },
@@ -319,115 +113,7 @@ export default {
         <v-window v-model="tab">
           <ClientWeight />
 
-          <!-- <v-window-item value="weights">
-            <v-card-title> Weight History </v-card-title>
-            <v-table>
-              <thead>
-                <tr>
-                  <th>Weight</th>
-                  <th>Date</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="weight in clientWeights" :key="weight.id">
-                  <td>
-                    {{ weight.weight }}
-                  </td>
-                  <td>{{ newDate(weight.date) }}</td>
-
-                  <td>
-                     For Weights
-                    <v-btn icon @click="confirmDelete('weight', weight.id)">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-
-            <v-form @submit.prevent="addWeight">
-              <v-card-title style="padding-top: 25px">
-                Weight Check-In</v-card-title
-              >
-              <v-text-field
-                v-model="newWeight"
-                label="Today's Weight"
-                required
-              ></v-text-field>
-              <v-btn @click="addWeight">Add Weight</v-btn>
-            </v-form>
-          </v-window-item> -->
           <ClientWorkout />
-
-          <!-- <v-window-item value="workouts">
-            <v-select
-              v-model="selectedWorkout"
-              :items="availableWorkouts.map((workout) => workout.workout_name)"
-              label="All workouts"
-            ></v-select>
-
-            <v-textarea
-              id="workoutNote"
-              placeholder="Add notes for this workout"
-            ></v-textarea>
-
-            <v-btn @click="assignWorkoutToClient" class="mb-6"
-              >Assign Workout</v-btn
-            >
-
-            <v-card-title> Assigned Workouts </v-card-title>
-            <v-text-field
-              v-model="searchQuery"
-              placeholder="Search Assigned Workouts"
-            ></v-text-field>
-            <v-table>
-              <thead>
-                <tr>
-                  <th>Workout</th>
-                  <th>Difficulty</th>
-                  <th>Notes</th>
-                  <th>Date Assigned</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-if="clientWorkouts.length === 0">
-                  <td colspan="4">No assigned workouts.</td>
-                </tr>
-                <tr
-                  v-else
-                  v-for="workout in filteredWorkouts"
-                  :key="workout.workout_id"
-                >
-                  <td>
-                    <router-link
-                      class="custom-link"
-                      :to="{
-                        name: 'workout-detail',
-                        params: { id: workout.workout_id },
-                      }"
-                    >
-                      {{ workout.workout_name }}
-                    </router-link>
-                  </td>
-                  <td>{{ workout.difficulty }}</td>
-                  <td>{{ workout.notes }}</td>
-                  <td>{{ newDate(workout.date) }}</td>
-                  <td>
-                    <v-btn
-                      icon
-                      @click="
-                        confirmDelete('workout', workout.client_workout_id)
-                      "
-                    >
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-window-item> -->
 
           <ClientGoal />
         </v-window>
@@ -447,19 +133,6 @@ export default {
         </v-card>
       </v-dialog>
     </div>
-    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
-      <v-card>
-        <v-card-title class="headline">Confirm Deletion</v-card-title>
-        <v-card-text> Are you sure you want to delete this item? </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="proceedToDelete"
-            >Yes, Delete</v-btn
-          >
-          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 <style scoped>
