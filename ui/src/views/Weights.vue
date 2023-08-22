@@ -2,8 +2,12 @@
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
+import ClientGoal from "../component/ClientGoal.vue";
 
 export default {
+  components: {
+    ClientGoal,
+  },
   data() {
     return {
       confirmDeleteDialog: false,
@@ -419,7 +423,9 @@ export default {
             </v-table>
           </v-window-item>
 
-          <v-window-item value="goals">
+          <ClientGoal />
+
+          <!-- <v-window-item value="goals">
             <v-card-title> Health/Meds </v-card-title>
             <v-textarea
               v-model="healthMedsNote"
@@ -433,7 +439,7 @@ export default {
             <v-textarea v-model="miscNote" label="Add Misc. Notes"></v-textarea>
 
             <v-btn @click="updateNotes">Save Notes</v-btn>
-          </v-window-item>
+          </v-window-item> -->
         </v-window>
       </v-card-text>
       <v-dialog v-model="errorDialog" max-width="500px">
