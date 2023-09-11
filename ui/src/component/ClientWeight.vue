@@ -58,11 +58,6 @@ export default {
       deleteType: "",
       workouts: [],
       searchQuery: "",
-      selectedWorkout: null,
-      availableWorkouts: [],
-      healthMedsNote: "",
-      goalsNote: "",
-      miscNote: "",
       tab: null,
       errorDialog: false,
       errorMessage: "",
@@ -205,8 +200,5 @@ export default {
       }
     },
   },
-  // Add any other methods or properties related to weights here
-
-  // Don't forget to move over any computed properties, lifecycle hooks, etc. if needed
 };
 </script>

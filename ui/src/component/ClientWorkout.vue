@@ -18,22 +18,44 @@
     <v-table>
       <thead>
         <tr>
-          <th>Workout</th>
-          <th>Difficulty</th>
+          <th @click="sortBy('workout_name')" class="clickable-header">
+            Workout
+            <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
+              >mdi-arrow-down</v-icon
+            >
+            <v-icon v-else-if="sortedColumn === 'workout_name'"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon v-else>mdi-sort</v-icon>
+          </th>
+          <th @click="sortBy('difficulty')" class="clickable-header">
+            Difficulty
+            <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
+              >mdi-arrow-down</v-icon
+            >
+            <v-icon v-else-if="sortedColumn === 'difficulty'"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon v-else>mdi-sort</v-icon>
+          </th>
           <th>Notes</th>
-          <th>Date Assigned</th>
+          <th @click="sortBy('date')" class="clickable-header">
+            Date Assigned
+            <v-icon v-if="sortedColumn === 'date' && sortAscending"
+              >mdi-arrow-down</v-icon
+            >
+            <v-icon v-else-if="sortedColumn === 'date'">mdi-arrow-up</v-icon>
+            <v-icon v-else>mdi-sort</v-icon>
+          </th>
           <th></th>
         </tr>
       </thead>
+
       <tbody>
         <tr v-if="clientWorkouts.length === 0">
           <td colspan="4">No assigned workouts.</td>
         </tr>
-        <tr
-          v-else
-          v-for="workout in filteredWorkouts"
-          :key="workout.workout_id"
-        >
+        <tr v-else v-for="workout in sortedWorkouts" :key="workout.workout_id">
           <td>
             <router-link
               class="custom-link"
@@ -99,21 +121,18 @@ export default {
     return {
       confirmDeleteDialog: false,
       itemToDelete: null,
+      sortedColumn: "",
+      sortAscending: true,
       deleteType: "",
       workouts: [],
       searchQuery: "",
       selectedWorkout: null,
       availableWorkouts: [],
-      healthMedsNote: "",
-      goalsNote: "",
-      miscNote: "",
       tab: null,
       errorDialog: false,
       errorMessage: "",
       clientWeights: [],
       clientWorkouts: [],
-      newWeight: "",
-      newWeighDate: "",
       clientFirstName: "",
       clientLastName: "",
       clientBirthDay: "",
@@ -151,20 +170,39 @@ export default {
   computed: {
     filteredWorkouts() {
       if (!this.searchQuery) {
-        return this.clientWorkouts; // Return clientWorkouts instead of workouts
+        return this.clientWorkouts; //
       }
       const query = this.searchQuery.toLowerCase();
       return this.clientWorkouts.filter(
-        // Change this to clientWorkouts
         (workout) =>
           workout.workout_name.toLowerCase().includes(query) ||
           workout.description.toLowerCase().includes(query) ||
           workout.difficulty.toLowerCase().includes(query)
       );
     },
+    sortedWorkouts() {
+      let workouts = [...this.filteredWorkouts]; // Filter first
+      if (this.sortedColumn) {
+        workouts.sort((a, b) => {
+          let result = 0;
+          if (a[this.sortedColumn] > b[this.sortedColumn]) result = 1;
+          if (a[this.sortedColumn] < b[this.sortedColumn]) result = -1;
+          return this.sortAscending ? result : -result; // reverse if descending
+        });
+      }
+      return workouts; // return the filtered and then sorted workouts
+    },
   },
 
   methods: {
+    sortBy(column) {
+      if (this.sortedColumn === column) {
+        this.sortAscending = !this.sortAscending;
+      } else {
+        this.sortedColumn = column;
+        this.sortAscending = true;
+      }
+    },
     async getClient() {
       try {
         const response = await axios.get(
@@ -207,7 +245,7 @@ export default {
         await axios.delete(
           `${import.meta.env.VITE_API_URL}client_workout/${workoutId}`
         );
-        this.getClientWorkouts(); // To refresh the client workouts after deletion
+        this.getClientWorkouts();
       } catch (error) {
         console.error("Error deleting client workout: ", error);
         this.errorMessage = "Failed to delete client workout.";

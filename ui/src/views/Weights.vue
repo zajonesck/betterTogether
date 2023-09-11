@@ -142,16 +142,11 @@ export default {
 .custom-link {
   display: inline-block;
   text-decoration: underline;
-  color: inherit; /* This will make the link use the default text color of its parent */
-  transition: color 0.3s ease; /* This will smoothly change the color when hovering */
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
 .custom-link:hover {
-  color: rgba(
-    101,
-    42,
-    127,
-    0.7
-  ); /* This will darken the color when hovering, change this value to your preference */
+  color: rgba(101, 42, 127, 0.7);
 }
 </style>
