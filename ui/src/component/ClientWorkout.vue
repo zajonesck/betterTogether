@@ -2,8 +2,10 @@
   <v-window-item value="workouts">
     <v-select
       v-model="selectedWorkout"
-      :items="availableWorkouts.map((workout) => workout.workout_name)"
+      :items="filteredAvailableWorkouts"
       label="All workouts"
+      :filter="searchAvailableWorkoutsFilter"
+      v-model:search-input="searchAvailableWorkouts"
     ></v-select>
     <v-textarea
       id="workoutNote"
@@ -119,6 +121,7 @@ import { format, parseISO } from "date-fns";
 export default {
   data() {
     return {
+      searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
       itemToDelete: null,
       sortedColumn: "",
@@ -192,6 +195,15 @@ export default {
       }
       return workouts; // return the filtered and then sorted workouts
     },
+    filteredAvailableWorkouts() {
+      if (!this.searchAvailableWorkouts) {
+        return this.availableWorkouts.map((workout) => workout.workout_name);
+      }
+      const query = this.searchAvailableWorkouts.toLowerCase();
+      return this.availableWorkouts
+        .map((workout) => workout.workout_name)
+        .filter((workoutName) => workoutName.toLowerCase().includes(query));
+    },
   },
 
   methods: {
@@ -256,6 +268,9 @@ export default {
       this.deleteType = type;
       this.itemToDelete = itemId;
       this.confirmDeleteDialog = true;
+    },
+    searchAvailableWorkoutsFilter(item, queryText, itemText) {
+      return itemText.toLowerCase().indexOf(queryText.toLowerCase()) > -1;
     },
     proceedToDelete() {
       if (this.deleteType === "weight") {
