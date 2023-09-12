@@ -50,7 +50,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="workout in filteredWorkouts" :key="workout.id">
+          <tr v-for="workout in paginatedItems" :key="workout.id">
             <td>
               <router-link
                 :to="{
@@ -67,6 +67,10 @@
           </tr>
         </tbody>
       </v-table>
+      <v-pagination
+        v-model="currentPage"
+        :length="Math.ceil(totalItems / itemsPerPage)"
+      ></v-pagination>
     </div>
   </v-container>
 </template>
@@ -77,6 +81,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      currentPage: 1,
+      itemsPerPage: 10,
       sortAscending: true,
       workouts: [],
       loading: true,
@@ -115,6 +121,14 @@ export default {
     },
   },
   computed: {
+    paginatedItems() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredWorkouts.slice(start, end); // corrected to 'filteredWorkouts'
+    },
+    totalItems() {
+      return this.filteredWorkouts.length; // corrected to 'filteredWorkouts'
+    },
     filteredWorkouts() {
       if (!this.searchQuery) {
         return this.workouts;

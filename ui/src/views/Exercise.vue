@@ -57,7 +57,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="exercise in filteredExercises" :key="exercise.id">
+            <tr v-for="exercise in paginatedExercises" :key="exercise.id">
               <td>
                 <router-link
                   :to="{ name: 'ExerciseDetail', params: { id: exercise.id } }"
@@ -71,6 +71,10 @@
             </tr>
           </tbody>
         </v-table>
+        <v-pagination
+          v-model="currentPage"
+          :length="Math.ceil(totalExercises / itemsPerPage)"
+        ></v-pagination>
       </div>
     </v-container>
   </div>
@@ -82,6 +86,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      currentPage: 1,
+      itemsPerPage: 10,
       exercises: [],
       searchQuery: "",
       sortedColumn: null,
@@ -89,6 +95,14 @@ export default {
     };
   },
   computed: {
+    paginatedExercises() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredExercises.slice(start, end);
+    },
+    totalExercises() {
+      return this.filteredExercises.length;
+    },
     filteredExercises() {
       if (!this.searchQuery) {
         return this.exercises; // Return all exercises if no search query
@@ -152,6 +166,13 @@ export default {
           console.error(response.data.message);
         } else {
           this.exercises = response.data;
+
+          // Sort by name by default
+          this.exercises.sort((a, b) => {
+            const nameA = a.name ? a.name.toUpperCase() : "";
+            const nameB = b.name ? b.name.toUpperCase() : "";
+            return nameA.localeCompare(nameB);
+          });
         }
       } catch (error) {
         console.error("An error occurred while fetching the exercises:", error);

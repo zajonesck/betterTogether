@@ -57,7 +57,11 @@
         <tr v-if="clientWorkouts.length === 0">
           <td colspan="4">No assigned workouts.</td>
         </tr>
-        <tr v-else v-for="workout in sortedWorkouts" :key="workout.workout_id">
+        <tr
+          v-else
+          v-for="workout in paginatedAssignedWorkouts"
+          :key="workout.workout_id"
+        >
           <td>
             <router-link
               class="custom-link"
@@ -83,6 +87,10 @@
         </tr>
       </tbody>
     </v-table>
+    <v-pagination
+      v-model="currentPageAssignedWorkouts"
+      :length="totalPagesAssignedWorkouts"
+    ></v-pagination>
   </v-window-item>
   <v-dialog v-model="errorDialog" max-width="500px">
     <v-card>
@@ -121,6 +129,8 @@ import { format, parseISO } from "date-fns";
 export default {
   data() {
     return {
+      currentPageAssignedWorkouts: 1,
+      itemsPerPageAssignedWorkouts: 10,
       searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
       itemToDelete: null,
@@ -171,6 +181,19 @@ export default {
   },
 
   computed: {
+    paginatedAssignedWorkouts() {
+      const start =
+        (this.currentPageAssignedWorkouts - 1) *
+        this.itemsPerPageAssignedWorkouts;
+      const end = start + this.itemsPerPageAssignedWorkouts;
+      return this.sortedWorkouts.slice(start, end);
+    },
+    totalPagesAssignedWorkouts() {
+      return Math.ceil(
+        this.sortedWorkouts.length / this.itemsPerPageAssignedWorkouts
+      );
+    },
+
     filteredWorkouts() {
       if (!this.searchQuery) {
         return this.clientWorkouts; //

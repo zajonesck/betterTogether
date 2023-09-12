@@ -5,6 +5,8 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
+      currentPage: 1,
+      itemsPerPage: 10,
       clients: [],
       newClientFirstName: "",
       newClientLastName: "",
@@ -27,6 +29,27 @@ export default {
     };
   },
   computed: {
+    paginatedClients() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredClients.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredClients.length / this.itemsPerPage);
+    },
+
+    sortedClients() {
+      let clientsCopy = [...this.clients]; // Making a copy so as not to mutate the original array
+      if (this.sortedColumn) {
+        clientsCopy.sort((a, b) => {
+          let result = 0;
+          if (a[this.sortedColumn] > b[this.sortedColumn]) result = 1;
+          if (a[this.sortedColumn] < b[this.sortedColumn]) result = -1;
+          return this.sortAscending ? result : -result; // reverse if descending
+        });
+      }
+      return clientsCopy;
+    },
     filteredClients() {
       if (!this.searchQuery) {
         return this.clients;
@@ -51,6 +74,7 @@ export default {
         .get(`${import.meta.env.VITE_API_URL}clients`)
         .then((response) => {
           this.clients = response.data;
+          this.sortBy("first_name"); // Automatically sort by first name
           this.loading = false;
           this.errorDialog = false;
         })
@@ -114,7 +138,8 @@ export default {
       if (this.sortedColumn === property) {
         this.sortAscending = !this.sortAscending;
       } else {
-        this.sortAscending = true;
+        this.sortedColumn = property;
+        this.sortAscending = true; // default to ascending when changing columns
       }
 
       this.clients.sort((a, b) => {
@@ -124,8 +149,6 @@ export default {
           ? textA.localeCompare(textB)
           : textB.localeCompare(textA);
       });
-
-      this.sortedColumn = property;
     },
   },
 };
@@ -187,7 +210,7 @@ export default {
         </thead>
 
         <tbody>
-          <tr v-for="client in filteredClients" :key="client.id">
+          <tr v-for="client in paginatedClients" :key="client.id">
             <td>
               <router-link
                 :to="{
@@ -208,6 +231,8 @@ export default {
           </tr>
         </tbody>
       </v-table>
+
+      <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
 
       <v-dialog v-model="dialog" max-width="500px">
         <v-card>
