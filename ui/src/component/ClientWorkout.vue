@@ -196,13 +196,20 @@ export default {
       return workouts; // return the filtered and then sorted workouts
     },
     filteredAvailableWorkouts() {
-      if (!this.searchAvailableWorkouts) {
-        return this.availableWorkouts.map((workout) => workout.workout_name);
+      let workouts = this.availableWorkouts.map(
+        (workout) => workout.workout_name
+      );
+      if (this.searchAvailableWorkouts) {
+        const query = this.searchAvailableWorkouts.toLowerCase();
+        workouts = workouts.filter((workoutName) =>
+          workoutName.toLowerCase().includes(query)
+        );
       }
-      const query = this.searchAvailableWorkouts.toLowerCase();
-      return this.availableWorkouts
-        .map((workout) => workout.workout_name)
-        .filter((workoutName) => workoutName.toLowerCase().includes(query));
+
+      // Sort the workouts alphabetically
+      workouts.sort();
+
+      return workouts;
     },
   },
 
