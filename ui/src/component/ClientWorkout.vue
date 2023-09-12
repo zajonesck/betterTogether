@@ -184,16 +184,16 @@ export default {
       );
     },
     sortedWorkouts() {
-      let workouts = [...this.filteredWorkouts]; // Filter first
+      let workouts = [...this.filteredWorkouts];
       if (this.sortedColumn) {
         workouts.sort((a, b) => {
           let result = 0;
           if (a[this.sortedColumn] > b[this.sortedColumn]) result = 1;
           if (a[this.sortedColumn] < b[this.sortedColumn]) result = -1;
-          return this.sortAscending ? result : -result; // reverse if descending
+          return this.sortAscending ? result : -result;
         });
       }
-      return workouts; // return the filtered and then sorted workouts
+      return workouts;
     },
     filteredAvailableWorkouts() {
       let workouts = this.availableWorkouts.map(
@@ -206,7 +206,6 @@ export default {
         );
       }
 
-      // Sort the workouts alphabetically
       workouts.sort();
 
       return workouts;

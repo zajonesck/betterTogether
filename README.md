@@ -2,7 +2,7 @@
 
 Better Together is a comprehensive fitness application designed to bring trainers and clients closer to their fitness goals. As a fitness professional, you can use Better Together to track client weights and workouts over time effortlessly. This repository contains both the frontend UI built with Vue.js and the backend server developed with Node.js.
 
-## Local Development Overview 
+## Local Development Overview
 
 - **UI**: Vue.js, running on `localhost:5173`
 - **API**: Node.js, running on `localhost:3000`
@@ -82,10 +82,33 @@ We recommend using [VSCode](https://code.visualstudio.com/) with the following e
 ## Deployments
 
 Frontend: After running `npm run build`, push to your `main` branch to deploy the app. Heroku uses the contents of the `dist` folder for deployment.
-Backend: Pushing to the `main` branch will automatically trigger a new Heroku build. 
+Backend: Pushing to the `main` branch will automatically trigger a new Heroku build.
 
 ### View Heroku logs
 
 ```
 $ heroku logs --tail
+```
+
+### Automated Tests
+
+Testing is crucial for ensuring the reliability and stability of the application. In this project, automated tests have been set up to make the validation process more efficient. Make sure all dependencies are installed and the application's environment is set up correctly for the tests to run without issues.
+
+```
+##TOOLS USED##
+
+Jest: A delightful JavaScript Testing Framework with a focus on simplicity.
+Supertest: Provides a high-level abstraction for testing HTTP, while still allowing you to drop down to the lower-level API provided by superagent
+
+```
+
+##HOW TESTS WORK##
+
+Jest acts as the test runner, providing an environment to execute our tests.
+With Supertest, we can easily make HTTP requests to our API and assert the responses, making it suitable for testing RESTful services.
+
+```
+##RUNNING THE TESTS##
+
+$ npm run test
 ```
