@@ -6,9 +6,8 @@
         <v-card-text>
           <v-row>
             <v-col cols="12">
-              <p>
-                <strong>Description:</strong> {{ exerciseDetail.description }}
-              </p>
+              <h4><strong>Description</strong></h4>
+              <p>{{ exerciseDetail.description }}</p>
             </v-col>
           </v-row>
           <v-row>
@@ -18,24 +17,28 @@
                 {{ exerciseDetail.primary_body_part }}
               </p>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" v-if="exerciseDetail.secondary_body_part">
               <p>
                 <strong>Secondary Body Part:</strong>
                 {{ exerciseDetail.secondary_body_part }}
               </p>
             </v-col>
-            <v-col cols="6">
-              <p>
-                <strong>Tutorial Video:</strong
-                ><iframe
-                  width="560"
-                  height="315"
-                  :src="exerciseDetail.example_link"
-                  frameborder="0"
-                  allowfullscreen
-                >
-                </iframe>
-              </p>
+
+            <v-col
+              cols="12"
+              class="d-flex justify-center flex-column align-center"
+            >
+              <div class="text-center">
+                <strong>Tutorial Video</strong>
+              </div>
+              <iframe
+                width="560"
+                height="315"
+                :src="exerciseDetail.example_link"
+                frameborder="0"
+                allowfullscreen
+              >
+              </iframe>
             </v-col>
           </v-row>
           <!-- Add more fields as necessary, e.g., images, etc. -->
