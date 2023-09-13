@@ -84,6 +84,12 @@
 import axios from "axios";
 
 export default {
+  watch: {
+    searchQuery() {
+      this.currentPage = 1;
+    },
+  },
+
   data() {
     return {
       currentPage: 1,
@@ -95,6 +101,9 @@ export default {
     };
   },
   computed: {
+    numericId() {
+      return Number(this.id);
+    },
     paginatedExercises() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
