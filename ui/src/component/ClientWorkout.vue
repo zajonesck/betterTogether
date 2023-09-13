@@ -8,9 +8,10 @@
       v-model:search-input="searchAvailableWorkouts"
     ></v-select>
     <v-textarea
-      id="workoutNote"
+      v-model="note"
       placeholder="Add notes for this workout"
     ></v-textarea>
+
     <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
     <v-card-title> Assigned Workouts </v-card-title>
     <v-text-field
@@ -60,7 +61,7 @@
         <tr
           v-else
           v-for="workout in paginatedAssignedWorkouts"
-          :key="workout.workout_id"
+          :key="workout.id"
         >
           <td>
             <router-link
@@ -129,6 +130,7 @@ import { format, parseISO } from "date-fns";
 export default {
   data() {
     return {
+      note: "",
       currentPageAssignedWorkouts: 1,
       itemsPerPageAssignedWorkouts: 10,
       searchAvailableWorkouts: "",
@@ -320,12 +322,10 @@ export default {
 
       if (!workout) return;
 
-      const workoutNote = document.getElementById("workoutNote").value;
-
       const requestBody = {
         client_id: this.$route.params.clientId,
         workout_id: workout.id,
-        notes: workoutNote,
+        notes: this.note,
         date: new Date().toISOString(),
       };
 
@@ -359,6 +359,19 @@ export default {
       } catch (error) {
         console.error("Error fetching workouts: ", error);
       }
+    },
+  },
+  watch: {
+    paginatedAssignedWorkouts: {
+      immediate: true, // This makes sure the function runs immediately upon mounting
+      handler(newValue) {
+        const ids = newValue.map((w) => w.workout_id);
+        const uniqueIds = [...new Set(ids)];
+
+        if (ids.length !== uniqueIds.length) {
+          console.warn("Duplicate IDs found!", ids);
+        }
+      },
     },
   },
 };
