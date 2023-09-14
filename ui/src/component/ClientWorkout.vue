@@ -53,7 +53,6 @@
           <th></th>
         </tr>
       </thead>
-
       <tbody>
         <tr v-if="clientWorkouts.length === 0">
           <td colspan="4">No assigned workouts.</td>
@@ -65,7 +64,6 @@
         >
           <td>
             <router-link
-              class="custom-link"
               :to="{
                 name: 'workout-detail',
                 params: { id: workout.workout_id },
@@ -121,7 +119,6 @@
     </v-card>
   </v-dialog>
 </template>
-
 <script>
 import axios from "axios";
 import { newBDate } from "../shared.js";
@@ -363,7 +360,7 @@ export default {
   },
   watch: {
     paginatedAssignedWorkouts: {
-      immediate: true, // This makes sure the function runs immediately upon mounting
+      immediate: true,
       handler(newValue) {
         const ids = newValue.map((w) => w.workout_id);
         const uniqueIds = [...new Set(ids)];
@@ -372,6 +369,9 @@ export default {
           console.warn("Duplicate IDs found!", ids);
         }
       },
+    },
+    searchQuery() {
+      this.currentPageAssignedWorkouts = 1; // Reset to the first page whenever search term changes
     },
   },
 };
