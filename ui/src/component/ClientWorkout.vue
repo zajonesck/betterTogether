@@ -10,6 +10,7 @@
     <v-textarea
       v-model="note"
       placeholder="Add notes for this workout"
+      @keyup.enter="assignWorkoutToClient"
     ></v-textarea>
 
     <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
@@ -334,8 +335,8 @@ export default {
           `${import.meta.env.VITE_API_URL}clients/workouts`,
           requestBody
         );
-        this.clientWorkouts.push(response.data);
         await this.getClientWorkouts();
+        this.note = ""; // This line clears the textarea after assigning the workout
       } catch (error) {
         console.error("Error assigning workout to client: ", error);
       }
