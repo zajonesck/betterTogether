@@ -195,16 +195,19 @@ export default {
 
     filteredWorkouts() {
       if (!this.searchQuery) {
-        return this.clientWorkouts; //
+        return this.clientWorkouts;
       }
       const query = this.searchQuery.toLowerCase();
       return this.clientWorkouts.filter(
         (workout) =>
           workout.workout_name.toLowerCase().includes(query) ||
-          workout.description.toLowerCase().includes(query) ||
-          workout.difficulty.toLowerCase().includes(query)
+          (workout.description &&
+            workout.description.toLowerCase().includes(query)) ||
+          workout.difficulty.toLowerCase().includes(query) ||
+          (workout.notes && workout.notes.toLowerCase().includes(query))
       );
     },
+
     sortedWorkouts() {
       let workouts = [...this.filteredWorkouts];
       if (this.sortedColumn) {
