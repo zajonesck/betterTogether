@@ -8,9 +8,12 @@
     "build:stage": "env-cmd -f ./.env.prod npm run-script build"
   },
   "dependencies": {
+    "@aws-amplify/ui-components": "^1.9.40",
+    "@aws-amplify/ui-vue": "^3.1.27",
     "@mdi/font": "^7.2.96",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.3",
+    "aws-amplify": "^4.3.46",
     "axios": "^0.27.2",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
