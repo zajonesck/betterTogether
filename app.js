@@ -27,7 +27,7 @@ app.use(
     extended: true,
   })
 );
-// app.use(verifyJWT);
+app.use(verifyJWT);
 
 app.get("/exercises", db.getAllExercises);
 

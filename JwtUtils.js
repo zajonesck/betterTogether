@@ -20,7 +20,7 @@ function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   const route = req.originalUrl;
 
-  if (route === "/login" || route === "/signup") {
+  if (route === "/#/login" || route === "/#/signup") {
     // Don't require token authentication for login and sign in pages
     next();
   } else if (authHeader) {
