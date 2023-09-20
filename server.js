@@ -1,10 +1,15 @@
 require("dotenv").config();
 
+const { verifyJWT } = require("./jwtUtils");
+const express = require("express");
+
+// Assuming you have your routes and other middleware in "./app"
 const app = require("./app");
 
-// Use process.env.PORT if it's available (in Heroku's environment), otherwise fall back to 3000
-const port = process.env.PORT || 3000;
+// Add JWT verification middleware to routes that require authentication
+// e.g., app.use("/protectedRoute", verifyJWT);
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}!`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

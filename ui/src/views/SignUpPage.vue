@@ -3,7 +3,7 @@
     <v-row justify="center" align="center" class="fill-height">
       <v-col cols="12" sm="8" md="4">
         <v-card>
-          <v-card-title>Login</v-card-title>
+          <v-card-title>Sign Up</v-card-title>
           <v-card-text>
             <v-form ref="form">
               <v-text-field
@@ -25,8 +25,10 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="login">Login</v-btn>
-            <v-btn text @click="redirectToSignUp">Create Account</v-btn>
+            <v-btn @click="signUp">Sign Up</v-btn>
+            <v-btn text @click="redirectToLogin"
+              >Already have an account?</v-btn
+            >
             <v-btn text @click="tryAsGuest">Try as Guest</v-btn>
           </v-card-actions>
         </v-card>
@@ -44,6 +46,18 @@
       </v-card-text>
       <v-card-actions>
         <v-btn @click="confirmSignUp">Submit</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="showCheckEmailDialog" max-width="290">
+    <v-card>
+      <v-card-title>Email Verification</v-card-title>
+      <v-card-text>
+        A verification code has been sent to your email. Please check your inbox
+        and enter the code to complete the sign-up process.
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="showCheckEmailDialog = false">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -65,33 +79,39 @@ export default {
     };
   },
   methods: {
-    async login() {
+    async signUp() {
       try {
-        const user = await Auth.signIn(this.username, this.password);
-        console.log(user);
-
-        // Store the JWT token in a data property (optional)
-        this.jwtToken = user.signInUserSession.accessToken.jwtToken;
-        console.log("jwt ", this.jwtToken);
-
-        this.$router.push("/client-roster");
+        const data = await Auth.signUp({
+          username: this.username,
+          password: this.password,
+          // attributes: {
+          //   email: this.email,
+          // },
+        });
+        console.log(data);
+        this.showCheckEmailDialog = true; // Show the check email dialog
       } catch (err) {
-        if (err.code === "UserNotConfirmedException") {
-          this.showVerificationDialog = true; // Show the verification dialog
-        } else if (err.code === "UserNotFoundException") {
-          // Handle user not found error
-          console.error("User does not exist.");
-        } else if (err.code === "NotAuthorizedException") {
-          // Handle wrong password error
-          console.error("Incorrect username or password.");
+        if (err.code === "UsernameExistsException") {
+          // Handle username already exists error
+          console.log("Username already exists.");
         } else {
-          console.error(err);
-          // Handle other login errors
+          console.log(err);
+          // Handle other sign-up errors
         }
       }
     },
-    redirectToSignUp() {
-      this.$router.push("/signup");
+    async confirmSignUp() {
+      try {
+        await Auth.confirmSignUp(this.username, this.verificationCode);
+        this.showVerificationDialog = false; // Close the verification dialog
+        // Notify user that confirmation was successful, or auto-login the user
+      } catch (err) {
+        console.log(err);
+        // Handle errors during confirmation
+      }
+    },
+    redirectToLogin() {
+      this.$router.push("/login"); // Redirect to the login page
     },
     tryAsGuest() {
       // Logic for guest user access

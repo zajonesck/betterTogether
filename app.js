@@ -1,6 +1,6 @@
 require("dotenv").config();
+const { verifyJWT } = require("./jwtUtils");
 
-let createError = require("http-errors");
 const express = require("express");
 let path = require("path");
 let logger = require("morgan");
@@ -19,7 +19,7 @@ const { nextDay } = require("date-fns");
 const port = process.env.PORT || 3000;
 
 // Add Access Control Allow Origin headers
-
+app.use(express.static("ui/dist"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -27,11 +27,11 @@ app.use(
     extended: true,
   })
 );
+app.use(verifyJWT);
+
 app.get("/exercises", db.getAllExercises);
 
 app.get("/exercises/:id", db.getExerciseById);
-
-app.use(express.static("ui/dist"));
 
 app.get("/clients", db.getClients);
 

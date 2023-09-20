@@ -1,10 +1,24 @@
 <script>
 import axios from "axios";
 import { newBDate } from "../shared.js";
+import { Auth } from "aws-amplify";
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Check if it's a 401 error (Unauthorized)
+    if (error.response.status === 401) {
+      console.log("Token might be expired or invalid. Please login again.");
+      // TODO: You can also redirect user to login page here or show a notification
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default {
   data() {
     return {
+      jwtToken: null,
       currentPage: 1,
       itemsPerPage: 10,
       clients: [],
@@ -63,13 +77,38 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     this.newBDate = newBDate;
-    this.getClients();
+
+    try {
+      const session = await Auth.currentSession();
+      if (session && session.isValid()) {
+        this.jwtToken = session.getIdToken().getJwtToken();
+        this.getClients();
+      } else {
+        // Handle the scenario where the token is not valid or not present
+        // Maybe redirect to login or show a message
+      }
+    } catch (error) {
+      console.error("Error fetching JWT token:", error);
+      // Handle error, maybe redirect to login or show a message
+    }
   },
 
   methods: {
+    setAxiosHeaders() {
+      if (this.jwtToken) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${this.jwtToken}`;
+      }
+    },
     getClients() {
+      if (!this.jwtToken) {
+        console.error("JWT token is not available. Cannot fetch clients.");
+        return; // Exit the function
+      }
+      this.setAxiosHeaders();
       axios
         .get(`${import.meta.env.VITE_API_URL}clients`)
         .then((response) => {
@@ -79,14 +118,26 @@ export default {
           this.errorDialog = false;
         })
         .catch((error) => {
-          console.error("Failed to add client:", error);
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error("Response Error:", error.response.data);
+            console.error("Response Status:", error.response.status);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.error("Request made but no response:", error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error in request setup:", error.message);
+          }
           this.errorMessage =
             "Failed to fetch clients. Please try again later.";
-          this.errorDialog = true; // Open the error dialog
+          this.errorDialog = true;
         });
     },
 
     addClient() {
+      this.setAxiosHeaders();
       const requestBody = {
         first_name: this.newClientFirstName,
         last_name: this.newClientLastName,
@@ -121,6 +172,7 @@ export default {
     },
 
     deleteClient(clientId) {
+      this.setAxiosHeaders();
       axios
         .delete(`${import.meta.env.VITE_API_URL}clients/${clientId}`)
         .then((response) => {

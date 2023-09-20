@@ -15,6 +15,13 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item link @click="signOut">
+        <v-list-item-content>
+          <v-list-item-title>
+            <v-icon>mdi-logout</v-icon> Sign Out
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar app clipped-left>
@@ -57,7 +64,22 @@
 
 <script setup>
 import { ref } from "vue";
+import { Auth } from "@aws-amplify/auth";
+import { useRouter } from "vue-router";
+
 const drawer = ref(false);
+const router = useRouter();
+
+async function signOut() {
+  try {
+    await Auth.signOut();
+    // Clear JWT or session token (depending on where you store it)
+    localStorage.removeItem("jwtToken");
+    router.push("/login"); // Redirect to login page
+  } catch (error) {
+    console.error("Error signing out: ", error);
+  }
+}
 </script>
 
 <style>

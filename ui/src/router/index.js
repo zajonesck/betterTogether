@@ -1,9 +1,16 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import { Auth } from "aws-amplify";
 import Clients from "../views/Clients.vue";
 import WorkoutDetail from "../views/WorkoutDetail.vue";
 import LoginPage from "../views/LoginPage.vue";
+import SignUpPage from "../views/SignUpPage.vue";
 
 const routes = [
+  {
+    path: "/signup",
+    name: "SignUp",
+    component: SignUpPage,
+  },
   {
     path: "/login",
     name: "Login",
@@ -13,6 +20,7 @@ const routes = [
     path: "/workout/:id",
     name: "workout-detail",
     component: WorkoutDetail,
+    meta: { requiresAuth: true },
     props: true,
   },
   {
@@ -23,35 +31,33 @@ const routes = [
     path: "/client-roster",
     name: "Clients",
     component: Clients,
+    meta: { requiresAuth: true },
   },
   {
     path: "/weight-history/:clientId",
     name: "Weights",
     component: () => import("../views/Weights.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/workout-rx",
     name: "Workouts",
     component: () => import("../views/Workouts.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/exercises",
     name: "Exercises",
-    component: () => import("../views/Exercise.vue"), // Adjust the path if your component is stored elsewhere
+    component: () => import("../views/Exercise.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/exercises/:id",
     name: "ExerciseDetail",
     component: () => import("../views/ExerciseDetail.vue"),
     props: true,
+    meta: { requiresAuth: true },
   },
-
-  // {
-  //   path: "/client-detail/:clientId",
-  //   name: "ClientDetail",
-  //   component: () => import("../views/ClientDetail.vue"),
-  //   props: true,
-  // },
 ];
 
 const router = createRouter({
@@ -59,4 +65,21 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    try {
+      const session = await Auth.currentSession();
+      if (session && session.isValid()) {
+        next();
+      } else {
+        next("/login");
+      }
+    } catch (error) {
+      console.error("Error fetching session:", error);
+      next("/login");
+    }
+  } else {
+    next();
+  }
+});
 export default router;
