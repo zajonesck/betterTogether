@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { verifyJWT } = require("./jwtUtils");
+const { verifyJWT } = require("./JwtUtils");
 
 const express = require("express");
 let path = require("path");

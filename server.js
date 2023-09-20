@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-const { verifyJWT } = require("./jwtUtils");
-const express = require("express");
+// const { verifyJWT } = require("./JwtUtils");
+// const express = require("express");
 
 // Assuming you have your routes and other middleware in "./app"
 const app = require("./app");
