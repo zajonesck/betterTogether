@@ -27,27 +27,27 @@ app.use(
     extended: true,
   })
 );
-// app.use(verifyJWT);
+app.use(verifyJWT);
 
-app.get("/exercises", verifyJWT, db.getAllExercises);
+app.get("/exercises", db.getAllExercises);
 
-app.get("/exercises/:id", verifyJWT, db.getExerciseById);
+app.get("/exercises/:id", db.getExerciseById);
 
-app.get("/clients", verifyJWT, db.getClients);
+app.get("/clients", db.getClients);
 
-app.get("/client-workouts/:clientId", verifyJWT, db.getClientWorkouts);
+app.get("/client-workouts/:clientId", db.getClientWorkouts);
 
-app.get("/clients/:clientId", verifyJWT, db.getClient);
+app.get("/clients/:clientId", db.getClient);
 
-app.get("/clients_weights/:clientId", verifyJWT, db.getWeights);
+app.get("/clients_weights/:clientId", db.getWeights);
 
-app.delete("/client_workout/:workoutId", verifyJWT, db.deleteClientWorkout);
+app.delete("/client_workout/:workoutId", db.deleteClientWorkout);
 
-app.get("/workouts", verifyJWT, db.getWorkouts);
+app.get("/workouts", db.getWorkouts);
 
-app.get("/workout/:workoutId", verifyJWT, db.getWorkout);
+app.get("/workout/:workoutId", db.getWorkout);
 
-app.post("/clients/workouts", verifyJWT, db.addClientWorkout);
+app.post("/clients/workouts", db.addClientWorkout);
 
 app.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
@@ -56,10 +56,10 @@ app.post("/clients_weights/:clientId", (req, res, next) => {
   if (isNaN(req.body.weight)) {
     return res.status(400).send("Valid weight required.");
   }
-  verifyJWT, db.addWeight(req, res);
+  db.addWeight(req, res);
 });
 
-app.post("/search/workouts", verifyJWT, db.searchWorkouts);
+app.post("/search/workouts", db.searchWorkouts);
 
 app.post("/clients", (req, res, next) => {
   if (!req.body.first_name || !req.body.last_name) {
@@ -78,7 +78,7 @@ app.post("/clients", (req, res, next) => {
   if (isNaN(Date.parse(req.body.birth_day))) {
     return res.status(400).send("Valid birthday required.");
   } else {
-    verifyJWT, db.addClient(req, res);
+    db.addClient(req, res);
   }
 });
 
@@ -94,7 +94,7 @@ app.delete("/test/delete-client/:clientId", (req, res) => {
     });
 });
 
-app.delete("/clients/:clientId", verifyJWT, db.deleteClient);
+app.delete("/clients/:clientId", db.deleteClient);
 
 app.delete("/clients_weights/:weightId", db.deleteWeight);
 app.put("/clients/:clientId/notes", (req, res, next) => {
@@ -105,7 +105,7 @@ app.put("/clients/:clientId/notes", (req, res, next) => {
   }
 
   // Assuming you have a `updateClientNotes` function in your `db` module
-  verifyJWT, db.updateClientNotes(req, res);
+  db.updateClientNotes(req, res);
 });
 
 // view engine setup
