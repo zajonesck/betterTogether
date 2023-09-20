@@ -10,11 +10,13 @@ const routes = [
     path: "/signup",
     name: "SignUp",
     component: SignUpPage,
+    meta: { requiresAuth: false },
   },
   {
     path: "/login",
     name: "Login",
     component: LoginPage,
+    meta: { requiresAuth: false },
   },
   {
     path: "/workout/:id",
@@ -26,6 +28,7 @@ const routes = [
   {
     path: "/",
     redirect: "/login",
+    meta: { requiresAuth: false },
   },
   {
     path: "/client-roster",
