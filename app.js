@@ -27,29 +27,35 @@ app.use(
     extended: true,
   })
 );
-app.use(verifyJWT);
 
-app.get("/exercises", db.getAllExercises);
+const protectedRoutes = express.Router();
+protectedRoutes.use(verifyJWT); // Apply JWT verification only to protected routes
 
-app.get("/exercises/:id", db.getExerciseById);
+// Define the login and signup routes first, so they are not affected by JWT verification
+app.post("/login");
+app.post("/signup");
 
-app.get("/clients", db.getClients);
+protectedRoutes.get("/exercises", db.getAllExercises);
 
-app.get("/client-workouts/:clientId", db.getClientWorkouts);
+protectedRoutes.get("/exercises/:id", db.getExerciseById);
 
-app.get("/clients/:clientId", db.getClient);
+protectedRoutes.get("/clients", db.getClients);
 
-app.get("/clients_weights/:clientId", db.getWeights);
+protectedRoutes.get("/client-workouts/:clientId", db.getClientWorkouts);
 
-app.delete("/client_workout/:workoutId", db.deleteClientWorkout);
+protectedRoutes.get("/clients/:clientId", db.getClient);
 
-app.get("/workouts", db.getWorkouts);
+protectedRoutes.get("/clients_weights/:clientId", db.getWeights);
 
-app.get("/workout/:workoutId", db.getWorkout);
+protectedRoutes.delete("/client_workout/:workoutId", db.deleteClientWorkout);
 
-app.post("/clients/workouts", db.addClientWorkout);
+protectedRoutes.get("/workouts", db.getWorkouts);
 
-app.post("/clients_weights/:clientId", (req, res, next) => {
+protectedRoutes.get("/workout/:workoutId", db.getWorkout);
+
+protectedRoutes.post("/clients/workouts", db.addClientWorkout);
+
+protectedRoutes.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
     return res.status(400).send("Client weight required.");
   }
@@ -59,9 +65,9 @@ app.post("/clients_weights/:clientId", (req, res, next) => {
   db.addWeight(req, res);
 });
 
-app.post("/search/workouts", db.searchWorkouts);
+protectedRoutes.post("/search/workouts", db.searchWorkouts);
 
-app.post("/clients", (req, res, next) => {
+protectedRoutes.post("/clients", (req, res, next) => {
   if (!req.body.first_name || !req.body.last_name) {
     return res.status(400).send("Client name required.");
   }
@@ -82,7 +88,7 @@ app.post("/clients", (req, res, next) => {
   }
 });
 
-app.delete("/test/delete-client/:clientId", (req, res) => {
+protectedRoutes.delete("/test/delete-client/:clientId", (req, res) => {
   const clientId = req.params.clientId;
 
   deleteClientForTest(clientId)
@@ -94,10 +100,10 @@ app.delete("/test/delete-client/:clientId", (req, res) => {
     });
 });
 
-app.delete("/clients/:clientId", db.deleteClient);
+protectedRoutes.delete("/clients/:clientId", db.deleteClient);
 
-app.delete("/clients_weights/:weightId", db.deleteWeight);
-app.put("/clients/:clientId/notes", (req, res, next) => {
+protectedRoutes.delete("/clients_weights/:weightId", db.deleteWeight);
+protectedRoutes.put("/clients/:clientId/notes", (req, res, next) => {
   // You can add validation checks here as needed, similar to what you've done for other routes
   const { health_note, goal_note, misc_note } = req.body;
   if (!health_note && !goal_note && !misc_note) {
@@ -107,6 +113,7 @@ app.put("/clients/:clientId/notes", (req, res, next) => {
   // Assuming you have a `updateClientNotes` function in your `db` module
   db.updateClientNotes(req, res);
 });
+app.use(protectedRoutes);
 
 // view engine setup
 // app.set("views", path.join(__dirname, "views"));
