@@ -18,7 +18,12 @@ function getKey(header, callback) {
 
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (authHeader) {
+  const route = req.originalUrl;
+
+  if (route === "/login" || route === "/signup") {
+    // Don't require token authentication for login and sign in pages
+    next();
+  } else if (authHeader) {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, user) => {
       if (err) {
