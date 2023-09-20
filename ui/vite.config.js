@@ -10,6 +10,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "./runtimeConfig": "./runtimeConfig.browser",
       "@": "/src", // This is a common alias to refer to the "src" directory.
     },
   },
