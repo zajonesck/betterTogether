@@ -19,12 +19,15 @@ function getKey(header, callback) {
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   const route = req.originalUrl;
+  console.log("route", route);
 
   if (route === "/login" || route === "/signup") {
+    console.log("bypass JWT");
     // Don't require token authentication for login and sign in pages
     next();
   } else if (authHeader) {
     const token = authHeader.split(" ")[1];
+    console.log("JWT TOKEN");
     jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, user) => {
       if (err) {
         return res.status(403).json({ error: "Invalid token" });
@@ -33,6 +36,7 @@ function verifyJWT(req, res, next) {
       next();
     });
   } else {
+    console.log("else last error");
     res.status(401).json({ error: "Authorization token must be provided" });
   }
 }
