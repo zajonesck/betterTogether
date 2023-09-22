@@ -3,16 +3,13 @@ require("dotenv").config();
 let createError = require("http-errors");
 const express = require("express");
 let path = require("path");
-let logger = require("morgan");
 
-let indexRouter = require("./routes/index");
-let usersRouter = require("./routes/users");
 const app = express();
 
-const db = require("./routes/queries");
+const db = require("./queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { deleteClientForTest } = require("./routes/queries");
+const { deleteClientForTest } = require("./queries");
 
 const port = process.env.PORT || 3000;
 
@@ -109,5 +106,19 @@ app.put("/clients/:clientId/notes", (req, res, next) => {
 // view engine setup
 // app.set("views", path.join(__dirname, "views"));
 // app.set("view engine", "jade");
+const awsServerlessExpress = require("aws-serverless-express");
 
-module.exports = app;
+/**
+ * @type {import('http').Server}
+ */
+const server = awsServerlessExpress.createServer(app);
+
+/**
+ * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
+ */
+exports.handler = (event, context) => {
+  console.log(`EVENT: ${JSON.stringify(event)}`);
+  return awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
+};
+
+exports.app = app;

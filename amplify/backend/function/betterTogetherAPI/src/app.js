@@ -3,7 +3,6 @@ require("dotenv").config();
 let createError = require("http-errors");
 const express = require("express");
 let path = require("path");
-let logger = require("morgan");
 
 let indexRouter = require("./routes/index");
 let usersRouter = require("./routes/users");
@@ -109,5 +108,19 @@ app.put("/clients/:clientId/notes", (req, res, next) => {
 // view engine setup
 // app.set("views", path.join(__dirname, "views"));
 // app.set("view engine", "jade");
+const awsServerlessExpress = require("aws-serverless-express");
+
+/**
+ * @type {import('http').Server}
+ */
+const server = awsServerlessExpress.createServer(app);
+
+/**
+ * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
+ */
+exports.handler = (event, context) => {
+  console.log(`EVENT: ${JSON.stringify(event)}`);
+  return awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
+};
 
 module.exports = app;
