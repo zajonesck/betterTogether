@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/app": {
+      "name": "/app",
+      "lambdaFunction": "bettertogether67e0fd7b",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

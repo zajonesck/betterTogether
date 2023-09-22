@@ -11,6 +11,11 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { VDataTable } from "vuetify/labs/VDataTable";
 
+// AWS Amplify
+import { Amplify } from "aws-amplify";
+// import { awsconfig } from "./aws-exports";
+// Amplify.configure(awsconfig);
+
 const vuetify = createVuetify({
   components: {
     VDataTable,

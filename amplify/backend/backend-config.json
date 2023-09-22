@@ -1,0 +1,131 @@
+{
+  "api": {
+    "UserManagementAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bettertogether67e0fd7b"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "api261fec5f": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bettertogether056853f2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "bettertogether": {
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "managed"
+    }
+  },
+  "function": {
+    "bettertogether056853f2": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "bettertogether67e0fd7b": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "bettertogetherb1088b9a": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "hosting": {
+    "S3AndCloudFront": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3AndCloudFront"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_bettertogether056853f2_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogether056853f2"
+        }
+      ]
+    },
+    "AMPLIFY_function_bettertogether056853f2_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogether056853f2"
+        }
+      ]
+    },
+    "AMPLIFY_function_bettertogether67e0fd7b_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogether67e0fd7b"
+        }
+      ]
+    },
+    "AMPLIFY_function_bettertogether67e0fd7b_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogether67e0fd7b"
+        }
+      ]
+    },
+    "AMPLIFY_function_bettertogetherb1088b9a_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogetherb1088b9a"
+        }
+      ]
+    },
+    "AMPLIFY_function_bettertogetherb1088b9a_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bettertogetherb1088b9a"
+        }
+      ]
+    }
+  }
+}
