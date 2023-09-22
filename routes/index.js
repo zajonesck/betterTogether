@@ -1,64 +1,124 @@
-// const db = require("./queries");
-// const express = require("express");
-// const bodyParser = require("body-parser");
-// const app = express();
-// const cors = require("cors");
-// const { nextDay } = require("date-fns");
+require("dotenv").config();
 
-// const port = process.env.PORT || 3000;
+let createError = require("http-errors");
+const express = require("express");
+let path = require("path");
 
-// // Add Access Control Allow Origin headers
-// app.use(cors());
-// app.use(bodyParser.json());
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// );
+const app = express();
 
-// app.use(express.static("ui/dist"));
+const db = require("./queries");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { deleteClientForTest } = require("./queries");
 
-// app.get("/clients", db.getClients);
+const port = process.env.PORT || 3000;
 
-// app.get("/clients/:clientId", db.getClient);
+// Add Access Control Allow Origin headers
 
-// app.get("/clients_weights/:clientId", db.getWeights);
+app.use(cors());
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.get("/exercises", db.getAllExercises);
 
-// app.post("/clients_weights/:clientId", (req, res, next) => {
-//   console.log(req.body.weight);
-//   if (!req.body.weight) {
-//     res.status(400).send("Client weight required.");
-//   }
-//   if (isNaN(req.body.weight)) {
-//     res.status(400).send("Valid weight required.");
-//   } else {
-//     db.addWeight(req, res);
-//   }
-// });
-// // app.post("/clients", (req, res, next) => {
-// //   if (!req.body.first_name || !req.body.last_name) {
-// //     res.status(400).send("Client name required.");
-// //   }
-// //   if (!req.body.birth_day) {
-// //     res.status(400).send("Birthday required.");
-// //   }
-// //   if (
-// //     new Date(req.body.birth_day).getFullYear() <
-// //     new Date().getFullYear() - 200
-// //   ) {
-// //     console.log(req.body.birth_day);
-// //     res.status(400).send("Are you really that old?");
-// //   }
-// //   if (isNaN(Date.parse(req.body.birth_day))) {
-// //     res.status(400).send("Valid birthday required.");
-// //   } else {
-// //     db.addClient(req, res);
-// //   }
-// //   //name duplicate, name is null
-// //   //req.body.birth_day - birth day
-// //   //birthday empty string, null, undefined, and "good date", if birthday parameter exists
-// // });
+app.get("/exercises/:id", db.getExerciseById);
 
-// app.delete("/clients/:clientId", db.deleteClient);
+app.use(express.static("ui/dist"));
 
-// app.delete("/clients_weights/:weightId", db.deleteWeight);
+app.get("/clients", db.getClients);
+
+app.get("/client-workouts/:clientId", db.getClientWorkouts);
+
+app.get("/clients/:clientId", db.getClient);
+
+app.get("/clients_weights/:clientId", db.getWeights);
+
+app.delete("/client_workout/:workoutId", db.deleteClientWorkout);
+
+app.get("/workouts", db.getWorkouts);
+
+app.get("/workout/:workoutId", db.getWorkout);
+
+app.post("/clients/workouts", db.addClientWorkout);
+
+app.post("/clients_weights/:clientId", (req, res, next) => {
+  if (!req.body.weight) {
+    return res.status(400).send("Client weight required.");
+  }
+  if (isNaN(req.body.weight)) {
+    return res.status(400).send("Valid weight required.");
+  }
+  db.addWeight(req, res);
+});
+
+app.post("/search/workouts", db.searchWorkouts);
+
+app.post("/clients", (req, res, next) => {
+  if (!req.body.first_name || !req.body.last_name) {
+    return res.status(400).send("Client name required.");
+  }
+  if (!req.body.birth_day) {
+    return res.status(400).send("Birthday required.");
+  }
+  if (
+    new Date(req.body.birth_day).getFullYear() <
+    new Date().getFullYear() - 200
+  ) {
+    console.log(req.body.birth_day);
+    return res.status(400).send("Are you really that old?");
+  }
+  if (isNaN(Date.parse(req.body.birth_day))) {
+    return res.status(400).send("Valid birthday required.");
+  } else {
+    db.addClient(req, res);
+  }
+});
+
+app.delete("/test/delete-client/:clientId", (req, res) => {
+  const clientId = req.params.clientId;
+
+  deleteClientForTest(clientId)
+    .then(() => {
+      res.status(200).send("Client deleted successfully.");
+    })
+    .catch((err) => {
+      res.status(500).send("Error deleting client.");
+    });
+});
+
+app.delete("/clients/:clientId", db.deleteClient);
+
+app.delete("/clients_weights/:weightId", db.deleteWeight);
+app.put("/clients/:clientId/notes", (req, res, next) => {
+  // You can add validation checks here as needed, similar to what you've done for other routes
+  const { health_note, goal_note, misc_note } = req.body;
+  if (!health_note && !goal_note && !misc_note) {
+    return res.status(400).send("At least one note field is required.");
+  }
+
+  // Assuming you have a `updateClientNotes` function in your `db` module
+  db.updateClientNotes(req, res);
+});
+
+// view engine setup
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "jade");
+const awsServerlessExpress = require("aws-serverless-express");
+
+/**
+ * @type {import('http').Server}
+ */
+const server = awsServerlessExpress.createServer(app);
+
+/**
+ * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
+ */
+exports.handler = (event, context) => {
+  console.log(`EVENT: ${JSON.stringify(event)}`);
+  return awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
+};
+
+exports.app = app;
