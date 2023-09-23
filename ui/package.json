@@ -4,27 +4,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 4173",
-    "build:stage": "env-cmd -f ./.env.prod npm run-script build"
+    "preview": "vite preview --port 4173"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
-    "@vuelidate/core": "^2.0.3",
-    "@vuelidate/validators": "^2.0.3",
     "aws-amplify": "^5.3.11",
     "axios": "^0.27.2",
-    "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
     "esbuild": "^0.19.3",
     "vite": "^4.4.9",
     "vue": "^3.2.38",
-    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.0.13",
     "vuetify": "^3.3.7"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.3.4",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "env-cmd": "^10.1.0"
+    "@vitejs/plugin-vue": "^4.3.4"
   }
 }
