@@ -1,6 +1,9 @@
 const request = require("supertest");
 const app = require("../app");
 const { deleteClientForTest } = require("../routes/queries");
+const { TextEncoder, TextDecoder } = require("util");
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 let createdClientIds = [];
 

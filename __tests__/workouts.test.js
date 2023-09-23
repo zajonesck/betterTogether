@@ -1,5 +1,8 @@
 const request = require("supertest");
 const app = require("../app");
+const { TextEncoder, TextDecoder } = require("util");
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 describe("GET /workouts", () => {
   test("should get all workouts", async () => {
