@@ -88,9 +88,14 @@ const getClients = (request, response) => {
 const addClientWorkout = (request, response) => {
   const { client_id, workout_id, notes, date } = request.body;
 
-  // Validate request data
-  if (!client_id || !workout_id || !date) {
-    return response.status(400).send("Required fields are missing.");
+  if (!workout_id) {
+    return response.status(400).send("workout_id is required.");
+  }
+  if (!client_id) {
+    return response.status(400).send("client_id is required.");
+  }
+  if (!date) {
+    return response.status(400).send("date is required.");
   }
 
   pool.query(
@@ -99,7 +104,7 @@ const addClientWorkout = (request, response) => {
     (error, results) => {
       if (error) {
         console.log(error);
-        response.status(500).send("An error occurred while adding the workout");
+        response.status(400).send("An unkown error occurred");
         return;
       }
       response.status(201).json({

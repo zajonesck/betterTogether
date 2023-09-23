@@ -1,17 +1,17 @@
 const request = require("supertest");
-const app = require("../app");
+const { app } = require("../routes/index");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-describe("GET /workouts", () => {
+describe("GET workouts", () => {
   test("should get all workouts", async () => {
     const res = await request(app).get("/workouts").expect(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
 });
 
-describe("GET /workout/:workoutId", () => {
+describe("GET workout", () => {
   test("It responds with the requested workout", async () => {
     const workoutId = 1;
     const response = await request(app).get(`/workout/${workoutId}`);
@@ -25,7 +25,7 @@ test("It responds with a 404 for non-existing workout", async () => {
   expect(response.statusCode).toBe(404);
 });
 
-describe("POST /clients/workouts", () => {
+describe("Create a client workout", () => {
   test("should add a client's workout and return the new workout's ID", async () => {
     const newWorkout = {
       client_id: 153,
@@ -46,7 +46,7 @@ describe("POST /clients/workouts", () => {
     );
   });
 
-  test("should fail when required fields are missing", async () => {
+  test("should fail when workout_id is missing", async () => {
     const incompleteWorkout = {
       client_id: 153,
       notes: "This is a test note",
@@ -55,7 +55,9 @@ describe("POST /clients/workouts", () => {
 
     const res = await request(app)
       .post("/clients/workouts")
-      .send(incompleteWorkout)
-      .expect(400);
+      .send(incompleteWorkout);
+
+    expect(res.text).toBe("workout_id is required.");
+    expect(res.statusCode).toBe(400);
   });
 });

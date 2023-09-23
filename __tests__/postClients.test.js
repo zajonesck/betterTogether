@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app");
+const { app } = require("../routes/index");
 const { deleteClientForTest } = require("../routes/queries");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
@@ -7,7 +7,7 @@ global.TextDecoder = TextDecoder;
 
 let createdClientIds = [];
 
-describe("POST /clients", () => {
+describe("Create a new client", () => {
   afterEach(async () => {
     for (let clientId of createdClientIds) {
       try {
@@ -96,7 +96,7 @@ describe("POST /clients", () => {
   });
 });
 
-describe("POST /clients_weights/:clientId", () => {
+describe("Create a new client weight", () => {
   test("Throws 400 error when there is no weight", async () => {
     const newClient = await request(app).post("/clients_weights/:153").send({
       weight: "",
