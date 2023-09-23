@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { app } = require("../routes/index");
+const { app } = require("../src/index");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;

@@ -1,6 +1,6 @@
 const request = require("supertest");
-const { app } = require("../routes/index");
-const { deleteClientForTest } = require("../routes/queries");
+const { app } = require("../src/index");
+const { deleteClientForTest } = require("../src/queries");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
