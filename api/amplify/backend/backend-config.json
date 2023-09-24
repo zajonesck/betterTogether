@@ -1,6 +1,6 @@
 {
   "api": {
-    "betterTogetherAPI": {
+    "betterTogetherApiResource": {
       "dependsOn": [
         {
           "attributes": [
@@ -8,7 +8,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "betterTogetherAPI"
+          "resourceName": "betterTogetherApiResource"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -16,26 +16,26 @@
     }
   },
   "function": {
-    "betterTogetherAPI": {
+    "betterTogetherApiResource": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_betterTogetherAPI_deploymentBucketName": {
+    "AMPLIFY_function_betterTogetherApiResource_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "betterTogetherAPI"
+          "resourceName": "betterTogetherApiResource"
         }
       ]
     },
-    "AMPLIFY_function_betterTogetherAPI_s3Key": {
+    "AMPLIFY_function_betterTogetherApiResource_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "betterTogetherAPI"
+          "resourceName": "betterTogetherApiResource"
         }
       ]
     }

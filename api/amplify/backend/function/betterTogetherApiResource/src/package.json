@@ -26,6 +26,11 @@
     "morgan": "^1.10.0",
     "pg": "^8.8.0"
   },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
   "scripts": {
     "start:watch": "NODE_ENV=local nodemon server.js",
     "start": "NODE_ENV=production node server.js",

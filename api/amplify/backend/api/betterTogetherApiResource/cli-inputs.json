@@ -1,9 +1,9 @@
 {
   "version": 1,
   "paths": {
-    "/": {
-      "name": "/",
-      "lambdaFunction": "betterTogetherAPI",
+    "/api": {
+      "name": "/api",
+      "lambdaFunction": "betterTogetherApiResource",
       "permissions": {
         "setting": "open"
       }

@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.4.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -43,16 +43,16 @@
             "Ref": "s3Key"
           }
         },
-        "Handler": "src/routes/index.handler",
+        "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "betterTogetherAPI",
+            "betterTogetherApiResource",
             {
               "Fn::Join": [
                 "",
                 [
-                  "betterTogetherAPI",
+                  "betterTogetherApiResource",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "bettertogetherLambdaRole0933be29",
+            "bettertogetherapiLambdaRole6eed9bb1",
             {
               "Fn::Join": [
                 "",
                 [
-                  "bettertogetherLambdaRole0933be29",
+                  "bettertogetherapiLambdaRole6eed9bb1",
                   "-",
                   {
                     "Ref": "env"
