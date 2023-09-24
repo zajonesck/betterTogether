@@ -6,7 +6,7 @@ global.TextDecoder = TextDecoder;
 
 describe("GET workouts", () => {
   test("should get all workouts", async () => {
-    const res = await request(app).get("/workouts").expect(200);
+    const res = await request(app).get("/api/workouts").expect(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
 });
@@ -14,14 +14,16 @@ describe("GET workouts", () => {
 describe("GET workout", () => {
   test("It responds with the requested workout", async () => {
     const workoutId = 1;
-    const response = await request(app).get(`/workout/${workoutId}`);
+    const response = await request(app).get(`/api/workout/${workoutId}`);
     expect(response.statusCode).toBe(200);
   });
 });
 
 test("It responds with a 404 for non-existing workout", async () => {
   const nonExistingWorkoutId = 999999;
-  const response = await request(app).get(`/workout/${nonExistingWorkoutId}`);
+  const response = await request(app).get(
+    `/api/workout/${nonExistingWorkoutId}`
+  );
   expect(response.statusCode).toBe(404);
 });
 
@@ -35,7 +37,7 @@ describe("Create a client workout", () => {
     };
 
     const res = await request(app)
-      .post("/clients/workouts")
+      .post("/api/clients/workouts")
       .send(newWorkout)
       .expect(201);
 
@@ -54,7 +56,7 @@ describe("Create a client workout", () => {
     };
 
     const res = await request(app)
-      .post("/clients/workouts")
+      .post("/api/clients/workouts")
       .send(incompleteWorkout);
 
     expect(res.text).toBe("workout_id is required.");

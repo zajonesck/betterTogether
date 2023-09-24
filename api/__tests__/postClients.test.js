@@ -20,10 +20,10 @@ describe("Create a new client", () => {
   });
 
   test("It responds with the newly created client", async () => {
-    const response = await request(app).get("/clients");
+    const response = await request(app).get("/api/clients");
     const numberOfClients = response.body.length;
 
-    const newClient = await request(app).post("/clients").send({
+    const newClient = await request(app).post("/api/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "10/10/2010",
@@ -33,7 +33,7 @@ describe("Create a new client", () => {
       createdClientIds.push(newClient.body.id);
     }
 
-    const newResponse = await request(app).get("/clients");
+    const newResponse = await request(app).get("/api/clients");
     expect(newResponse.body.length).toBe(numberOfClients + 1);
     expect(newClient.body).toHaveProperty("id");
     expect(newClient.body).toHaveProperty("first_name", "New");
@@ -45,7 +45,7 @@ describe("Create a new client", () => {
     expect(newClient.statusCode).toBe(201);
   });
   test("Throws 400 error when there is no client_name", async () => {
-    const newClient = await request(app).post("/clients").send({
+    const newClient = await request(app).post("/api/clients").send({
       first_name: "",
       last_name: "Client",
       birth_day: "10/10/2010",
@@ -55,7 +55,7 @@ describe("Create a new client", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when there is no birth_day", async () => {
-    const newClient = await request(app).post("/clients").send({
+    const newClient = await request(app).post("/api/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "",
@@ -65,7 +65,7 @@ describe("Create a new client", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when birth_day is an invalid date", async () => {
-    const newClient = await request(app).post("/clients").send({
+    const newClient = await request(app).post("/api/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "abcd",
@@ -75,7 +75,7 @@ describe("Create a new client", () => {
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when birth_day is more than 200 years ago", async () => {
-    const newClient = await request(app).post("/clients").send({
+    const newClient = await request(app).post("/api/clients").send({
       first_name: "New",
       last_name: "Client",
       birth_day: "10/10/1010",
@@ -98,16 +98,18 @@ describe("Create a new client", () => {
 
 describe("Create a new client weight", () => {
   test("Throws 400 error when there is no weight", async () => {
-    const newClient = await request(app).post("/clients_weights/:153").send({
-      weight: "",
-    });
+    const newClient = await request(app)
+      .post("/api/clients_weights/:153")
+      .send({
+        weight: "",
+      });
     expect(newClient.body).toStrictEqual({});
     expect(newClient.text).toEqual("Client weight required.");
     expect(newClient.statusCode).toBe(400);
   });
   test("Throws 400 error when clients_weights is an invalid weight", async () => {
     const newClient = await request(app)
-      .post("/clients_weights/:clientId")
+      .post("/api/clients_weights/:clientId")
       .send({
         weight: "abcd",
       });
