@@ -13,8 +13,6 @@ const { deleteClientForTest } = require("./queries");
 
 const port = process.env.PORT || 3000;
 
-// Add Access Control Allow Origin headers
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
