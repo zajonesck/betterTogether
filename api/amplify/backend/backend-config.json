@@ -1,0 +1,43 @@
+{
+  "api": {
+    "betterTogetherApiResource": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "betterTogetherApiResource"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "betterTogetherApiResource": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_betterTogetherApiResource_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "betterTogetherApiResource"
+        }
+      ]
+    },
+    "AMPLIFY_function_betterTogetherApiResource_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "betterTogetherApiResource"
+        }
+      ]
+    }
+  }
+}

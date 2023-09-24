@@ -1,0 +1,26 @@
+{
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bettertogetherapi-prod-193441-authRole",
+      "UnauthRoleArn": "arn:aws:iam::743761728067:role/amplify-bettertogetherapi-prod-193441-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::743761728067:role/amplify-bettertogetherapi-prod-193441-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-bettertogetherapi-prod-193441-deployment",
+      "UnauthRoleName": "amplify-bettertogetherapi-prod-193441-unauthRole",
+      "StackName": "amplify-bettertogetherapi-prod-193441",
+      "StackId": "arn:aws:cloudformation:us-east-1:743761728067:stack/amplify-bettertogetherapi-prod-193441/27de0f60-5a72-11ee-8b22-1215a4cc1645",
+      "AmplifyAppId": "d25jr4yoml4drk"
+    },
+    "categories": {
+      "function": {
+        "betterTogetherApiResource": {
+          "deploymentBucketName": "amplify-bettertogetherapi-prod-193441-deployment",
+          "s3Key": "amplify-builds/betterTogetherApiResource-662f3677784d31763431-build.zip"
+        }
+      },
+      "api": {
+        "betterTogetherApiResource": {}
+      }
+    }
+  }
+}

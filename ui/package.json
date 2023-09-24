@@ -18,6 +18,26 @@
     "vuetify": "^3.3.7"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.22.15",
+    "@babel/preset-env": "^7.22.20",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-preset-env": "^1.7.0",
+    "vue-template-compiler": "^2.7.14",
     "@vitejs/plugin-vue": "^4.3.4"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.vue$": "vue-jest"
+    },
+    "globals": {
+      "vue-jest": {
+        "experimentalCSSCompile": true
+      }
+    }
   }
 }
