@@ -5,24 +5,25 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "test": "vitest"
+    "test": "vitest --dom"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
-    "@vue/test-utils": "^2.4.1",
     "aws-amplify": "^5.3.11",
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",
     "esbuild": "^0.19.3",
-    "vitest": "^0.34.5",
-    "vue": "^3.3.4",
+    "happy-dom": "^6.0.4",
+    "vue": "3.3.4",
     "vue-router": "^4.2.5",
     "vuetify": "^3.3.17"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.3.4",
+    "@vue/test-utils": "^2.4.1",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vitest": "^0.34.5"
   }
 }

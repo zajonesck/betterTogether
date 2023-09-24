@@ -1,5 +1,6 @@
 const { mount } = require("@vue/test-utils");
-const Clients = require("../ui/src/views/Clients.vue");
+import Clients from "../src/views/Clients.vue";
+
 describe("Clients.vue", () => {
   let wrapper;
 
