@@ -23,26 +23,12 @@ export default {
       healthMedsNote: "",
       goalsNote: "",
       miscNote: "",
-      confirmDeleteDialog: false,
-      itemToDelete: null,
-      deleteType: "",
-      searchQuery: "",
-      tab: null,
       errorDialog: false,
       errorMessage: "",
       clientFirstName: "",
       clientLastName: "",
       clientBirthDay: "",
       loading: true,
-      chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
     };
   },
 
