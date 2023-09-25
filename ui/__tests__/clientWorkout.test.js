@@ -1,246 +1,127 @@
 const { mount } = require("@vue/test-utils");
 import ClientWorkout from "../src/component/ClientWorkout.vue";
 
-describe("Clientorkout.vue", () => {
+describe("ClientWorkout.vue", () => {
   let wrapper;
+
+  const clientWorkoutsData = [
+    {
+      workout_name: "Chest Day",
+      difficulty: "Intermediate",
+      date: "2023-09-23",
+      notes: "Intense",
+    },
+    {
+      workout_name: "Arm Day",
+      difficulty: "Beginner",
+      date: "2023-09-22",
+      notes: "Light",
+    },
+  ];
 
   beforeEach(() => {
     wrapper = mount(ClientWorkout);
   });
 
   describe("Sorting functionality", () => {
-    test("should sort by workout_name in ascending order", () => {
+    test.each([
+      ["workout_name", true, "Arm Day"],
+      ["workout_name", false, "Chest Day"],
+      ["difficulty", true, "Beginner"],
+      ["difficulty", false, "Intermediate"],
+      ["date", true, "2023-09-22"],
+      ["date", false, "2023-09-23"],
+    ])("should sort by %s in %s order", (column, ascending, expected) => {
       wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "workout_name",
-        sortAscending: true,
+        clientWorkouts: clientWorkoutsData,
+        sortedColumn: column,
+        sortAscending: ascending,
       });
-
-      expect(wrapper.vm.sortedWorkouts[0].workout_name).toBe("Arm Day");
-    });
-
-    test("should sort by workout_name in descending order", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "workout_name",
-        sortAscending: false,
-      });
-
-      expect(wrapper.vm.sortedWorkouts[0].workout_name).toBe("Chest Day");
-    });
-
-    test("should sort by difficulty in ascending order", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "difficulty",
-        sortAscending: true,
-      });
-
-      expect(wrapper.vm.sortedWorkouts[0].difficulty).toBe("Beginner");
-    });
-
-    test("should sort by difficulty in descending order", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "difficulty",
-        sortAscending: false,
-      });
-
-      expect(wrapper.vm.sortedWorkouts[0].difficulty).toBe("Intermediate");
-    });
-
-    test("should sort by date in ascending order", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "date",
-        sortAscending: true,
-      });
-
-      expect(wrapper.vm.sortedWorkouts[0].date).toBe("2023-09-22");
-    });
-
-    test("should sort by date in descending order", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        sortedColumn: "date",
-        sortAscending: false,
-      });
-
-      expect(wrapper.vm.sortedWorkouts[0].date).toBe("2023-09-23");
+      expect(wrapper.vm.sortedWorkouts[0][column]).toBe(expected);
     });
   });
 
   describe("Search functionality", () => {
-    test("should filter workouts by workout_name", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        searchQuery: "Chest Day",
-      });
+    test.each([
+      ["Chest Day", "workout_name", 1, "Chest Day"],
+      ["Calisthenics", "workout_name", 0],
+      ["cHeSt DaY", "workout_name", 1, "Chest Day"],
+      ["Intermediate", "difficulty", 1, "Intermediate"],
+      ["Intense", "notes", 1, "Intense"],
+    ])(
+      "should filter workouts by %s in %s column",
+      (query, column, expectedLength, expectedValue) => {
+        wrapper.setData({
+          clientWorkouts: clientWorkoutsData,
+          searchQuery: query,
+        });
+        expect(wrapper.vm.filteredWorkouts.length).toBe(expectedLength);
+        if (expectedLength > 0) {
+          expect(wrapper.vm.filteredWorkouts[0][column]).toBe(expectedValue);
+        }
+      }
+    );
+  });
+  describe("Pagination functionality", () => {
+    const clientWorkoutsData = [
+      {
+        id: 1,
+        workout_name: "Chest Day",
+        difficulty: "Intermediate",
+        date: "2023-09-23",
+        notes: "Intense",
+      },
+      {
+        id: 2,
+        workout_name: "Arm Day",
+        difficulty: "Beginner",
+        date: "2023-09-22",
+        notes: "Light",
+      },
+      {
+        id: 3,
+        workout_name: "Leg Day",
+        difficulty: "Advanced",
+        date: "2023-09-21",
+        notes: "Very Intense",
+      },
+    ];
 
-      expect(wrapper.vm.filteredWorkouts.length).toBe(1);
-      expect(wrapper.vm.filteredWorkouts[0].workout_name).toBe("Chest Day");
+    test("should display correct number of workouts per page", () => {
+      wrapper.setData({
+        clientWorkouts: clientWorkoutsData,
+        currentPageAssignedWorkouts: 1,
+        itemsPerPageAssignedWorkouts: 2,
+      });
+      expect(wrapper.vm.paginatedAssignedWorkouts.length).toBe(2);
+      expect(wrapper.vm.paginatedAssignedWorkouts[0].workout_name).toBe(
+        "Chest Day"
+      );
+      expect(wrapper.vm.paginatedAssignedWorkouts[1].workout_name).toBe(
+        "Arm Day"
+      );
     });
 
-    test("should return empty list if no match found", () => {
+    test("should calculate total pages correctly", () => {
       wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        searchQuery: "Calisthenics",
+        clientWorkouts: clientWorkoutsData,
+        itemsPerPageAssignedWorkouts: 2,
       });
-
-      expect(wrapper.vm.filteredWorkouts.length).toBe(0);
+      expect(wrapper.vm.totalPagesAssignedWorkouts).toBe(
+        Math.ceil(clientWorkoutsData.length / 2)
+      );
     });
 
-    test("should filter workouts case-insensitively", () => {
+    test("should navigate to next page correctly", () => {
       wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-          },
-        ],
-        searchQuery: "cHeSt DaY",
+        clientWorkouts: clientWorkoutsData,
+        currentPageAssignedWorkouts: 2,
+        itemsPerPageAssignedWorkouts: 2,
       });
-
-      expect(wrapper.vm.filteredWorkouts.length).toBe(1);
-      expect(wrapper.vm.filteredWorkouts[0].workout_name).toBe("Chest Day");
-    });
-    test("should filter workouts by difficulty", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-            notes: "Intense",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-            notes: "Light",
-          },
-        ],
-        searchQuery: "Intermediate",
-      });
-
-      expect(wrapper.vm.filteredWorkouts.length).toBe(1);
-      expect(wrapper.vm.filteredWorkouts[0].difficulty).toBe("Intermediate");
-    });
-    test("should filter workouts by notes", () => {
-      wrapper.setData({
-        clientWorkouts: [
-          {
-            workout_name: "Chest Day",
-            difficulty: "Intermediate",
-            date: "2023-09-23",
-            notes: "Intense",
-          },
-          {
-            workout_name: "Arm Day",
-            difficulty: "Beginner",
-            date: "2023-09-22",
-            notes: "Light",
-          },
-        ],
-        searchQuery: "Intense",
-      });
-
-      expect(wrapper.vm.filteredWorkouts.length).toBe(1);
-      expect(wrapper.vm.filteredWorkouts[0].notes).toBe("Intense");
+      expect(wrapper.vm.paginatedAssignedWorkouts.length).toBe(1); // As we only have 3 workouts in the sample data
+      expect(wrapper.vm.paginatedAssignedWorkouts[0].workout_name).toBe(
+        "Leg Day"
+      );
     });
   });
 });

@@ -63,8 +63,8 @@ const drawer = ref(false);
 <style>
 v-app {
   background-image: url("./src/assets/TransparentLogo.png");
-  background-size: cover; /* This will make sure the image covers the entire container */
-  background-repeat: no-repeat; /* This will prevent the image from repeating if it's smaller than the container */
-  background-position: center; /* This will center the background image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 </style>

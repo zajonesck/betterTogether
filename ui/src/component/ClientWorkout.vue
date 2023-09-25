@@ -6,7 +6,7 @@
         :items="filteredAvailableWorkouts"
         label="All workouts"
         :filter="searchAvailableWorkoutsFilter"
-        v-model:search-input="searchAvailableWorkouts"
+        :v-model:search-input="searchAvailableWorkouts"
       ></v-select>
       <v-textarea
         v-model="note"

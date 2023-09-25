@@ -27,12 +27,9 @@
 <script>
 export default {
   methods: {
-    login() {
-      // Handle login logic here
-    },
+    login() {},
     tryAsGuest() {
-      // Logic for guest user access
-      this.$router.push("/client-roster"); // Redirect to a guest dashboard or appropriate route
+      this.$router.push("/client-roster");
     },
   },
 };
