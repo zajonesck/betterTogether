@@ -1,124 +1,126 @@
 <template>
-  <v-window-item value="workouts">
-    <v-select
-      v-model="selectedWorkout"
-      :items="filteredAvailableWorkouts"
-      label="All workouts"
-      :filter="searchAvailableWorkoutsFilter"
-      v-model:search-input="searchAvailableWorkouts"
-    ></v-select>
-    <v-textarea
-      v-model="note"
-      placeholder="Add notes for this workout"
-      @keyup.enter="assignWorkoutToClient"
-    ></v-textarea>
+  <div>
+    <v-window-item value="workouts">
+      <v-select
+        v-model="selectedWorkout"
+        :items="filteredAvailableWorkouts"
+        label="All workouts"
+        :filter="searchAvailableWorkoutsFilter"
+        v-model:search-input="searchAvailableWorkouts"
+      ></v-select>
+      <v-textarea
+        v-model="note"
+        placeholder="Add notes for this workout"
+        @keyup.enter="assignWorkoutToClient"
+      ></v-textarea>
 
-    <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
-    <v-card-title> Assigned Workouts </v-card-title>
-    <v-text-field
-      v-model="searchQuery"
-      placeholder="Search Assigned Workouts"
-    ></v-text-field>
-    <v-table>
-      <thead>
-        <tr>
-          <th @click="sortBy('workout_name')" class="clickable-header">
-            Workout
-            <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'workout_name'"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th @click="sortBy('difficulty')" class="clickable-header">
-            Difficulty
-            <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'difficulty'"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th>Notes</th>
-          <th @click="sortBy('date')" class="clickable-header">
-            Date Assigned
-            <v-icon v-if="sortedColumn === 'date' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'date'">mdi-arrow-up</v-icon>
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="clientWorkouts.length === 0">
-          <td colspan="4">No assigned workouts.</td>
-        </tr>
-        <tr
-          v-else
-          v-for="workout in paginatedAssignedWorkouts"
-          :key="workout.id"
-        >
-          <td>
-            <router-link
-              :to="{
-                name: 'workout-detail',
-                params: { id: workout.workout_id },
-              }"
-            >
-              {{ workout.workout_name }}
-            </router-link>
-          </td>
-          <td>{{ workout.difficulty }}</td>
-          <td>{{ workout.notes }}</td>
-          <td>{{ newDate(workout.date) }}</td>
-          <td>
-            <v-btn
-              icon
-              @click="confirmDelete('workout', workout.client_workout_id)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-pagination
-      v-model="currentPageAssignedWorkouts"
-      :length="totalPagesAssignedWorkouts"
-    ></v-pagination>
-  </v-window-item>
-  <v-dialog v-model="errorDialog" max-width="500px">
-    <v-card>
-      <v-card-title class="headline">Error</v-card-title>
-      <v-card-text>
-        {{ errorMessage }}
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="errorDialog = false"
-          >Close</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
-    <v-card>
-      <v-card-title class="headline">Confirm Deletion</v-card-title>
-      <v-card-text> Are you sure you want to delete this item? </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="proceedToDelete"
-          >Yes, Delete</v-btn
-        >
-        <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
+      <v-card-title> Assigned Workouts </v-card-title>
+      <v-text-field
+        v-model="searchQuery"
+        placeholder="Search Assigned Workouts"
+      ></v-text-field>
+      <v-table>
+        <thead>
+          <tr>
+            <th @click="sortBy('workout_name')" class="clickable-header">
+              Workout
+              <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'workout_name'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th @click="sortBy('difficulty')" class="clickable-header">
+              Difficulty
+              <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'difficulty'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th>Notes</th>
+            <th @click="sortBy('date')" class="clickable-header">
+              Date Assigned
+              <v-icon v-if="sortedColumn === 'date' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'date'">mdi-arrow-up</v-icon>
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="clientWorkouts.length === 0">
+            <td colspan="4">No assigned workouts.</td>
+          </tr>
+          <tr
+            v-else
+            v-for="workout in paginatedAssignedWorkouts"
+            :key="workout.id"
+          >
+            <td>
+              <router-link
+                :to="{
+                  name: 'workout-detail',
+                  params: { id: workout.workout_id },
+                }"
+              >
+                {{ workout.workout_name }}
+              </router-link>
+            </td>
+            <td>{{ workout.difficulty }}</td>
+            <td>{{ workout.notes }}</td>
+            <td>{{ newDate(workout.date) }}</td>
+            <td>
+              <v-btn
+                icon
+                @click="confirmDelete('workout', workout.client_workout_id)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+      <v-pagination
+        v-model="currentPageAssignedWorkouts"
+        :length="totalPagesAssignedWorkouts"
+      ></v-pagination>
+    </v-window-item>
+    <v-dialog v-model="errorDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="headline">Error</v-card-title>
+        <v-card-text>
+          {{ errorMessage }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="errorDialog = false"
+            >Close</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="headline">Confirm Deletion</v-card-title>
+        <v-card-text> Are you sure you want to delete this item? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="proceedToDelete"
+            >Yes, Delete</v-btn
+          >
+          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 <script>
 import axios from "axios";
