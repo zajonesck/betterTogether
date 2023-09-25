@@ -1,49 +1,51 @@
 <template>
-  <v-window-item value="weights">
-    <v-card-title> Weight History </v-card-title>
-    <v-table>
-      <thead>
-        <tr>
-          <th>Weight</th>
-          <th>Date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="weight in clientWeights" :key="weight.id">
-          <td>{{ weight.weight }}</td>
-          <td>{{ newDate(weight.date) }}</td>
-          <td>
-            <v-btn icon @click="confirmDelete('weight', weight.id)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-form @submit.prevent="addWeight">
-      <v-card-title style="padding-top: 25px"> Weight Check-In </v-card-title>
-      <v-text-field
-        v-model="newWeight"
-        label="Today's Weight"
-        required
-      ></v-text-field>
-      <v-btn @click="addWeight">Add Weight</v-btn>
-    </v-form>
-  </v-window-item>
-  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
-    <v-card>
-      <v-card-title class="headline">Confirm Deletion</v-card-title>
-      <v-card-text> Are you sure you want to delete this item? </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="proceedToDelete"
-          >Yes, Delete</v-btn
-        >
-        <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <div>
+    <v-window-item value="weights">
+      <v-card-title> Weight History </v-card-title>
+      <v-table>
+        <thead>
+          <tr>
+            <th>Weight</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="weight in clientWeights" :key="weight.id">
+            <td>{{ weight.weight }}</td>
+            <td>{{ newDate(weight.date) }}</td>
+            <td>
+              <v-btn icon @click="confirmDelete('weight', weight.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+      <v-form @submit.prevent="addWeight">
+        <v-card-title style="padding-top: 25px"> Weight Check-In </v-card-title>
+        <v-text-field
+          v-model="newWeight"
+          label="Today's Weight"
+          required
+        ></v-text-field>
+        <v-btn @click="addWeight">Add Weight</v-btn>
+      </v-form>
+    </v-window-item>
+    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="headline">Confirm Deletion</v-card-title>
+        <v-card-text> Are you sure you want to delete this item? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="proceedToDelete"
+            >Yes, Delete</v-btn
+          >
+          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -56,32 +58,13 @@ export default {
       confirmDeleteDialog: false,
       itemToDelete: null,
       deleteType: "",
-      workouts: [],
-      searchQuery: "",
-      tab: null,
       errorDialog: false,
       errorMessage: "",
       clientWeights: [],
-      clientWorkouts: [],
       newWeight: "",
-      newWeighDate: "",
-      clientFirstName: "",
-      clientLastName: "",
-      clientBirthDay: "",
+      newWeightDate: "",
       loading: true,
       chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     };
   },
   async mounted() {
@@ -94,33 +77,6 @@ export default {
     }
   },
   methods: {
-    async getClient() {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}clients/${
-            this.$route.params.clientId
-          }`
-        );
-        const {
-          first_name,
-          last_name,
-          birth_day,
-          health_note,
-          goal_note,
-          misc_note,
-        } = response.data[0];
-        this.clientFirstName = first_name;
-        this.clientLastName = last_name;
-        this.clientBirthDay = newBDate(birth_day);
-        this.healthMedsNote = health_note;
-        this.goalsNote = goal_note;
-        this.miscNote = misc_note;
-      } catch (error) {
-        console.error("Error fetching client data: ", error);
-        this.errorMessage = "Failed to fetch client data.";
-        this.errorDialog = true;
-      }
-    },
     confirmDelete(type, itemId) {
       this.deleteType = type;
       this.itemToDelete = itemId;
