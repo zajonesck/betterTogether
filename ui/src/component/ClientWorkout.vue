@@ -143,28 +143,9 @@ export default {
       searchQuery: "",
       selectedWorkout: null,
       availableWorkouts: [],
-      tab: null,
       errorDialog: false,
       errorMessage: "",
-      clientWeights: [],
       clientWorkouts: [],
-      clientFirstName: "",
-      clientLastName: "",
-      clientBirthDay: "",
-      loading: true,
-      chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     };
   },
 
