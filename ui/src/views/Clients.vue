@@ -12,13 +12,6 @@ export default {
       newClientLastName: "",
       newClientBirthDate: "",
       loading: true,
-      headers: [
-        { text: "ID", value: "id" },
-        { text: "First Name", value: "first_name" },
-        { text: "Last Name", value: "last_name" },
-        { text: "Birth Date", value: "birth_day" },
-        { text: "Actions", value: "actions", sortable: false },
-      ],
       dialog: false,
       clientToDelete: null,
       searchQuery: "",
