@@ -1,5 +1,3 @@
-<!-- LoginPage.vue -->
-
 <template>
   <v-container style="min-height: calc(100vh - 250px)">
     <v-row justify="center" align="center" class="fill-height">
@@ -40,6 +38,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Add any additional styling for your login page here */
-</style>
+<style scoped></style>
