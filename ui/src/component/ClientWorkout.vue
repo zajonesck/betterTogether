@@ -89,7 +89,7 @@
         </tbody>
       </v-table>
       <v-pagination
-        v-model="currentPageAssignedWorkouts"
+        v-model="currentPage"
         :length="totalPagesAssignedWorkouts"
       ></v-pagination>
     </v-window-item>
@@ -131,7 +131,7 @@ export default {
   data() {
     return {
       note: "",
-      currentPageAssignedWorkouts: 1,
+      currentPage: 1,
       itemsPerPageAssignedWorkouts: 10,
       searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
@@ -165,9 +165,7 @@ export default {
 
   computed: {
     paginatedAssignedWorkouts() {
-      const start =
-        (this.currentPageAssignedWorkouts - 1) *
-        this.itemsPerPageAssignedWorkouts;
+      const start = (this.currentPage - 1) * this.itemsPerPageAssignedWorkouts;
       const end = start + this.itemsPerPageAssignedWorkouts;
       return this.sortedWorkouts.slice(start, end);
     },
@@ -358,7 +356,7 @@ export default {
       },
     },
     searchQuery() {
-      this.currentPageAssignedWorkouts = 1; // Reset to the first page whenever search term changes
+      this.currentPage = 1; // Reset to the first page whenever search term changes
     },
   },
 };

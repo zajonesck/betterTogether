@@ -6,16 +6,25 @@ describe("ClientWorkout.vue", () => {
 
   const clientWorkoutsData = [
     {
+      id: 1,
       workout_name: "Chest Day",
       difficulty: "Intermediate",
       date: "2023-09-23",
       notes: "Intense",
     },
     {
+      id: 2,
       workout_name: "Arm Day",
       difficulty: "Beginner",
       date: "2023-09-22",
       notes: "Light",
+    },
+    {
+      id: 3,
+      workout_name: "Leg Day",
+      difficulty: "Advanced",
+      date: "2023-09-21",
+      notes: "Very Intense",
     },
   ];
 
@@ -26,10 +35,10 @@ describe("ClientWorkout.vue", () => {
   describe("Sorting functionality", () => {
     test.each([
       ["workout_name", true, "Arm Day"],
-      ["workout_name", false, "Chest Day"],
-      ["difficulty", true, "Beginner"],
+      ["workout_name", false, "Leg Day"],
+      ["difficulty", true, "Advanced"],
       ["difficulty", false, "Intermediate"],
-      ["date", true, "2023-09-22"],
+      ["date", true, "2023-09-21"],
       ["date", false, "2023-09-23"],
     ])("should sort by %s in %s order", (column, ascending, expected) => {
       wrapper.setData({
@@ -47,7 +56,7 @@ describe("ClientWorkout.vue", () => {
       ["Calisthenics", "workout_name", 0],
       ["cHeSt DaY", "workout_name", 1, "Chest Day"],
       ["Intermediate", "difficulty", 1, "Intermediate"],
-      ["Intense", "notes", 1, "Intense"],
+      ["Intense", "notes", 2, "Intense"],
     ])(
       "should filter workouts by %s in %s column",
       (query, column, expectedLength, expectedValue) => {
@@ -63,30 +72,6 @@ describe("ClientWorkout.vue", () => {
     );
   });
   describe("Pagination functionality", () => {
-    const clientWorkoutsData = [
-      {
-        id: 1,
-        workout_name: "Chest Day",
-        difficulty: "Intermediate",
-        date: "2023-09-23",
-        notes: "Intense",
-      },
-      {
-        id: 2,
-        workout_name: "Arm Day",
-        difficulty: "Beginner",
-        date: "2023-09-22",
-        notes: "Light",
-      },
-      {
-        id: 3,
-        workout_name: "Leg Day",
-        difficulty: "Advanced",
-        date: "2023-09-21",
-        notes: "Very Intense",
-      },
-    ];
-
     test("should display correct number of workouts per page", () => {
       wrapper.setData({
         clientWorkouts: clientWorkoutsData,
@@ -112,13 +97,16 @@ describe("ClientWorkout.vue", () => {
       );
     });
 
-    test("should navigate to next page correctly", () => {
-      wrapper.setData({
+    test("should navigate to next page correctly", async () => {
+      await wrapper.setData({
         clientWorkouts: clientWorkoutsData,
-        currentPageAssignedWorkouts: 2,
+        currentPage: 2,
         itemsPerPageAssignedWorkouts: 2,
       });
-      expect(wrapper.vm.paginatedAssignedWorkouts.length).toBe(1); // As we only have 3 workouts in the sample data
+
+      // Check if it navigated to the next page correctly
+      expect(wrapper.vm.currentPage).toBe(2);
+      expect(wrapper.vm.paginatedAssignedWorkouts.length).toBe(1); // Only one item on the second page
       expect(wrapper.vm.paginatedAssignedWorkouts[0].workout_name).toBe(
         "Leg Day"
       );
