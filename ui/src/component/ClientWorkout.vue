@@ -132,7 +132,7 @@ export default {
     return {
       note: "",
       currentPage: 1,
-      itemsPerPageAssignedWorkouts: 10,
+      itemsPerPage: 10,
       searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
       itemToDelete: null,
@@ -165,14 +165,12 @@ export default {
 
   computed: {
     paginatedAssignedWorkouts() {
-      const start = (this.currentPage - 1) * this.itemsPerPageAssignedWorkouts;
-      const end = start + this.itemsPerPageAssignedWorkouts;
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
       return this.sortedWorkouts.slice(start, end);
     },
     totalPagesAssignedWorkouts() {
-      return Math.ceil(
-        this.sortedWorkouts.length / this.itemsPerPageAssignedWorkouts
-      );
+      return Math.ceil(this.sortedWorkouts.length / this.itemsPerPage);
     },
 
     filteredWorkouts() {

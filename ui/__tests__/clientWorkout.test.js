@@ -40,11 +40,11 @@ describe("ClientWorkout.vue", () => {
       ["difficulty", false, "Intermediate"],
       ["date", true, "2023-09-21"],
       ["date", false, "2023-09-23"],
-    ])("should sort by %s in %s order", (column, ascending, expected) => {
+    ])("should sort by %s in %s order", (column, sortAscending, expected) => {
       wrapper.setData({
         clientWorkouts: clientWorkoutsData,
         sortedColumn: column,
-        sortAscending: ascending,
+        sortAscending: sortAscending,
       });
       expect(wrapper.vm.sortedWorkouts[0][column]).toBe(expected);
     });
@@ -59,13 +59,13 @@ describe("ClientWorkout.vue", () => {
       ["Intense", "notes", 2, "Intense"],
     ])(
       "should filter workouts by %s in %s column",
-      (query, column, expectedLength, expectedValue) => {
+      (query, column, expectedResults, expectedValue) => {
         wrapper.setData({
           clientWorkouts: clientWorkoutsData,
           searchQuery: query,
         });
-        expect(wrapper.vm.filteredWorkouts.length).toBe(expectedLength);
-        if (expectedLength > 0) {
+        expect(wrapper.vm.filteredWorkouts.length).toBe(expectedResults);
+        if (expectedResults > 0) {
           expect(wrapper.vm.filteredWorkouts[0][column]).toBe(expectedValue);
         }
       }
@@ -75,8 +75,8 @@ describe("ClientWorkout.vue", () => {
     test("should display correct number of workouts per page", () => {
       wrapper.setData({
         clientWorkouts: clientWorkoutsData,
-        currentPageAssignedWorkouts: 1,
-        itemsPerPageAssignedWorkouts: 2,
+        currentPage: 1,
+        itemsPerPage: 2,
       });
       expect(wrapper.vm.paginatedAssignedWorkouts.length).toBe(2);
       expect(wrapper.vm.paginatedAssignedWorkouts[0].workout_name).toBe(
@@ -90,7 +90,7 @@ describe("ClientWorkout.vue", () => {
     test("should calculate total pages correctly", () => {
       wrapper.setData({
         clientWorkouts: clientWorkoutsData,
-        itemsPerPageAssignedWorkouts: 2,
+        itemsPerPage: 2,
       });
       expect(wrapper.vm.totalPagesAssignedWorkouts).toBe(
         Math.ceil(clientWorkoutsData.length / 2)
@@ -101,7 +101,7 @@ describe("ClientWorkout.vue", () => {
       await wrapper.setData({
         clientWorkouts: clientWorkoutsData,
         currentPage: 2,
-        itemsPerPageAssignedWorkouts: 2,
+        itemsPerPage: 2,
       });
 
       // Check if it navigated to the next page correctly
