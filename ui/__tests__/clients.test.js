@@ -89,7 +89,12 @@ describe("Clients.vue", () => {
         last_name: "Smith",
         birth_day: "1990-03-10",
       },
-      { id: 3, first_name: "Bob", last_name: "Doe", birth_day: "1985-01-01" },
+      {
+        id: 3,
+        first_name: "Bobby",
+        last_name: "Doeford",
+        birth_day: "1985-01-01",
+      },
     ];
 
     test("should display correct number of clients per page", () => {
@@ -118,7 +123,7 @@ describe("Clients.vue", () => {
         itemsPerPage: 2,
       });
       expect(wrapper.vm.paginatedClients.length).toBe(1); // As we only have 3 clients in the sample data
-      expect(wrapper.vm.paginatedClients[0].first_name).toBe("Bob");
+      expect(wrapper.vm.paginatedClients[0].first_name).toBe("Bobby");
     });
   });
 });
