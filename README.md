@@ -24,6 +24,7 @@ Better Together is a comprehensive fitness application designed to bring trainer
 - **UI**: Vue.js, accessible at [bettertogether.day](https://www.bettertogether.day/)
 - **API**: Node.js, hosted by AWS Lambda functions accessed through API Gateway and available at `https://nn43xtyoif.execute-api.us-east-1.amazonaws.com`
 - **Database**: PostgreSQL, hosted by AWS RDS and running on port `5432`
+- **Secrets**: Secrets, managed by AWS Secret Manager
 
 ## Frontend - Better Together UI (Vue.js)
 
@@ -76,7 +77,6 @@ $ npm run test
 # Add a new client named "Big Boy Cope" with a birthday on "03/20/2016" to the production environment
 $ curl -H "Content-Type: application/json" -X POST -d '{"client_name":"Big Boy Cope", "birth_day":"03/20/2016"}' https://nn43xtyoif.execute-api.us-east-1.amazonaws.com/clients
 
-# The rest of the commands can follow a similar format...
 ```
 
 ## Recommended IDE Setup
@@ -88,10 +88,10 @@ We recommend using [VSCode](https://code.visualstudio.com/) with the following e
 
 ## Deployments
 
-Frontend: After running `npm run build`, push to your `main` branch to deploy the app.
+Frontend: Push to your `main` branch to deploy the app.
 Backend: `Amplify push` will automatically trigger a new Amplify build.
 
-### View Amplify logs
+### Amplify Setup
 
 - Install the AWS Amplify CLI:
 
@@ -125,6 +125,9 @@ Testing is crucial for ensuring the reliability and stability of the application
 
 - **Jest**: A delightful JavaScript Testing Framework with a focus on simplicity.
 - **Supertest**: Provides a high-level abstraction for testing HTTP, while still allowing you to drop down to the lower-level API provided by superagent.
+
+### Tools Used for UI Testing
+
 - **vitest**: Vitest is a unit-test framework tailored for Vite, utilizing Vite's dev server for file transformations and offering rapid testing with features like Hot Module Reload (HMR). With a Jest-compatible API, it emphasizes performance and developer experience, aiming to be the preferred test runner for Vite projects.
 
 ### How Tests Work
@@ -133,6 +136,10 @@ Jest acts as the test runner, providing an environment to execute our tests. Wit
 
 ### Running the Tests
 
-```bash
+```API
+$ npm run test
+```
+
+```UI
 $ npm run test
 ```
