@@ -14,10 +14,6 @@ export default {
   },
   data() {
     return {
-      confirmDeleteDialog: false,
-      itemToDelete: null,
-      deleteType: "",
-      searchQuery: "",
       tab: null,
       errorDialog: false,
       errorMessage: "",
@@ -25,19 +21,6 @@ export default {
       clientLastName: "",
       clientBirthDay: "",
       loading: true,
-      chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     };
   },
 
@@ -61,14 +44,9 @@ export default {
   },
 
   methods: {
-    updateNotes() {},
     capitalize(text) {
       if (!text) return "";
       return text.charAt(0).toUpperCase() + text.slice(1);
-    },
-    newDate(weighDay) {
-      const date = format(parseISO(weighDay), "MMM dd, yyyy");
-      return date;
     },
 
     async getClient() {

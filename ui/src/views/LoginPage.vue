@@ -1,5 +1,3 @@
-<!-- LoginPage.vue -->
-
 <template>
   <v-container style="min-height: calc(100vh - 250px)">
     <v-row justify="center" align="center" class="fill-height">
@@ -29,17 +27,12 @@
 <script>
 export default {
   methods: {
-    login() {
-      // Handle login logic here
-    },
+    login() {},
     tryAsGuest() {
-      // Logic for guest user access
-      this.$router.push("/client-roster"); // Redirect to a guest dashboard or appropriate route
+      this.$router.push("/client-roster");
     },
   },
 };
 </script>
 
-<style scoped>
-/* Add any additional styling for your login page here */
-</style>
+<style scoped></style>

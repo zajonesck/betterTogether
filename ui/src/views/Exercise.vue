@@ -101,9 +101,6 @@ export default {
     };
   },
   computed: {
-    numericId() {
-      return Number(this.id);
-    },
     paginatedExercises() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
@@ -201,8 +198,8 @@ export default {
 .custom-link {
   display: inline-block;
   text-decoration: underline;
-  color: inherit; /* This will make the link use the default text color of its parent */
-  transition: color 0.3s ease; /* This will smoothly change the color when hovering */
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
 .custom-link:hover {

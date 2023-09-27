@@ -1,14 +1,9 @@
 <template>
   <v-window-item value="goals">
-    <v-card-title> Health/Meds </v-card-title>
-    <v-textarea
-      v-model="healthMedsNote"
-      label="Add Health/Meds Notes"
-    ></v-textarea>
-    <v-card-title> Goals </v-card-title>
-    <v-textarea v-model="goalsNote" label="Add Goals"></v-textarea>
-    <v-card-title> Misc. </v-card-title>
-    <v-textarea v-model="miscNote" label="Add Misc. Notes"></v-textarea>
+    <div v-for="(label, key) in textAreas" :key="key">
+      <v-card-title> {{ label.title }} </v-card-title>
+      <v-textarea v-model="notes[key]" :label="label.label"></v-textarea>
+    </div>
     <v-btn @click="updateNotes">Save Notes</v-btn>
   </v-window-item>
 </template>
@@ -20,57 +15,49 @@ import { newBDate } from "../shared.js";
 export default {
   data() {
     return {
-      healthMedsNote: "",
-      goalsNote: "",
-      miscNote: "",
-      confirmDeleteDialog: false,
-      itemToDelete: null,
-      deleteType: "",
-      searchQuery: "",
-      tab: null,
+      notes: {
+        healthMedsNote: "",
+        goalsNote: "",
+        miscNote: "",
+      },
+      textAreas: {
+        healthMedsNote: {
+          title: "Health/Meds",
+          label: "Add Health/Meds Notes",
+        },
+        goalsNote: { title: "Goals", label: "Add Goals" },
+        miscNote: { title: "Misc.", label: "Add Misc. Notes" },
+      },
       errorDialog: false,
       errorMessage: "",
       clientFirstName: "",
       clientLastName: "",
       clientBirthDay: "",
       loading: true,
-      chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
     };
   },
 
   async mounted() {
     try {
-      await Promise.all([this.getClient()]);
+      await this.getClient();
     } catch (error) {
       console.error("Failed to fetch data: ", error);
     } finally {
       this.loading = false;
     }
   },
+
   methods: {
     async updateNotes() {
       try {
-        const requestBody = {
-          health_note: this.healthMedsNote,
-          goal_note: this.goalsNote,
-          misc_note: this.miscNote,
-        };
         await axios.put(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }/notes`,
           {
-            health_note: this.healthMedsNote,
-            goal_note: this.goalsNote,
-            misc_note: this.miscNote,
+            health_note: this.notes.healthMedsNote,
+            goal_note: this.notes.goalsNote,
+            misc_note: this.notes.miscNote,
           }
         );
       } catch (error) {
@@ -79,6 +66,7 @@ export default {
         this.errorDialog = true;
       }
     },
+
     async getClient() {
       try {
         const response = await axios.get(
@@ -94,12 +82,13 @@ export default {
           goal_note,
           misc_note,
         } = response.data[0];
+
         this.clientFirstName = first_name;
         this.clientLastName = last_name;
         this.clientBirthDay = newBDate(birth_day);
-        this.healthMedsNote = health_note;
-        this.goalsNote = goal_note;
-        this.miscNote = misc_note;
+        this.notes.healthMedsNote = health_note;
+        this.notes.goalsNote = goal_note;
+        this.notes.miscNote = misc_note;
       } catch (error) {
         console.error("Error fetching client data: ", error);
         this.errorMessage = "Failed to fetch client data.";

@@ -14,4 +14,7 @@ export default defineConfig({
     "process.env": process.env,
     global: "window",
   },
+  test:{
+   environment: 'happy-dom',
+ }
 });

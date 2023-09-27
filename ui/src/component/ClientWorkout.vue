@@ -1,124 +1,126 @@
 <template>
-  <v-window-item value="workouts">
-    <v-select
-      v-model="selectedWorkout"
-      :items="filteredAvailableWorkouts"
-      label="All workouts"
-      :filter="searchAvailableWorkoutsFilter"
-      v-model:search-input="searchAvailableWorkouts"
-    ></v-select>
-    <v-textarea
-      v-model="note"
-      placeholder="Add notes for this workout"
-      @keyup.enter="assignWorkoutToClient"
-    ></v-textarea>
+  <div>
+    <v-window-item value="workouts">
+      <v-select
+        v-model="selectedWorkout"
+        :items="filteredAvailableWorkouts"
+        label="All workouts"
+        :filter="searchAvailableWorkoutsFilter"
+        :v-model:search-input="searchAvailableWorkouts"
+      ></v-select>
+      <v-textarea
+        v-model="note"
+        placeholder="Add notes for this workout"
+        @keyup.enter="assignWorkoutToClient"
+      ></v-textarea>
 
-    <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
-    <v-card-title> Assigned Workouts </v-card-title>
-    <v-text-field
-      v-model="searchQuery"
-      placeholder="Search Assigned Workouts"
-    ></v-text-field>
-    <v-table>
-      <thead>
-        <tr>
-          <th @click="sortBy('workout_name')" class="clickable-header">
-            Workout
-            <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'workout_name'"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th @click="sortBy('difficulty')" class="clickable-header">
-            Difficulty
-            <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'difficulty'"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th>Notes</th>
-          <th @click="sortBy('date')" class="clickable-header">
-            Date Assigned
-            <v-icon v-if="sortedColumn === 'date' && sortAscending"
-              >mdi-arrow-down</v-icon
-            >
-            <v-icon v-else-if="sortedColumn === 'date'">mdi-arrow-up</v-icon>
-            <v-icon v-else>mdi-sort</v-icon>
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="clientWorkouts.length === 0">
-          <td colspan="4">No assigned workouts.</td>
-        </tr>
-        <tr
-          v-else
-          v-for="workout in paginatedAssignedWorkouts"
-          :key="workout.id"
-        >
-          <td>
-            <router-link
-              :to="{
-                name: 'workout-detail',
-                params: { id: workout.workout_id },
-              }"
-            >
-              {{ workout.workout_name }}
-            </router-link>
-          </td>
-          <td>{{ workout.difficulty }}</td>
-          <td>{{ workout.notes }}</td>
-          <td>{{ newDate(workout.date) }}</td>
-          <td>
-            <v-btn
-              icon
-              @click="confirmDelete('workout', workout.client_workout_id)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-pagination
-      v-model="currentPageAssignedWorkouts"
-      :length="totalPagesAssignedWorkouts"
-    ></v-pagination>
-  </v-window-item>
-  <v-dialog v-model="errorDialog" max-width="500px">
-    <v-card>
-      <v-card-title class="headline">Error</v-card-title>
-      <v-card-text>
-        {{ errorMessage }}
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="errorDialog = false"
-          >Close</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
-    <v-card>
-      <v-card-title class="headline">Confirm Deletion</v-card-title>
-      <v-card-text> Are you sure you want to delete this item? </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="proceedToDelete"
-          >Yes, Delete</v-btn
-        >
-        <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
+      <v-card-title> Assigned Workouts </v-card-title>
+      <v-text-field
+        v-model="searchQuery"
+        placeholder="Search Assigned Workouts"
+      ></v-text-field>
+      <v-table>
+        <thead>
+          <tr>
+            <th @click="sortBy('workout_name')" class="clickable-header">
+              Workout
+              <v-icon v-if="sortedColumn === 'workout_name' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'workout_name'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th @click="sortBy('difficulty')" class="clickable-header">
+              Difficulty
+              <v-icon v-if="sortedColumn === 'difficulty' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'difficulty'"
+                >mdi-arrow-up</v-icon
+              >
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th>Notes</th>
+            <th @click="sortBy('date')" class="clickable-header">
+              Date Assigned
+              <v-icon v-if="sortedColumn === 'date' && sortAscending"
+                >mdi-arrow-down</v-icon
+              >
+              <v-icon v-else-if="sortedColumn === 'date'">mdi-arrow-up</v-icon>
+              <v-icon v-else>mdi-sort</v-icon>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="clientWorkouts.length === 0">
+            <td colspan="4">No assigned workouts.</td>
+          </tr>
+          <tr
+            v-else
+            v-for="workout in paginatedAssignedWorkouts"
+            :key="workout.id"
+          >
+            <td>
+              <router-link
+                :to="{
+                  name: 'workout-detail',
+                  params: { id: workout.workout_id },
+                }"
+              >
+                {{ workout.workout_name }}
+              </router-link>
+            </td>
+            <td>{{ workout.difficulty }}</td>
+            <td>{{ workout.notes }}</td>
+            <td>{{ newDate(workout.date) }}</td>
+            <td>
+              <v-btn
+                icon
+                @click="confirmDelete('workout', workout.client_workout_id)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPagesAssignedWorkouts"
+      ></v-pagination>
+    </v-window-item>
+    <v-dialog v-model="errorDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="headline">Error</v-card-title>
+        <v-card-text>
+          {{ errorMessage }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="errorDialog = false"
+            >Close</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="headline">Confirm Deletion</v-card-title>
+        <v-card-text> Are you sure you want to delete this item? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="proceedToDelete"
+            >Yes, Delete</v-btn
+          >
+          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -129,41 +131,27 @@ export default {
   data() {
     return {
       note: "",
-      currentPageAssignedWorkouts: 1,
-      itemsPerPageAssignedWorkouts: 10,
+      currentPage: 1,
+      itemsPerPage: 10,
       searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
       itemToDelete: null,
-      sortedColumn: "",
+      sortedColumn: null,
       sortAscending: true,
       deleteType: "",
       workouts: [],
       searchQuery: "",
       selectedWorkout: null,
       availableWorkouts: [],
-      tab: null,
       errorDialog: false,
       errorMessage: "",
-      clientWeights: [],
       clientWorkouts: [],
-      clientFirstName: "",
-      clientLastName: "",
-      clientBirthDay: "",
-      loading: true,
-      chartData: null,
-      defaultChartData: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     };
+  },
+  watch: {
+    searchQuery() {
+      this.currentPage = 1;
+    },
   },
 
   async mounted() {
@@ -182,16 +170,12 @@ export default {
 
   computed: {
     paginatedAssignedWorkouts() {
-      const start =
-        (this.currentPageAssignedWorkouts - 1) *
-        this.itemsPerPageAssignedWorkouts;
-      const end = start + this.itemsPerPageAssignedWorkouts;
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
       return this.sortedWorkouts.slice(start, end);
     },
     totalPagesAssignedWorkouts() {
-      return Math.ceil(
-        this.sortedWorkouts.length / this.itemsPerPageAssignedWorkouts
-      );
+      return Math.ceil(this.sortedWorkouts.length / this.itemsPerPage);
     },
 
     filteredWorkouts() {
@@ -214,8 +198,19 @@ export default {
       if (this.sortedColumn) {
         workouts.sort((a, b) => {
           let result = 0;
-          if (a[this.sortedColumn] > b[this.sortedColumn]) result = 1;
-          if (a[this.sortedColumn] < b[this.sortedColumn]) result = -1;
+          switch (this.sortedColumn) {
+            case "date":
+              const dateA = parseISO(a[this.sortedColumn]);
+              const dateB = parseISO(b[this.sortedColumn]);
+              result = dateA - dateB;
+              break;
+            case "workout_name":
+              result = a.workout_name.localeCompare(b.workout_name);
+              break;
+            case "difficulty":
+              result = a.difficulty.localeCompare(b.difficulty);
+              break;
+          }
           return this.sortAscending ? result : -result;
         });
       }
@@ -246,7 +241,27 @@ export default {
         this.sortedColumn = column;
         this.sortAscending = true;
       }
+
+      // Sorting logic
+      this.clientWorkouts.sort((a, b) => {
+        let result = 0;
+        switch (this.sortedColumn) {
+          case "date":
+            const dateA = parseISO(a[this.sortedColumn]);
+            const dateB = parseISO(b[this.sortedColumn]);
+            result = dateA - dateB;
+            break;
+          case "workout_name":
+            result = a.workout_name.localeCompare(b.workout_name);
+            break;
+          case "difficulty":
+            result = a.difficulty.localeCompare(b.difficulty);
+            break;
+        }
+        return this.sortAscending ? result : -result;
+      });
     },
+
     async getClient() {
       try {
         const response = await axios.get(
@@ -370,12 +385,11 @@ export default {
         const uniqueIds = [...new Set(ids)];
 
         if (ids.length !== uniqueIds.length) {
-          console.warn("Duplicate IDs found!", ids);
         }
       },
     },
     searchQuery() {
-      this.currentPageAssignedWorkouts = 1; // Reset to the first page whenever search term changes
+      this.currentPage = 1;
     },
   },
 };

@@ -4,40 +4,28 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "test": "vitest --dom"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
     "aws-amplify": "^5.3.11",
     "axios": "^0.27.2",
+    "chart.js": "^4.4.0",
     "date-fns": "^2.29.3",
     "esbuild": "^0.19.3",
-    "vite": "^4.4.9",
-    "vue": "^3.2.38",
-    "vue-router": "^4.0.13",
-    "vuetify": "^3.3.7"
+    "happy-dom": "^6.0.4",
+    "vue": "3.3.4",
+    "vue-chartjs": "^5.2.0",
+    "vue-router": "^4.2.5",
+    "vuetify": "^3.3.17"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/plugin-syntax-jsx": "^7.22.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.22.15",
-    "@babel/preset-env": "^7.22.20",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-transform-vue-jsx": "^3.7.0",
-    "babel-preset-env": "^1.7.0",
-    "vue-template-compiler": "^2.7.14",
-    "@vitejs/plugin-vue": "^4.3.4"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "babel-jest",
-      "^.+\\.vue$": "vue-jest"
-    },
-    "globals": {
-      "vue-jest": {
-        "experimentalCSSCompile": true
-      }
-    }
+    "@vitejs/plugin-vue": "^4.3.4",
+    "@vue/test-utils": "^2.4.1",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.5"
   }
 }
