@@ -84,13 +84,18 @@ export default {
   data() {
     return {
       currentPage: 1,
-      itemsPerPage: 10,
+      itemsPerPage: 5,
       sortAscending: true,
       workouts: [],
       loading: true,
       searchQuery: "",
       sortedColumn: null,
     };
+  },
+  watch: {
+    searchQuery() {
+      this.currentPage = 1;
+    },
   },
   methods: {
     async getWorkouts() {
@@ -120,16 +125,18 @@ export default {
           ? textA.localeCompare(textB)
           : textB.localeCompare(textA);
       });
+
+      this.currentPage = 1; // Reset to the first page when sorting
     },
   },
   computed: {
     paginatedItems() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.filteredWorkouts.slice(start, end); // corrected to 'filteredWorkouts'
+      return this.filteredWorkouts.slice(start, end);
     },
     totalItems() {
-      return this.filteredWorkouts.length; // corrected to 'filteredWorkouts'
+      return this.filteredWorkouts.length;
     },
     filteredWorkouts() {
       if (!this.searchQuery) {

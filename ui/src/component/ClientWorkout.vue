@@ -136,7 +136,7 @@ export default {
       searchAvailableWorkouts: "",
       confirmDeleteDialog: false,
       itemToDelete: null,
-      sortedColumn: "",
+      sortedColumn: null,
       sortAscending: true,
       deleteType: "",
       workouts: [],
@@ -147,6 +147,11 @@ export default {
       errorMessage: "",
       clientWorkouts: [],
     };
+  },
+  watch: {
+    searchQuery() {
+      this.currentPage = 1;
+    },
   },
 
   async mounted() {
@@ -193,8 +198,19 @@ export default {
       if (this.sortedColumn) {
         workouts.sort((a, b) => {
           let result = 0;
-          if (a[this.sortedColumn] > b[this.sortedColumn]) result = 1;
-          if (a[this.sortedColumn] < b[this.sortedColumn]) result = -1;
+          switch (this.sortedColumn) {
+            case "date":
+              const dateA = parseISO(a[this.sortedColumn]);
+              const dateB = parseISO(b[this.sortedColumn]);
+              result = dateA - dateB;
+              break;
+            case "workout_name":
+              result = a.workout_name.localeCompare(b.workout_name);
+              break;
+            case "difficulty":
+              result = a.difficulty.localeCompare(b.difficulty);
+              break;
+          }
           return this.sortAscending ? result : -result;
         });
       }
@@ -225,7 +241,27 @@ export default {
         this.sortedColumn = column;
         this.sortAscending = true;
       }
+
+      // Sorting logic
+      this.clientWorkouts.sort((a, b) => {
+        let result = 0;
+        switch (this.sortedColumn) {
+          case "date":
+            const dateA = parseISO(a[this.sortedColumn]);
+            const dateB = parseISO(b[this.sortedColumn]);
+            result = dateA - dateB;
+            break;
+          case "workout_name":
+            result = a.workout_name.localeCompare(b.workout_name);
+            break;
+          case "difficulty":
+            result = a.difficulty.localeCompare(b.difficulty);
+            break;
+        }
+        return this.sortAscending ? result : -result;
+      });
     },
+
     async getClient() {
       try {
         const response = await axios.get(
