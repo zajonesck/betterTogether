@@ -13,6 +13,7 @@
     "supertest": "^6.3.3"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.418.0",
     "@types/aws-lambda": "^8.10.121",
     "aws-amplify": "5.3.11",
     "aws-serverless-express": "^3.4.0",
