@@ -385,12 +385,11 @@ export default {
         const uniqueIds = [...new Set(ids)];
 
         if (ids.length !== uniqueIds.length) {
-          console.warn("Duplicate IDs found!", ids);
         }
       },
     },
     searchQuery() {
-      this.currentPage = 1; // Reset to the first page whenever search term changes
+      this.currentPage = 1;
     },
   },
 };

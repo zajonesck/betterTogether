@@ -18,9 +18,9 @@ import { Amplify } from "aws-amplify";
 
 const vuetify = createVuetify({
   components: {
+    ...components,
     VDataTable,
   },
-  components,
   directives,
   theme: {
     defaultTheme: "dark",
