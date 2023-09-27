@@ -11,6 +11,7 @@ Better Together is a comprehensive fitness application designed to bring trainer
 - [Recommended IDE Setup](#recommended-ide-setup)
 - [Deployments](#deployments)
 - [Automated Tests](#automated-tests)
+- [roles coming soon]
 
 ## Local Development Overview
 
