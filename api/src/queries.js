@@ -1,52 +1,8 @@
-require("dotenv").config();
-const {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} = require("@aws-sdk/client-secrets-manager");
-
-async function getDatabaseCredentials() {
-  const client = new SecretsManagerClient({ region: "us-east-1" });
-  try {
-    const response = await client.send(
-      new GetSecretValueCommand({
-        SecretId: "prod/betterTogether/postgreSql",
-        VersionStage: "AWSCURRENT",
-      })
-    );
-    return JSON.parse(response.SecretString);
-  } catch (error) {
-    console.error("Error retrieving secret:", error);
-    throw error;
-  }
-}
-
-const Pool = require("pg").Pool;
-let pool;
-
-// if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
-//   pool = new Pool({
-//     user: process.env.LOCAL_USER,
-//     host: process.env.LOCAL_HOST,
-//     database: process.env.LOCAL_DATABASE,
-//     password: process.env.LOCAL_PASSWORD,
-//     port: process.env.LOCAL_PORT,
-//   });
-// } else {
-(async () => {
-  const dbCredentials = await getDatabaseCredentials();
-  pool = new Pool({
-    user: dbCredentials.username,
-    host: dbCredentials.host,
-    database: dbCredentials.dbname,
-    password: dbCredentials.password,
-    port: dbCredentials.port,
-    ssl: { rejectUnauthorized: false },
-  });
-})();
-// }
+const { getPoolInstance } = require("./database");
 
 const deleteClient = (request, response) => {
   const clientId = request.params.clientId;
+  const pool = getPoolInstance();
   pool.query(
     "DELETE FROM clients WHERE id = $1",
     [clientId],
@@ -62,6 +18,7 @@ const deleteClient = (request, response) => {
 
 const deleteClientForTest = (clientId) => {
   return new Promise((resolve, reject) => {
+    const pool = getPoolInstance();
     pool.query(
       "DELETE FROM clients WHERE id = $1",
       [clientId],
@@ -78,6 +35,7 @@ const deleteClientForTest = (clientId) => {
 
 const getClient = (request, response) => {
   const clientId = request.params.clientId;
+  const pool = getPoolInstance();
   pool.query(
     "SELECT first_name, last_name, birth_day, health_note, goal_note, misc_note FROM clients WHERE id = $1",
     [clientId],
@@ -91,7 +49,7 @@ const getClient = (request, response) => {
 };
 
 const getClients = (request, response) => {
-  console.log("secret!!!!", dbCredentials.username);
+  const pool = getPoolInstance();
   pool.query(
     "SELECT * FROM clients ORDER BY birth_day DESC",
 
@@ -122,6 +80,7 @@ const addClientWorkout = (request, response) => {
     return response.status(400).send("date is required.");
   }
 
+  const pool = getPoolInstance();
   pool.query(
     "INSERT INTO client_workout (client_id, workout_id, notes, date) VALUES($1, $2, $3, $4) RETURNING id",
     [client_id, workout_id, notes, date],
@@ -140,6 +99,7 @@ const addClientWorkout = (request, response) => {
 };
 
 const getWorkouts = (request, response) => {
+  const pool = getPoolInstance();
   pool.query(
     `SELECT workouts.id, workouts.workout_name, workouts.description, workouts.difficulty, 
       array_agg(json_build_object(
@@ -167,6 +127,7 @@ const getWorkouts = (request, response) => {
 const getClientWorkouts = (request, response) => {
   const clientId = parseInt(request.params.clientId);
 
+  const pool = getPoolInstance();
   pool.query(
     `
     SELECT 
@@ -216,6 +177,7 @@ const getClientWorkouts = (request, response) => {
 function getWorkout(request, response) {
   const workoutId = request.params.workoutId;
 
+  const pool = getPoolInstance();
   pool.query(
     `SELECT workouts.workout_name, workouts.description, workouts.difficulty, 
       array_agg(json_build_object(
@@ -259,6 +221,7 @@ const addClient = (request, response) => {
     misc_note,
   } = request.body;
 
+  const pool = getPoolInstance();
   pool.query(
     "INSERT INTO clients (first_name, last_name, birth_day, health_note, goal_note, misc_note) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
     [first_name, last_name, birth_day, health_note, goal_note, misc_note],
@@ -277,6 +240,7 @@ const addClient = (request, response) => {
 const searchWorkouts = (request, response) => {
   const { difficulty } = request.body;
 
+  const pool = getPoolInstance();
   pool.query(
     `SELECT workouts.id, workouts.workout_name, workouts.description, workouts.difficulty, 
         array_agg(json_build_object(
@@ -305,6 +269,7 @@ const searchWorkouts = (request, response) => {
 
 const getWeights = (request, response) => {
   const clientId = request.params.clientId;
+  const pool = getPoolInstance();
   pool.query(
     "SELECT * FROM clients_weights WHERE client_id = $1",
     [clientId],
@@ -320,6 +285,7 @@ const getWeights = (request, response) => {
 const addWeight = (request, response) => {
   const clientId = request.params.clientId;
   const weight = request.body.weight;
+  const pool = getPoolInstance();
   pool.query(
     "INSERT INTO clients_weights (weight, date, client_id) VALUES($1, now(), $2)",
     [weight, clientId],
@@ -335,6 +301,7 @@ const addWeight = (request, response) => {
 
 const deleteWeight = (request, response) => {
   const weightId = request.params.weightId;
+  const pool = getPoolInstance();
   pool.query(
     "DELETE FROM clients_weights WHERE id = $1",
     [weightId],
@@ -350,6 +317,7 @@ const deleteWeight = (request, response) => {
 
 const deleteClientWorkout = (request, response) => {
   const workoutId = parseInt(request.params.workoutId);
+  const pool = getPoolInstance();
   pool.query(
     "DELETE FROM client_workout WHERE id = $1",
     [workoutId],
@@ -374,6 +342,7 @@ const deleteClientWorkout = (request, response) => {
 const getExerciseById = (req, res) => {
   const id = parseInt(req.params.id);
 
+  const pool = getPoolInstance();
   pool.query(
     `SELECT e.id, e.name, e.description, e.example_link,
             bp1.body_part_name as primary_body_part, 
@@ -397,6 +366,7 @@ const getExerciseById = (req, res) => {
 };
 
 const getAllExercises = (request, response) => {
+  const pool = getPoolInstance();
   pool.query(
     `SELECT e.id, e.name, e.description, e.example_link,
             bp1.body_part_name as primary_body_part, 
@@ -429,6 +399,7 @@ const updateClientNotes = (req, res) => {
     return res.status(400).send("No data provided to update.");
   }
 
+  const pool = getPoolInstance();
   pool.query(
     "UPDATE clients SET health_note = $1, goal_note = $2, misc_note = $3 WHERE id = $4",
     [health_note, goal_note, misc_note, clientId],
