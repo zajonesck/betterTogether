@@ -20,6 +20,9 @@
       },
       "api": {
         "betterTogetherApiResource": {}
+      },
+      "auth": {
+        "bettertogetherapi6ad9a3b8": {}
       }
     }
   }

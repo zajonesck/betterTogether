@@ -15,6 +15,13 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item @click="logout">
+        <v-list-item-content>
+          <v-list-item-title>
+            <v-icon>mdi-logout</v-icon> Logout
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar app clipped-left>
@@ -57,7 +64,20 @@
 
 <script setup>
 import { ref } from "vue";
+import { Auth } from "aws-amplify";
+import { useRouter } from "vue-router";
+
 const drawer = ref(false);
+const router = useRouter();
+
+const logout = async () => {
+  try {
+    await Auth.signOut();
+    router.push("/login");
+  } catch (error) {
+    console.error("Error signing out: ", error);
+  }
+};
 </script>
 
 <style>
