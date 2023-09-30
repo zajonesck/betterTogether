@@ -1,7 +1,7 @@
 <template>
-  <v-container style="min-height: calc(100vh - 250px)">
+  <v-container class="flex-container" style="min-height: calc(100vh - 250px)">
     <v-row justify="center" align="center" class="fill-height">
-      <v-col cols="12" sm="8" md="4">
+      <v-col cols="8" sm="8" md="8">
         <v-card>
           <v-card-title>Login</v-card-title>
           <v-card-text>
@@ -23,12 +23,14 @@
               ></v-text-field>
             </v-form>
           </v-card-text>
-          <v-card-actions>
-            <v-btn @click="login">Login</v-btn>
-            <v-btn text @click="tryAsGuest">Try as Guest</v-btn>
-            <v-btn text @click="signUp">Sign Up</v-btn>
+          <v-card-actions class="justify-center">
+            <v-btn @click="login" class="mx-2">Login</v-btn>
           </v-card-actions>
         </v-card>
+        <v-row justify="center" class="mt-4">
+          <v-btn text @click="tryAsGuest" class="mx-2">Try as Guest</v-btn>
+          <v-btn text @click="signUp" class="mx-2">Sign Up</v-btn>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -36,7 +38,7 @@
 
 <script>
 import { ref } from "vue";
-import { Auth } from "aws-amplify"; // Importing Auth module
+import { Auth } from "aws-amplify";
 import { useRouter } from "vue-router";
 
 export default {
@@ -51,7 +53,6 @@ export default {
         const user = await Auth.signIn(email.value, password.value);
 
         if (user) {
-          // Navigate to a different page after successful login, if needed
           router.push("/client-roster");
         } else {
           error.value = "Authentication failed";
@@ -66,7 +67,7 @@ export default {
     };
 
     const signUp = () => {
-      router.push("/signup"); // Navigate to the signup page
+      router.push("/signup");
     };
 
     return {
@@ -81,4 +82,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style></style>
