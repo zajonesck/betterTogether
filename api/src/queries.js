@@ -23,27 +23,27 @@ async function getDatabaseCredentials() {
 const Pool = require("pg").Pool;
 let pool;
 
-if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
+// if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
+//   pool = new Pool({
+//     user: process.env.LOCAL_USER,
+//     host: process.env.LOCAL_HOST,
+//     database: process.env.LOCAL_DATABASE,
+//     password: process.env.LOCAL_PASSWORD,
+//     port: process.env.LOCAL_PORT,
+//   });
+// } else {
+(async () => {
+  const dbCredentials = await getDatabaseCredentials();
   pool = new Pool({
-    user: process.env.LOCAL_USER,
-    host: process.env.LOCAL_HOST,
-    database: process.env.LOCAL_DATABASE,
-    password: process.env.LOCAL_PASSWORD,
-    port: process.env.LOCAL_PORT,
+    user: dbCredentials.username,
+    host: dbCredentials.host,
+    database: dbCredentials.dbname,
+    password: dbCredentials.password,
+    port: dbCredentials.port,
+    ssl: { rejectUnauthorized: false },
   });
-} else {
-  (async () => {
-    const dbCredentials = await getDatabaseCredentials();
-    pool = new Pool({
-      user: dbCredentials.username,
-      host: dbCredentials.host,
-      database: dbCredentials.dbname,
-      password: dbCredentials.password,
-      port: dbCredentials.port,
-      ssl: { rejectUnauthorized: false },
-    });
-  })();
-}
+})();
+// }
 
 const deleteClient = (request, response) => {
   const clientId = request.params.clientId;
@@ -91,6 +91,7 @@ const getClient = (request, response) => {
 };
 
 const getClients = (request, response) => {
+  console.log("secret!!!!", dbCredentials.username);
   pool.query(
     "SELECT * FROM clients ORDER BY birth_day DESC",
 
