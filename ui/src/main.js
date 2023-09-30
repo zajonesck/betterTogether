@@ -1,6 +1,9 @@
+// Vue and main App
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+
+// Styling and Icons
 import "./assets/main.css";
 import "@mdi/font/css/materialdesignicons.css";
 
@@ -13,9 +16,12 @@ import { VDataTable } from "vuetify/labs/VDataTable";
 
 // AWS Amplify
 import { Amplify } from "aws-amplify";
-// import { awsconfig } from "./aws-exports";
-// Amplify.configure(awsconfig);
+import awsmobile from "../../api/aws-exports";
 
+// Configure AWS Amplify
+Amplify.configure(awsmobile);
+
+// Create Vuetify instance
 const vuetify = createVuetify({
   components: {
     ...components,
@@ -30,4 +36,5 @@ const vuetify = createVuetify({
   },
 });
 
+// Create and mount Vue App
 createApp(App).use(router).use(vuetify).mount("#app");
