@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { deleteClientForTest } = require("./queries");
 const router = express.Router();
+const { verifyJWT } = require("../JwtVerificatiom");
 
 const port = process.env.PORT || 3000;
 
@@ -20,7 +21,7 @@ app.use(
 );
 app.use("/api", router);
 
-router.get("/exercises", db.getAllExercises);
+router.get("/exercises", verifyJWT, db.getAllExercises);
 
 router.get("/exercises/:id", db.getExerciseById);
 

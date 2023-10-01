@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { getToken } = require("../../ui/src/authHelper");
 
 const Pool = require("pg").Pool;
 let pool;
