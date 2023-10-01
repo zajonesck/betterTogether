@@ -7,6 +7,8 @@ const cors = require("cors");
 const { deleteClientForTest } = require("./queries");
 const router = express.Router();
 
+initializePool();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -106,7 +108,7 @@ const server = awsServerlessExpress.createServer(app);
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async (event, context) => {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
+  console.log(`event: ${JSON.stringify(event)}`);
   await initializePool(); // Initialize DB connection
   return awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
 };
