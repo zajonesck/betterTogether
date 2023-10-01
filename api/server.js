@@ -1,10 +1,12 @@
-require("dotenv").config();
-
 const { app } = require("./src/index");
+const { initializePool } = require("./src/database");
 
-// Use process.env.PORT if it's available (in Heroku's environment), otherwise fall back to 3000
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}!`);
-});
+// Immediately call initializePool when this file is loaded.
+async function startServer() {
+  await initializePool();
+  app.listen(port, () => {});
+}
+
+startServer();

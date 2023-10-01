@@ -1,15 +1,13 @@
-require("dotenv").config();
-
 const express = require("express");
 const app = express();
-
+const { initializePool } = require("./database");
 const db = require("./queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { deleteClientForTest } = require("./queries");
 const router = express.Router();
 
-const port = process.env.PORT || 3000;
+initializePool();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -99,9 +97,6 @@ router.put("/clients/:clientId/notes", (req, res, next) => {
   db.updateClientNotes(req, res);
 });
 
-// view engine setup
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "jade");
 const awsServerlessExpress = require("aws-serverless-express");
 
 /**
@@ -112,8 +107,9 @@ const server = awsServerlessExpress.createServer(app);
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-exports.handler = (event, context) => {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
+exports.handler = async (event, context) => {
+  console.log(`event: ${JSON.stringify(event)}`);
+  await initializePool(); // Initialize DB connection
   return awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
 };
 
