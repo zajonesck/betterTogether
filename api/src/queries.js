@@ -1,24 +1,4 @@
 require("dotenv").config();
-const {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} = require("@aws-sdk/client-secrets-manager");
-
-async function getDatabaseCredentials() {
-  const client = new SecretsManagerClient({ region: "us-east-1" });
-  try {
-    const response = await client.send(
-      new GetSecretValueCommand({
-        SecretId: "prod/betterTogether/postgreSql",
-        VersionStage: "AWSCURRENT",
-      })
-    );
-    return JSON.parse(response.SecretString);
-  } catch (error) {
-    console.error("Error retrieving secret:", error);
-    throw error;
-  }
-}
 
 const Pool = require("pg").Pool;
 let pool;
@@ -32,17 +12,14 @@ if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
     port: process.env.LOCAL_PORT,
   });
 } else {
-  (async () => {
-    const dbCredentials = await getDatabaseCredentials();
-    pool = new Pool({
-      user: dbCredentials.username,
-      host: dbCredentials.host,
-      database: dbCredentials.dbname,
-      password: dbCredentials.password,
-      port: dbCredentials.port,
-      ssl: { rejectUnauthorized: false },
-    });
-  })();
+  pool = new Pool({
+    user: process.env.PROD_USER,
+    host: process.env.PROD_HOST,
+    database: process.env.PROD_DATABASE,
+    password: process.env.PROD_PASSWORD,
+    port: process.env.PROD_PORT,
+    ssl: { rejectUnauthorized: false },
+  });
 }
 
 const deleteClient = (request, response) => {

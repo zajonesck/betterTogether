@@ -1,9 +1,6 @@
 require("dotenv").config();
 
-let createError = require("http-errors");
 const express = require("express");
-let path = require("path");
-
 const app = express();
 
 const db = require("./queries");
