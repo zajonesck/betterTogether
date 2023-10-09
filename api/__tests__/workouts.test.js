@@ -1,12 +1,18 @@
+require("dotenv").config({ path: "../env" });
+
 const request = require("supertest");
 const { app } = require("../src/index");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+const TESTJWT = process.env.TESTJWT;
+
 describe("GET workouts", () => {
   test("should get all workouts", async () => {
-    const res = await request(app).get("/api/workouts");
+    const res = await request(app)
+      .get("/api/workouts")
+      .set("Authorization", `Bearer ${TESTJWT}`);
     console.log(res.body);
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -16,16 +22,19 @@ describe("GET workouts", () => {
 describe("GET workout", () => {
   test("It responds with the requested workout", async () => {
     const workoutId = 1;
-    const response = await request(app).get(`/api/workout/${workoutId}`);
+    const response = await request(app)
+      .get(`/api/workout/${workoutId}`)
+      .set("Authorization", `Bearer ${TESTJWT}`);
     expect(response.statusCode).toBe(200);
   });
 });
 
 test("It responds with a 404 for non-existing workout", async () => {
   const nonExistingWorkoutId = 999999;
-  const response = await request(app).get(
-    `/api/workout/${nonExistingWorkoutId}`
-  );
+  const response = await request(app)
+    .get(`/api/workout/${nonExistingWorkoutId}`)
+    .set("Authorization", `Bearer ${TESTJWT}`);
+
   expect(response.statusCode).toBe(404);
 });
 
@@ -40,6 +49,7 @@ describe("Create a client workout", () => {
 
     const res = await request(app)
       .post("/api/clients/workouts")
+      .set("Authorization", `Bearer ${TESTJWT}`)
       .send(newWorkout)
       .expect(201);
 
@@ -59,6 +69,7 @@ describe("Create a client workout", () => {
 
     const res = await request(app)
       .post("/api/clients/workouts")
+      .set("Authorization", `Bearer ${TESTJWT}`)
       .send(incompleteWorkout);
 
     expect(res.text).toBe("workout_id is required.");

@@ -23,7 +23,7 @@ function verifyJWT(req, res, next) {
     next();
   } else if (authHeader) {
     const token = authHeader.split(" ")[1];
-    if (token === "123456") {
+    if (token === process.env.TESTJWT) {
       next();
     } else {
       jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, user) => {
