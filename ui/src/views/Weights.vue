@@ -1,4 +1,5 @@
 <script>
+import apiClient from "../../apiClient";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
@@ -51,7 +52,7 @@ export default {
 
     async getClient() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }`
@@ -128,3 +129,4 @@ export default {
   color: rgba(101, 42, 127, 0.7);
 }
 </style>
+../../apiClient

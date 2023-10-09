@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import apiClient from "../../apiClient";
 import axios from "axios";
 
 export default {
@@ -55,7 +56,7 @@ export default {
     try {
       const workoutId = this.$route.params.id; // get the ID from the route parameter
 
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${import.meta.env.VITE_API_URL}workout/${workoutId}` // use the workoutId
       );
 
@@ -92,3 +93,4 @@ export default {
   ); /* This will darken the color when hovering, change this value to your preference */
 }
 </style>
+../../apiClient

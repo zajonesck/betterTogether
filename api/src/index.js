@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { deleteClientForTest } = require("./queries");
 const router = express.Router();
-const { verifyJWT } = require("../JwtVerificatiom");
+const { verifyJWT } = require("../jwtVerification");
 
 const port = process.env.PORT || 3000;
 
@@ -23,25 +23,25 @@ app.use("/api", router);
 
 router.get("/exercises", verifyJWT, db.getAllExercises);
 
-router.get("/exercises/:id", db.getExerciseById);
+router.get("/exercises/:id", verifyJWT, db.getExerciseById);
 
-router.get("/clients", db.getClients);
+router.get("/clients", verifyJWT, db.getClients);
 
-router.get("/client-workouts/:clientId", db.getClientWorkouts);
+router.get("/client-workouts/:clientId", verifyJWT, db.getClientWorkouts);
 
-router.get("/clients/:clientId", db.getClient);
+router.get("/clients/:clientId", verifyJWT, db.getClient);
 
-router.get("/clients_weights/:clientId", db.getWeights);
+router.get("/clients_weights/:clientId", verifyJWT, db.getWeights);
 
-router.delete("/client_workout/:workoutId", db.deleteClientWorkout);
+router.delete("/client_workout/:workoutId", verifyJWT, db.deleteClientWorkout);
 
-router.get("/workouts", db.getWorkouts);
+router.get("/workouts", verifyJWT, db.getWorkouts);
 
-router.get("/workout/:workoutId", db.getWorkout);
+router.get("/workout/:workoutId", verifyJWT, db.getWorkout);
 
-router.post("/clients/workouts", db.addClientWorkout);
+router.post("/clients/workouts", verifyJWT, db.addClientWorkout);
 
-router.post("/clients_weights/:clientId", (req, res, next) => {
+router.post("/clients_weights/:clientId", verifyJWT, (req, res, next) => {
   if (!req.body.weight) {
     return res.status(400).send("Client weight required.");
   }
@@ -51,9 +51,9 @@ router.post("/clients_weights/:clientId", (req, res, next) => {
   db.addWeight(req, res);
 });
 
-router.post("/search/workouts", db.searchWorkouts);
+router.post("/search/workouts", verifyJWT, db.searchWorkouts);
 
-router.post("/clients", (req, res, next) => {
+router.post("/clients", verifyJWT, (req, res, next) => {
   if (!req.body.first_name || !req.body.last_name) {
     return res.status(400).send("Client name required.");
   }
@@ -74,7 +74,7 @@ router.post("/clients", (req, res, next) => {
   }
 });
 
-router.delete("/test/delete-client/:clientId", (req, res) => {
+router.delete("/test/delete-client/:clientId", verifyJWT, (req, res) => {
   const clientId = req.params.clientId;
 
   deleteClientForTest(clientId)
@@ -86,9 +86,9 @@ router.delete("/test/delete-client/:clientId", (req, res) => {
     });
 });
 
-router.delete("/clients/:clientId", db.deleteClient);
+router.delete("/clients/:clientId", verifyJWT, db.deleteClient);
 
-router.delete("/clients_weights/:weightId", db.deleteWeight);
+router.delete("/clients_weights/:weightId", verifyJWT, db.deleteWeight);
 router.put("/clients/:clientId/notes", (req, res, next) => {
   // You can add validation checks here as needed, similar to what you've done for other routes
   const { health_note, goal_note, misc_note } = req.body;

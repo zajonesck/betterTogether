@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import apiClient from "../../apiClient";
 import axios from "axios";
 
 export default {
@@ -165,7 +166,7 @@ export default {
 
     async getAllExercises() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}exercises`
         );
         if (response.data && response.data.message) {
@@ -206,3 +207,4 @@ export default {
   color: rgba(101, 42, 127, 0.7);
 }
 </style>
+../../apiClient

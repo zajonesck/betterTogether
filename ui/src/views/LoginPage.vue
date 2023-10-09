@@ -54,7 +54,9 @@ export default {
       try {
         const user = await Auth.signIn(email.value, password.value);
 
-        if (user) {
+        if (user && user.signInUserSession) {
+          const jwtToken = user.signInUserSession.idToken.jwtToken;
+          sessionStorage.setItem("jwt", jwtToken);
           router.push("/client-roster");
         } else {
           error.value = "Authentication failed";
@@ -63,6 +65,8 @@ export default {
         error.value = err.message || "An error occurred during login";
       }
     };
+
+    // to retrive : const jwtToken = sessionStorage.getItem('jwt');
 
     const tryAsGuest = () => {
       router.push("/client-roster");

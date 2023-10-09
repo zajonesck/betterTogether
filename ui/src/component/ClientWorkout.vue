@@ -123,6 +123,7 @@
   </div>
 </template>
 <script>
+import apiClient from "../../apiClient";
 import axios from "axios";
 import { newBDate } from "../shared.js";
 import { format, parseISO } from "date-fns";
@@ -264,7 +265,7 @@ export default {
 
     async getClient() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }`
@@ -301,7 +302,7 @@ export default {
     },
     async deleteClientWorkout(workoutId) {
       try {
-        await axios.delete(
+        await apiClient.delete(
           `${import.meta.env.VITE_API_URL}client_workout/${workoutId}`
         );
         this.getClientWorkouts();
@@ -346,7 +347,7 @@ export default {
       };
 
       try {
-        const response = await axios.post(
+        const response = await apiClient.post(
           `${import.meta.env.VITE_API_URL}clients/workouts`,
           requestBody
         );
@@ -358,7 +359,7 @@ export default {
     },
     async getClientWorkouts() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}client-workouts/${
             this.$route.params.clientId
           }`
@@ -368,7 +369,7 @@ export default {
     },
     async getAvailableWorkouts() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}workouts`
         );
         this.availableWorkouts = response.data;
@@ -394,3 +395,4 @@ export default {
   },
 };
 </script>
+../../apiClient
