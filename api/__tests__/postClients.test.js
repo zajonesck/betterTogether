@@ -4,7 +4,7 @@ const { deleteClientForTest } = require("../src/queries");
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-const { getTestJWT } = require("../src/secret");
+const { getTestJWT } = require("../src/testJWTSecret");
 
 let TESTJWT;
 
