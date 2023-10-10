@@ -1,4 +1,5 @@
 const { getPoolInstance } = require("./database");
+
 const deleteClient = (request, response) => {
   const clientId = request.params.clientId;
   const pool = getPoolInstance();

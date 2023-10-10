@@ -1,5 +1,5 @@
 <script>
-import axios from "axios";
+import apiClient from "../../apiClient";
 import { newBDate } from "../shared.js";
 
 export default {
@@ -63,7 +63,7 @@ export default {
 
   methods: {
     getClients() {
-      axios
+      apiClient
         .get(`${import.meta.env.VITE_API_URL}clients`)
         .then((response) => {
           this.clients = response.data;
@@ -85,7 +85,7 @@ export default {
         last_name: this.newClientLastName,
         birth_day: this.newClientBirthDate,
       };
-      axios
+      apiClient
         .post(`${import.meta.env.VITE_API_URL}clients`, requestBody)
         .then((response) => {
           this.getClients();
@@ -114,7 +114,7 @@ export default {
     },
 
     deleteClient(clientId) {
-      axios
+      apiClient
         .delete(`${import.meta.env.VITE_API_URL}clients/${clientId}`)
         .then((response) => {
           this.getClients();
@@ -290,3 +290,4 @@ export default {
   ); /* This will darken the color when hovering, change this value to your preference */
 }
 </style>
+../../apiClient

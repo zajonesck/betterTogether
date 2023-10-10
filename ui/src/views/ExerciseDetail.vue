@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import apiClient from "../../apiClient";
 
 export default {
   props: {
@@ -66,7 +66,7 @@ export default {
   async created() {
     try {
       // Fetch the specific exercise detail using its ID
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${import.meta.env.VITE_API_URL}exercises/${this.id}`
       );
       if (response.data) {
@@ -83,3 +83,4 @@ export default {
   },
 };
 </script>
+../../apiClient

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import apiClient from "../../apiClient";
 import { newBDate } from "../shared.js";
 
 export default {
@@ -50,7 +50,7 @@ export default {
   methods: {
     async updateNotes() {
       try {
-        await axios.put(
+        await apiClient.put(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }/notes`,
@@ -69,7 +69,7 @@ export default {
 
     async getClient() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }`
@@ -98,3 +98,4 @@ export default {
   },
 };
 </script>
+../../apiClient

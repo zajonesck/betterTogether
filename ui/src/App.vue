@@ -73,6 +73,7 @@ const router = useRouter();
 const logout = async () => {
   try {
     await Auth.signOut();
+    sessionStorage.removeItem("jwt");
     router.push("/login");
   } catch (error) {
     console.error("Error signing out: ", error);

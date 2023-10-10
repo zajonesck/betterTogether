@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import apiClient from "../../apiClient";
 import { format, parseISO } from "date-fns";
 
 export default {
@@ -102,7 +102,7 @@ export default {
         date: this.newWeightDate,
       };
       try {
-        await axios.post(
+        await apiClient.post(
           `${import.meta.env.VITE_API_URL}clients_weights/${
             this.$route.params.clientId
           }`,
@@ -119,7 +119,7 @@ export default {
     },
     async deleteWeight(weightId) {
       try {
-        await axios.delete(
+        await apiClient.delete(
           `${import.meta.env.VITE_API_URL}clients_weights/${weightId}`
         );
         this.getWeights();
@@ -131,7 +131,7 @@ export default {
     },
     async getWeights() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}clients_weights/${
             this.$route.params.clientId
           }`
@@ -158,3 +158,4 @@ export default {
   },
 };
 </script>
+../../apiClient

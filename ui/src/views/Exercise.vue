@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import apiClient from "../../apiClient";
 import axios from "axios";
 
 export default {
@@ -111,7 +112,7 @@ export default {
     },
     filteredExercises() {
       if (!this.searchQuery) {
-        return this.exercises; // Return all exercises if no search query
+        return this.exercises;
       }
 
       const query = this.searchQuery.toLowerCase();
@@ -142,21 +143,19 @@ export default {
         this.sortAscending = !this.sortAscending;
       } else {
         this.sortedColumn = property;
-        this.sortAscending = true; // default to ascending when changing columns
+        this.sortAscending = true;
       }
 
       this.exercises.sort((a, b) => {
         const textA = a[property] ? a[property].toString().toUpperCase() : "";
         const textB = b[property] ? b[property].toString().toUpperCase() : "";
 
-        // Check for null values
         if (a[property] === null && b[property] !== null)
           return this.sortAscending ? 1 : -1;
         if (a[property] !== null && b[property] === null)
           return this.sortAscending ? -1 : 1;
         if (a[property] === null && b[property] === null) return 0;
 
-        // Standard sorting if both values are non-null
         return this.sortAscending
           ? textA.localeCompare(textB)
           : textB.localeCompare(textA);
@@ -165,7 +164,7 @@ export default {
 
     async getAllExercises() {
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `${import.meta.env.VITE_API_URL}exercises`
         );
         if (response.data && response.data.message) {
@@ -173,7 +172,6 @@ export default {
         } else {
           this.exercises = response.data;
 
-          // Sort by name by default
           this.exercises.sort((a, b) => {
             const nameA = a.name ? a.name.toUpperCase() : "";
             const nameB = b.name ? b.name.toUpperCase() : "";
@@ -206,3 +204,4 @@ export default {
   color: rgba(101, 42, 127, 0.7);
 }
 </style>
+../../apiClient
