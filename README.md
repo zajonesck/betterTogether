@@ -117,6 +117,30 @@ $ amplify status
 $ amplify console function
 ```
 
+## Amazon Cognito and JWT Token Verification
+
+Amazon Cognito is leveraged in the application to provide authentication and authorization. Users authenticate through Cognito and receive a JWT (JSON Web Token) which is then used to verify and grant access to certain parts of the application.
+
+### How JWT Tokens are used:
+
+- Once a user is authenticated, they are provided with a JWT token by Cognito.
+- This token is sent in the Authorization header for requests made to the server.
+- Before processing the request, the server verifies the JWT token's validity.
+  - For local and test environments, a test JWT token is used. This test JWT is fetched from AWS Secret Manager.
+  - For other environments, the JWT token is verified against the Cognito JWKS (JSON Web Key Set) endpoint.
+
+### Role Definitions:
+
+1. **Admin**: This role has access to all functions within the application, allowing them to view, modify, delete, and manage all data. They can manage user accounts, view all client data, and perform any administrative tasks required.
+2. **User (coming soon)**: This role is for the client, allowing them to view only their data. They can't modify or delete any data, and their scope is limited to their own personal information, weight, workouts, etc.
+
+## AWS Secret Manager in Database and Tests:
+
+AWS Secret Manager is utilized to securely store and retrieve secrets required for the application. For instance:
+
+- The test JWT token, used for local and test environments, is fetched from AWS Secret Manager.
+- Database secrets and configurations can also be stored and fetched securely using AWS Secret Manager.
+
 ## Automated Tests
 
 Testing is crucial for ensuring the reliability and stability of the application. In this project, automated tests have been set up to make the validation process more efficient. Ensure all dependencies are installed and the application's environment is set up correctly for the tests to run without issues.

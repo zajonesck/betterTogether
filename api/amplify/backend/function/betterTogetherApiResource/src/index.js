@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { deleteClientForTest } = require("./queries");
 const router = express.Router();
+const { verifyJWT } = require("./jwtVerification");
 
 initializePool();
 
@@ -16,29 +17,36 @@ app.use(
     extended: true,
   })
 );
+
+// does not require JWT verifacation
 app.use("/api", router);
 
-router.get("/exercises", db.getAllExercises);
+//require JWT verifacation
+const jwtProtectedRouter = express.Router();
+router.use(jwtProtectedRouter);
+jwtProtectedRouter.use(verifyJWT);
 
-router.get("/exercises/:id", db.getExerciseById);
+jwtProtectedRouter.get("/exercises", db.getAllExercises);
 
-router.get("/clients", db.getClients);
+jwtProtectedRouter.get("/exercises/:id", db.getExerciseById);
 
-router.get("/client-workouts/:clientId", db.getClientWorkouts);
+jwtProtectedRouter.get("/clients", db.getClients);
 
-router.get("/clients/:clientId", db.getClient);
+jwtProtectedRouter.get("/client-workouts/:clientId", db.getClientWorkouts);
 
-router.get("/clients_weights/:clientId", db.getWeights);
+jwtProtectedRouter.get("/clients/:clientId", db.getClient);
 
-router.delete("/client_workout/:workoutId", db.deleteClientWorkout);
+jwtProtectedRouter.get("/clients_weights/:clientId", db.getWeights);
 
-router.get("/workouts", db.getWorkouts);
+jwtProtectedRouter.delete("/client_workout/:workoutId", db.deleteClientWorkout);
 
-router.get("/workout/:workoutId", db.getWorkout);
+jwtProtectedRouter.get("/workouts", db.getWorkouts);
 
-router.post("/clients/workouts", db.addClientWorkout);
+jwtProtectedRouter.get("/workout/:workoutId", db.getWorkout);
 
-router.post("/clients_weights/:clientId", (req, res, next) => {
+jwtProtectedRouter.post("/clients/workouts", db.addClientWorkout);
+
+jwtProtectedRouter.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
     return res.status(400).send("Client weight required.");
   }
@@ -48,9 +56,9 @@ router.post("/clients_weights/:clientId", (req, res, next) => {
   db.addWeight(req, res);
 });
 
-router.post("/search/workouts", db.searchWorkouts);
+jwtProtectedRouter.post("/search/workouts", db.searchWorkouts);
 
-router.post("/clients", (req, res, next) => {
+jwtProtectedRouter.post("/clients", (req, res, next) => {
   if (!req.body.first_name || !req.body.last_name) {
     return res.status(400).send("Client name required.");
   }
@@ -71,7 +79,7 @@ router.post("/clients", (req, res, next) => {
   }
 });
 
-router.delete("/test/delete-client/:clientId", (req, res) => {
+jwtProtectedRouter.delete("/test/delete-client/:clientId", (req, res) => {
   const clientId = req.params.clientId;
 
   deleteClientForTest(clientId)
@@ -83,30 +91,22 @@ router.delete("/test/delete-client/:clientId", (req, res) => {
     });
 });
 
-router.delete("/clients/:clientId", db.deleteClient);
+jwtProtectedRouter.delete("/clients/:clientId", db.deleteClient);
 
-router.delete("/clients_weights/:weightId", db.deleteWeight);
-router.put("/clients/:clientId/notes", (req, res, next) => {
-  // You can add validation checks here as needed, similar to what you've done for other routes
+jwtProtectedRouter.delete("/clients_weights/:weightId", db.deleteWeight);
+jwtProtectedRouter.put("/clients/:clientId/notes", (req, res, next) => {
   const { health_note, goal_note, misc_note } = req.body;
   if (!health_note && !goal_note && !misc_note) {
     return res.status(400).send("At least one note field is required.");
   }
 
-  // Assuming you have a `updateClientNotes` function in your `db` module
   db.updateClientNotes(req, res);
 });
 
 const awsServerlessExpress = require("aws-serverless-express");
 
-/**
- * @type {import('http').Server}
- */
 const server = awsServerlessExpress.createServer(app);
 
-/**
- * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
- */
 exports.handler = async (event, context) => {
   console.log(`event: ${JSON.stringify(event)}`);
   await initializePool(); // Initialize DB connection

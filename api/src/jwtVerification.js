@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { getTestJWT } = require("./src/testJWTSecret");
+const { getTestJWT } = require("./testJWTSecret");
 const jwksClient = require("jwks-rsa");
 const COGNITO_REGION = process.env.COGNITO_REGION || "us-east-1";
 const COGNITO_USER_POOL_ID =
