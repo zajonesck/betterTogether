@@ -1,6 +1,5 @@
 <script>
 import apiClient from "../../apiClient";
-import axios from "axios";
 import { newBDate } from "../shared.js";
 
 export default {

@@ -50,7 +50,6 @@
 
 <script>
 import apiClient from "../../apiClient";
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 
 export default {

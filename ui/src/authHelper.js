@@ -1,5 +1,3 @@
-// authHelper.js
-
 const { Auth } = require("aws-amplify");
 
 async function getToken() {

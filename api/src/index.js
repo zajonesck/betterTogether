@@ -17,29 +17,36 @@ app.use(
     extended: true,
   })
 );
+
+// does not require JWT verifacation
 app.use("/api", router);
 
-router.get("/exercises", verifyJWT, db.getAllExercises);
+//require JWT verifacation
+const jwtProtectedRouter = express.Router();
+router.use(jwtProtectedRouter);
+jwtProtectedRouter.use(verifyJWT);
 
-router.get("/exercises/:id", verifyJWT, db.getExerciseById);
+jwtProtectedRouter.get("/exercises", db.getAllExercises);
 
-router.get("/clients", verifyJWT, db.getClients);
+jwtProtectedRouter.get("/exercises/:id", db.getExerciseById);
 
-router.get("/client-workouts/:clientId", verifyJWT, db.getClientWorkouts);
+jwtProtectedRouter.get("/clients", db.getClients);
 
-router.get("/clients/:clientId", verifyJWT, db.getClient);
+jwtProtectedRouter.get("/client-workouts/:clientId", db.getClientWorkouts);
 
-router.get("/clients_weights/:clientId", verifyJWT, db.getWeights);
+jwtProtectedRouter.get("/clients/:clientId", db.getClient);
 
-router.delete("/client_workout/:workoutId", verifyJWT, db.deleteClientWorkout);
+jwtProtectedRouter.get("/clients_weights/:clientId", db.getWeights);
 
-router.get("/workouts", verifyJWT, db.getWorkouts);
+jwtProtectedRouter.delete("/client_workout/:workoutId", db.deleteClientWorkout);
 
-router.get("/workout/:workoutId", verifyJWT, db.getWorkout);
+jwtProtectedRouter.get("/workouts", db.getWorkouts);
 
-router.post("/clients/workouts", verifyJWT, db.addClientWorkout);
+jwtProtectedRouter.get("/workout/:workoutId", db.getWorkout);
 
-router.post("/clients_weights/:clientId", verifyJWT, (req, res, next) => {
+jwtProtectedRouter.post("/clients/workouts", db.addClientWorkout);
+
+jwtProtectedRouter.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
     return res.status(400).send("Client weight required.");
   }
@@ -49,9 +56,9 @@ router.post("/clients_weights/:clientId", verifyJWT, (req, res, next) => {
   db.addWeight(req, res);
 });
 
-router.post("/search/workouts", verifyJWT, db.searchWorkouts);
+jwtProtectedRouter.post("/search/workouts", db.searchWorkouts);
 
-router.post("/clients", verifyJWT, (req, res, next) => {
+jwtProtectedRouter.post("/clients", (req, res, next) => {
   if (!req.body.first_name || !req.body.last_name) {
     return res.status(400).send("Client name required.");
   }
@@ -72,7 +79,7 @@ router.post("/clients", verifyJWT, (req, res, next) => {
   }
 });
 
-router.delete("/test/delete-client/:clientId", verifyJWT, (req, res) => {
+jwtProtectedRouter.delete("/test/delete-client/:clientId", (req, res) => {
   const clientId = req.params.clientId;
 
   deleteClientForTest(clientId)
@@ -84,17 +91,15 @@ router.delete("/test/delete-client/:clientId", verifyJWT, (req, res) => {
     });
 });
 
-router.delete("/clients/:clientId", verifyJWT, db.deleteClient);
+jwtProtectedRouter.delete("/clients/:clientId", db.deleteClient);
 
-router.delete("/clients_weights/:weightId", verifyJWT, db.deleteWeight);
-router.put("/clients/:clientId/notes", (req, res, next) => {
-  // You can add validation checks here as needed, similar to what you've done for other routes
+jwtProtectedRouter.delete("/clients_weights/:weightId", db.deleteWeight);
+jwtProtectedRouter.put("/clients/:clientId/notes", (req, res, next) => {
   const { health_note, goal_note, misc_note } = req.body;
   if (!health_note && !goal_note && !misc_note) {
     return res.status(400).send("At least one note field is required.");
   }
 
-  // Assuming you have a `updateClientNotes` function in your `db` module
   db.updateClientNotes(req, res);
 });
 

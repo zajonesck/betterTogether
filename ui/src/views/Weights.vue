@@ -1,6 +1,5 @@
 <script>
 import apiClient from "../../apiClient";
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { newBDate } from "../shared.js";
 import ClientGoal from "../component/ClientGoal.vue";

@@ -43,7 +43,6 @@
 
 <script>
 import apiClient from "../../apiClient";
-import axios from "axios";
 
 export default {
   data() {

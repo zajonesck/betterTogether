@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import apiClient from "../../apiClient";
 import { newBDate } from "../shared.js";
 

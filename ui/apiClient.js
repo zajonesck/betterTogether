@@ -1,14 +1,10 @@
 import axios from "axios";
 
-// Create an axios instance
-const apiClient = axios.create({
-  // baseURL: "https://http://localhost:3000/",
-});
+const apiClient = axios.create({});
 
-// Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const jwtToken = sessionStorage.getItem("jwt"); // Retrieve JWT from sessionStorage
+    const jwtToken = sessionStorage.getItem("jwt");
     if (jwtToken) {
       config.headers["Authorization"] = `Bearer ${jwtToken}`;
     }

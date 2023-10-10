@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { getTestJWT } = require("./src/secret");
+const { getTestJWT } = require("./src/testJWTSecret");
 const jwksClient = require("jwks-rsa");
 const COGNITO_REGION = process.env.COGNITO_REGION || "us-east-1";
 const COGNITO_USER_POOL_ID =
@@ -30,7 +30,7 @@ async function verifyJWT(req, res, next) {
 
   const token = authHeader.split(" ")[1];
 
-  if (isExemptRoute(req.originalUrl) || (await isValidTestToken(token))) {
+  if (await isValidTestToken(token)) {
     return next();
   }
 
@@ -41,10 +41,6 @@ async function verifyJWT(req, res, next) {
     req.user = user;
     next();
   });
-}
-
-function isExemptRoute(route) {
-  return route === "/login" || route === "/signup";
 }
 
 async function isValidTestToken(token) {
