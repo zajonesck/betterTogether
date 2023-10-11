@@ -1,34 +1,31 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <div>
+    <canvas ref="canvas"></canvas>
+  </div>
 </template>
 
 <script>
-import { Line } from "vue-chartjs";
+import Chart from "chart.js/auto";
 
 export default {
-  extends: Line,
+  name: "LineChart",
   props: {
     chartData: {
       type: Object,
-      default: null,
+      required: true,
     },
+  },
+  data() {
+    return {
+      chartId: "my-chart",
+      chart: null,
+    };
   },
   mounted() {
-    this.renderChart(this.chartData, {
-      responsive: true,
-      maintainAspectRatio: false,
+    this.chart = new Chart(this.$refs.canvas.getContext("2d"), {
+      type: "line",
+      data: this.chartData,
     });
-  },
-  watch: {
-    chartData(newChartData) {
-      if (newChartData) {
-        this.$data._chart.destroy();
-        this.renderChart(newChartData, {
-          responsive: true,
-          maintainAspectRatio: false,
-        });
-      }
-    },
   },
 };
 </script>

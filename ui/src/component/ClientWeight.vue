@@ -2,6 +2,10 @@
   <div>
     <v-window-item value="weights">
       <v-card-title> Weight History </v-card-title>
+      <line-chart
+        v-if="chartData && Object.keys(chartData).length"
+        :chartData="chartData"
+      ></line-chart>
       <v-table>
         <thead>
           <tr>
@@ -22,6 +26,7 @@
           </tr>
         </tbody>
       </v-table>
+
       <v-form @submit.prevent="addWeight">
         <v-card-title style="padding-top: 25px"> Weight Check-In </v-card-title>
         <v-text-field
@@ -50,6 +55,7 @@
 
 <script>
 import apiClient from "../../apiClient";
+import LineChart from "./LineChart.vue";
 import { format, parseISO } from "date-fns";
 
 export default {
@@ -64,9 +70,13 @@ export default {
       newWeight: "",
       newWeightDate: "",
       loading: true,
-      chartData: null,
+      chartData: {},
     };
   },
+  components: {
+    LineChart,
+  },
+
   async mounted() {
     try {
       await Promise.all([this.getWeights()]);
@@ -138,7 +148,9 @@ export default {
         );
         this.clientWeights = response.data;
         this.chartData = {
-          labels: response.data.map((w) => w.date),
+          labels: response.data.map((w) =>
+            format(parseISO(w.date), "yyyy-MM-dd")
+          ),
           datasets: [
             {
               label: "Weight",
@@ -158,4 +170,3 @@ export default {
   },
 };
 </script>
-../../apiClient
