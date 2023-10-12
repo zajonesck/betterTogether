@@ -83,7 +83,6 @@ const logout = async () => {
 
 <style>
 v-app {
-  background-image: url("./src/assets/TransparentLogo.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
