@@ -6,7 +6,9 @@ CREATE TABLE clients (
     birth_day timestamp without time zone NOT NULL,
     health_note character varying(500),
     goal_note character varying(500),
-    misc_note character varying(500)
+    misc_note character varying(500),
+    goal_weight integer
+
 );
 
 -- Indices -------------------------------------------------------
