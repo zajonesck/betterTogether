@@ -21,6 +21,9 @@ export default {
   },
   data() {
     return {
+      chartData: {
+        datasets: [],
+      },
       chart: null,
     };
   },
@@ -60,6 +63,7 @@ export default {
                 color: "#FFFFFF",
                 usePointStyle: true,
                 boxWidth: 3,
+                padding: 20,
               },
             },
           },

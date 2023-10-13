@@ -43,6 +43,7 @@ describe("Client Operations", () => {
 
   describe("Create a new client", () => {
     test("It responds with the newly created client", async () => {
+      console.log("pppppp", request.body);
       const response = await makeRequest("get", "/api/clients");
       const numberOfClients = response.body.length;
 
