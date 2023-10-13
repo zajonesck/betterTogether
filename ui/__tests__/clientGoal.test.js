@@ -11,6 +11,7 @@ describe("ClientGoal.vue", () => {
           notes: {
             healthMedsNote: "",
             goalsNote: "",
+            goalWeight: "",
             miscNote: "",
           },
         };
@@ -21,7 +22,7 @@ describe("ClientGoal.vue", () => {
   describe("Rendering functionality", () => {
     test("renders text areas correctly", async () => {
       await wrapper.vm.$nextTick();
-      expect(wrapper.findAll("v-textarea").length).toBe(3);
+      expect(wrapper.findAll("v-textarea").length).toBe(4);
       expect(
         wrapper.find('v-textarea[label="Add Health/Meds Notes"]').exists()
       ).toBe(true);
@@ -44,11 +45,15 @@ describe("ClientGoal.vue", () => {
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.notes.goalsNote).toBe("Test Goals Note");
     });
-
     test("updates misc note correctly", async () => {
       await wrapper.setData({ notes: { miscNote: "Test Misc Note" } });
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.notes.miscNote).toBe("Test Misc Note");
+    });
+    test("updates goal weight correctly", async () => {
+      await wrapper.setData({ notes: { goalWeight: 65 } }); // assuming goalWeight is a number
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.notes.goalWeight).toBe(65);
     });
   });
 });

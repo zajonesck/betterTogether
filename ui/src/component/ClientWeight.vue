@@ -2,6 +2,12 @@
   <div>
     <v-window-item value="weights">
       <v-card-title> Weight History </v-card-title>
+      <line-chart
+        v-if="chartData && Object.keys(chartData).length"
+        :chartData="chartData"
+        :goal-weight="notes.goalWeight"
+      ></line-chart>
+
       <v-table>
         <thead>
           <tr>
@@ -22,6 +28,7 @@
           </tr>
         </tbody>
       </v-table>
+
       <v-form @submit.prevent="addWeight">
         <v-card-title style="padding-top: 25px"> Weight Check-In </v-card-title>
         <v-text-field
@@ -50,6 +57,7 @@
 
 <script>
 import apiClient from "../../apiClient";
+import LineChart from "./LineChart.vue";
 import { format, parseISO } from "date-fns";
 
 export default {
@@ -64,12 +72,22 @@ export default {
       newWeight: "",
       newWeightDate: "",
       loading: true,
-      chartData: null,
+      chartData: {},
+      notes: {
+        healthMedsNote: "",
+        goalsNote: "",
+        goalWeight: null, // Set default as null
+        miscNote: "",
+      },
     };
   },
+  components: {
+    LineChart,
+  },
+
   async mounted() {
     try {
-      await Promise.all([this.getWeights()]);
+      await Promise.all([this.getWeights(), this.getClient()]);
     } catch (error) {
       console.error("Failed to fetch data: ", error);
     } finally {
@@ -117,6 +135,24 @@ export default {
         this.errorDialog = true;
       }
     },
+    async getClient() {
+      try {
+        const response = await apiClient.get(
+          `${import.meta.env.VITE_API_URL}clients/${
+            this.$route.params.clientId
+          }`
+        );
+        const clientData = response.data[0];
+        this.notes.healthMedsNote = clientData.health_note;
+        this.notes.goalsNote = clientData.goal_note;
+        this.notes.goalWeight = clientData.goal_weight;
+        this.notes.miscNote = clientData.misc_note;
+      } catch (error) {
+        console.error("Error fetching client data: ", error);
+        this.errorMessage = "Failed to fetch client data.";
+        this.errorDialog = true;
+      }
+    },
     async deleteWeight(weightId) {
       try {
         await apiClient.delete(
@@ -138,7 +174,8 @@ export default {
         );
         this.clientWeights = response.data;
         this.chartData = {
-          labels: response.data.map((w) => w.date),
+          labels: response.data.map((w) => format(parseISO(w.date), "MM/dd")),
+
           datasets: [
             {
               label: "Weight",
@@ -158,4 +195,3 @@ export default {
   },
 };
 </script>
-../../apiClient

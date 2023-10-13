@@ -37,7 +37,7 @@ const getClient = (request, response) => {
   const clientId = request.params.clientId;
   const pool = getPoolInstance();
   pool.query(
-    "SELECT first_name, last_name, birth_day, health_note, goal_note, misc_note FROM clients WHERE id = $1",
+    "SELECT first_name, last_name, birth_day, health_note, goal_note, goal_weight, misc_note FROM clients WHERE id = $1",
     [clientId],
     (error, results) => {
       if (error) {
@@ -219,19 +219,27 @@ const addClient = (request, response) => {
     health_note,
     goal_note,
     misc_note,
+    goal_weight,
   } = request.body;
 
   const pool = getPoolInstance();
   pool.query(
-    "INSERT INTO clients (first_name, last_name, birth_day, health_note, goal_note, misc_note) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
-    [first_name, last_name, birth_day, health_note, goal_note, misc_note],
+    "INSERT INTO clients (first_name, last_name, birth_day, health_note, goal_note, misc_note, goal_weight) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+    [
+      first_name,
+      last_name,
+      birth_day,
+      health_note,
+      goal_note,
+      misc_note,
+      goal_weight,
+    ],
     (error, results) => {
       if (error) {
         console.log(error);
         response.status(500).send("An error occurred while adding the client.");
         return;
       }
-      // Send back the newly added client's data.
       response.status(201).json(results.rows[0]);
     }
   );
@@ -393,16 +401,16 @@ const getAllExercises = (request, response) => {
 };
 const updateClientNotes = (req, res) => {
   const clientId = req.params.clientId;
-  const { health_note, goal_note, misc_note } = req.body;
+  const { health_note, goal_note, misc_note, goal_weight } = req.body;
 
-  if (!health_note && !goal_note && !misc_note) {
+  if (!health_note && !goal_note && !misc_note && !goal_weight) {
     return res.status(400).send("No data provided to update.");
   }
 
   const pool = getPoolInstance();
   pool.query(
-    "UPDATE clients SET health_note = $1, goal_note = $2, misc_note = $3 WHERE id = $4",
-    [health_note, goal_note, misc_note, clientId],
+    "UPDATE clients SET health_note = $1, goal_note = $2, misc_note = $3, goal_weight = $4 WHERE id = $5",
+    [health_note, goal_note, misc_note, goal_weight, clientId],
     (error, results) => {
       if (error) {
         console.log(error);
@@ -412,7 +420,6 @@ const updateClientNotes = (req, res) => {
       }
 
       if (results.rowCount === 0) {
-        // if no rows were updated
         return res.status(404).send("Client not found.");
       }
 

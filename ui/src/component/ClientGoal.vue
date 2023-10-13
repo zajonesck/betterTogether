@@ -18,6 +18,7 @@ export default {
       notes: {
         healthMedsNote: "",
         goalsNote: "",
+        goalWeight: "",
         miscNote: "",
       },
       textAreas: {
@@ -26,6 +27,7 @@ export default {
           label: "Add Health/Meds Notes",
         },
         goalsNote: { title: "Goals", label: "Add Goals" },
+        goalWeight: { title: "Goal weight", label: "Enter Goal Weight" },
         miscNote: { title: "Misc.", label: "Add Misc. Notes" },
       },
       errorDialog: false,
@@ -57,6 +59,7 @@ export default {
           {
             health_note: this.notes.healthMedsNote,
             goal_note: this.notes.goalsNote,
+            goal_weight: this.notes.goalWeight,
             misc_note: this.notes.miscNote,
           }
         );
@@ -80,6 +83,7 @@ export default {
           birth_day,
           health_note,
           goal_note,
+          goal_weight,
           misc_note,
         } = response.data[0];
 
@@ -88,6 +92,7 @@ export default {
         this.clientBirthDay = newBDate(birth_day);
         this.notes.healthMedsNote = health_note;
         this.notes.goalsNote = goal_note;
+        this.notes.goalWeight = goal_weight;
         this.notes.miscNote = misc_note;
       } catch (error) {
         console.error("Error fetching client data: ", error);
@@ -98,4 +103,3 @@ export default {
   },
 };
 </script>
-../../apiClient
