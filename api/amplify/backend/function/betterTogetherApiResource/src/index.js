@@ -18,10 +18,8 @@ app.use(
   })
 );
 
-// does not require JWT verifacation
 app.use("/api", router);
 
-//require JWT verifacation
 const jwtProtectedRouter = express.Router();
 router.use(jwtProtectedRouter);
 jwtProtectedRouter.use(verifyJWT);
@@ -93,11 +91,10 @@ jwtProtectedRouter.delete("/test/delete-client/:clientId", (req, res) => {
 
 jwtProtectedRouter.delete("/clients/:clientId", db.deleteClient);
 
-jwtProtectedRouter.delete("/clients_weights/:weightId", db.deleteWeight);
 jwtProtectedRouter.put("/clients/:clientId/notes", (req, res, next) => {
-  const { health_note, goal_note, misc_note } = req.body;
-  if (!health_note && !goal_note && !misc_note) {
-    return res.status(400).send("At least one note field is required.");
+  const { health_note, goal_note, misc_note, goal_weight } = req.body;
+  if (!health_note && !goal_note && !misc_note && !goal_weight) {
+    return res.status(400).send("At least one field is required.");
   }
 
   db.updateClientNotes(req, res);
