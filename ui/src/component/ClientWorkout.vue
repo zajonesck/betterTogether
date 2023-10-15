@@ -120,6 +120,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
+      {{ snackbarMessage }}
+      <v-btn icon @click="snackbar = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -146,6 +152,9 @@ export default {
       errorDialog: false,
       errorMessage: "",
       clientWorkouts: [],
+      snackbar: false,
+      snackbarMessage: "",
+      snackbarColor: "success",
     };
   },
   watch: {
@@ -351,9 +360,15 @@ export default {
           requestBody
         );
         await this.getClientWorkouts();
-        this.note = ""; // This line clears the textarea after assigning the workout
+        this.note = "";
+        this.snackbarMessage = "Workout assigned successfully!";
+        this.snackbarColor = "success";
+        this.snackbar = true;
       } catch (error) {
         console.error("Error assigning workout to client: ", error);
+        this.snackbarMessage = "Failed to assign workout. Please try again.";
+        this.snackbarColor = "error";
+        this.snackbar = true;
       }
     },
     async getClientWorkouts() {
@@ -394,4 +409,3 @@ export default {
   },
 };
 </script>
-../../apiClient

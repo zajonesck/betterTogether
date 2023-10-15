@@ -1,10 +1,28 @@
 <template>
   <v-window-item value="goals">
-    <div v-for="(label, key) in textAreas" :key="key">
+    <div v-for="(label, key) in textFields" :key="key">
       <v-card-title> {{ label.title }} </v-card-title>
-      <v-textarea v-model="notes[key]" :label="label.label"></v-textarea>
+      <v-text-field
+        v-if="label.type === 'number'"
+        v-model="notes[key]"
+        :label="label.label"
+        type="number"
+        @keyup.enter="updateNotes"
+      ></v-text-field>
+      <v-textarea
+        v-else
+        v-model="notes[key]"
+        :label="label.label"
+        @keyup.enter="updateNotes"
+      ></v-textarea>
     </div>
     <v-btn @click="updateNotes">Save Notes</v-btn>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
+      {{ snackbarMessage }}
+      <v-btn icon @click="snackbar = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </v-window-item>
 </template>
 
@@ -21,14 +39,27 @@ export default {
         goalWeight: "",
         miscNote: "",
       },
-      textAreas: {
+      textFields: {
         healthMedsNote: {
           title: "Health/Meds",
           label: "Add Health/Meds Notes",
+          type: "textarea",
         },
-        goalsNote: { title: "Goals", label: "Add Goals" },
-        goalWeight: { title: "Goal weight", label: "Enter Goal Weight" },
-        miscNote: { title: "Misc.", label: "Add Misc. Notes" },
+        goalsNote: {
+          title: "Goals",
+          label: "Add Goals",
+          type: "textarea",
+        },
+        goalWeight: {
+          title: "Goal weight",
+          label: "Enter Goal Weight",
+          type: "number",
+        },
+        miscNote: {
+          title: "Misc.",
+          label: "Add Misc. Notes",
+          type: "textarea",
+        },
       },
       errorDialog: false,
       errorMessage: "",
@@ -36,6 +67,9 @@ export default {
       clientLastName: "",
       clientBirthDay: "",
       loading: true,
+      snackbar: false,
+      snackbarMessage: "",
+      snackbarColor: "success",
     };
   },
 
@@ -63,10 +97,18 @@ export default {
             misc_note: this.notes.miscNote,
           }
         );
+        this.snackbarMessage = "Notes updated successfully!";
+        this.snackbarColor = "success";
+        this.snackbar = true;
       } catch (error) {
         console.error("Error updating notes: ", error);
         this.errorMessage = "Failed to update notes.";
         this.errorDialog = true;
+
+        // Display error message
+        this.snackbarMessage = "Failed to update notes. Please try again.";
+        this.snackbarColor = "error";
+        this.snackbar = true;
       }
     },
 

@@ -2,12 +2,18 @@
   <div>
     <v-window-item value="weights">
       <v-card-title> Weight History </v-card-title>
-      <line-chart
-        v-if="chartData && Object.keys(chartData).length"
-        :chartData="chartData"
-        :goal-weight="notes.goalWeight"
-      ></line-chart>
-
+      <div style="position: relative; min-height: 250px">
+        <v-progress-circular
+          v-if="chartLoading"
+          indeterminate
+          size="70"
+        ></v-progress-circular>
+        <line-chart
+          v-else-if="chartData && Object.keys(chartData).length"
+          :chartData="chartData"
+          :goal-weight="notes.goalWeight"
+        ></line-chart>
+      </div>
       <v-table>
         <thead>
           <tr>
@@ -38,20 +44,28 @@
         ></v-text-field>
         <v-btn @click="addWeight">Add Weight</v-btn>
       </v-form>
+      <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+        <v-card>
+          <v-card-title class="headline">Confirm Deletion</v-card-title>
+          <v-card-text>
+            Are you sure you want to delete this item?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="proceedToDelete"
+              >Yes, Delete</v-btn
+            >
+            <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-window-item>
-    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
-      <v-card>
-        <v-card-title class="headline">Confirm Deletion</v-card-title>
-        <v-card-text> Are you sure you want to delete this item? </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="proceedToDelete"
-            >Yes, Delete</v-btn
-          >
-          <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
+      {{ snackbarMessage }}
+      <v-btn icon @click="snackbar = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -61,8 +75,12 @@ import LineChart from "./LineChart.vue";
 import { format, parseISO } from "date-fns";
 
 export default {
+  components: {
+    LineChart,
+  },
   data() {
     return {
+      chartLoading: true,
       confirmDeleteDialog: false,
       itemToDelete: null,
       deleteType: "",
@@ -76,25 +94,19 @@ export default {
       notes: {
         healthMedsNote: "",
         goalsNote: "",
-        goalWeight: null, // Set default as null
+        goalWeight: null,
         miscNote: "",
       },
+      snackbar: false,
+      snackbarMessage: "",
+      snackbarColor: "success",
     };
   },
-  components: {
-    LineChart,
-  },
-
-  async mounted() {
-    try {
-      await Promise.all([this.getWeights(), this.getClient()]);
-    } catch (error) {
-      console.error("Failed to fetch data: ", error);
-    } finally {
-      this.loading = false;
-    }
-  },
   methods: {
+    async fetchChartData() {
+      this.chartLoading = true;
+      this.chartLoading = false;
+    },
     confirmDelete(type, itemId) {
       this.deleteType = type;
       this.itemToDelete = itemId;
@@ -129,8 +141,16 @@ export default {
         this.getWeights();
         this.newWeight = "";
         this.newWeightDate = "";
+        this.snackbarMessage = "Weight added successfully!";
+        this.snackbarColor = "success";
+        this.snackbar = true;
       } catch (error) {
         console.error("Error adding weight data: ", error);
+
+        this.snackbarMessage = "Failed to add weight. Please try again.";
+        this.snackbarColor = "error";
+        this.snackbar = true;
+
         this.errorMessage = "Failed to add weight data.";
         this.errorDialog = true;
       }
@@ -192,6 +212,16 @@ export default {
         this.errorDialog = true;
       }
     },
+  },
+  async mounted() {
+    try {
+      await Promise.all([this.getWeights(), this.getClient()]);
+    } catch (error) {
+      console.error("Failed to fetch data: ", error);
+    } finally {
+      this.loading = false;
+    }
+    this.fetchChartData();
   },
 };
 </script>
