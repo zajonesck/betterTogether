@@ -99,15 +99,21 @@ export default {
         );
         this.snackbarMessage = "Notes updated successfully!";
         this.snackbarColor = "success";
-        this.snackbar = true;
       } catch (error) {
         console.error("Error updating notes: ", error);
-        this.errorMessage = "Failed to update notes.";
-        this.errorDialog = true;
 
-        // Display error message
-        this.snackbarMessage = "Failed to update notes. Please try again.";
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          this.snackbarMessage = error.response.data.errors.join(" ");
+        } else {
+          this.snackbarMessage = "Failed to update notes. Please try again.";
+        }
+
         this.snackbarColor = "error";
+      } finally {
         this.snackbar = true;
       }
     },

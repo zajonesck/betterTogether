@@ -104,7 +104,6 @@ export default {
   },
   methods: {
     async fetchChartData() {
-      this.chartLoading = true;
       this.chartLoading = false;
     },
     confirmDelete(type, itemId) {
