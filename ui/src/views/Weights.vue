@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      tab: null,
+      tab: "weights",
       errorDialog: false,
       errorMessage: "",
       clientFirstName: "",
@@ -72,12 +72,14 @@ export default {
 
 <template>
   <v-container style="min-height: calc(100vh - 250px)">
-    <v-progress-circular
-      v-if="loading"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <div v-else>
+    <div v-if="loading" class="full-page-loader">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        size="70"
+      ></v-progress-circular>
+    </div>
+    <div v-else class="content-container">
       <v-card-title>
         {{ capitalizedFirstName }} {{ capitalizedLastName }}
       </v-card-title>
@@ -114,6 +116,16 @@ export default {
   </v-container>
 </template>
 <style scoped>
+.full-page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.content-container {
+  min-height: calc(100vh - 250px);
+}
 .clickable-header:hover {
   cursor: pointer;
 }
@@ -128,4 +140,3 @@ export default {
   color: rgba(101, 42, 127, 0.7);
 }
 </style>
-../../apiClient

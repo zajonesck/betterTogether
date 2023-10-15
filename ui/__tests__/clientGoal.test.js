@@ -22,7 +22,9 @@ describe("ClientGoal.vue", () => {
   describe("Rendering functionality", () => {
     test("renders text areas correctly", async () => {
       await wrapper.vm.$nextTick();
-      expect(wrapper.findAll("v-textarea").length).toBe(4);
+      expect(wrapper.findAll("v-textarea").length).toBe(3);
+      const numberInputs = wrapper.findAll('v-text-field[type="number"]');
+      expect(numberInputs.length).toBe(1);
       expect(
         wrapper.find('v-textarea[label="Add Health/Meds Notes"]').exists()
       ).toBe(true);

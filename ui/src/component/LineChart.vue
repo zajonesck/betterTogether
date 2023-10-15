@@ -59,7 +59,8 @@ export default {
               labels: {
                 color: "#FFFFFF",
                 usePointStyle: true,
-                boxWidth: 3,
+                boxWidth: 15,
+                padding: 25,
               },
             },
           },

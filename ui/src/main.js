@@ -13,6 +13,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { VDataTable } from "vuetify/labs/VDataTable";
+import { VSnackbar } from "vuetify/components";
 
 // AWS Amplify
 import { Amplify } from "aws-amplify";
@@ -26,6 +27,7 @@ const vuetify = createVuetify({
   components: {
     ...components,
     VDataTable,
+    VSnackbar,
   },
   directives,
   theme: {

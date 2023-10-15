@@ -7,7 +7,7 @@
             <v-card-title>Login</v-card-title>
             <v-card-text>
               <v-alert v-if="error" type="error">{{ error }}</v-alert>
-              <v-form ref="form">
+              <v-form ref="form" @submit.prevent="login" @keyup.enter="login">
                 <v-text-field
                   v-model="email"
                   label="Email"
