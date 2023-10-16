@@ -21,7 +21,8 @@ CREATE UNIQUE INDEX clients_data_pkey ON clients(id int4_ops);
 
 CREATE TABLE clients_weights (
     id SERIAL PRIMARY KEY,
-    weight integer NOT NULL,
+    weight numeric(10,2)
+ NOT NULL,
     date timestamp without time zone NOT NULL,
     client_id integer REFERENCES clients(id)
 );

@@ -41,8 +41,12 @@
           v-model="newWeight"
           label="Today's Weight"
           required
+          type="number"
+          step="0.01"
+          :rules="[validWeightRule]"
         ></v-text-field>
-        <v-btn @click="addWeight">Add Weight</v-btn>
+
+        <v-btn :loading="weightLoading" @click="addWeight">Add Weight</v-btn>
       </v-form>
       <v-dialog v-model="confirmDeleteDialog" max-width="400px">
         <v-card>
@@ -55,16 +59,22 @@
             <v-btn color="red darken-1" text @click="proceedToDelete"
               >Yes, Delete</v-btn
             >
-            <v-btn text @click="confirmDeleteDialog = false">Cancel</v-btn>
+            <v-btn icon @click="confirmDelete('weight', weight.id)">
+              <v-icon v-if="!weightLoading">mdi-delete</v-icon>
+              <v-progress-circular
+                v-else
+                indeterminate
+                size="20"
+              ></v-progress-circular>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-window-item>
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
-      {{ snackbarMessage }}
-      <v-btn icon @click="snackbar = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="750">
+      <div class="text-center flex-grow-1">
+        {{ snackbarMessage }}
+      </div>
     </v-snackbar>
   </div>
 </template>
@@ -80,6 +90,7 @@ export default {
   },
   data() {
     return {
+      weightLoading: false,
       chartLoading: true,
       confirmDeleteDialog: false,
       itemToDelete: null,
@@ -100,6 +111,12 @@ export default {
       snackbar: false,
       snackbarMessage: "",
       snackbarColor: "success",
+      validWeightRule: (value) => {
+        if (value && !value.toString().match(/^\d+(\.\d{1,2})?$/)) {
+          return "Weight should be a number up to two decimal places";
+        }
+        return true;
+      },
     };
   },
   methods: {
@@ -126,6 +143,7 @@ export default {
       return date;
     },
     async addWeight() {
+      this.weightLoading = true;
       const requestBody = {
         weight: this.newWeight,
         date: this.newWeightDate,
@@ -145,13 +163,13 @@ export default {
         this.snackbar = true;
       } catch (error) {
         console.error("Error adding weight data: ", error);
-
         this.snackbarMessage = "Failed to add weight. Please try again.";
         this.snackbarColor = "error";
         this.snackbar = true;
-
         this.errorMessage = "Failed to add weight data.";
         this.errorDialog = true;
+      } finally {
+        this.weightLoading = false;
       }
     },
     async getClient() {
@@ -173,6 +191,8 @@ export default {
       }
     },
     async deleteWeight(weightId) {
+      this.weightLoading = true;
+
       try {
         await apiClient.delete(
           `${import.meta.env.VITE_API_URL}clients_weights/${weightId}`
@@ -182,6 +202,8 @@ export default {
         console.error("Error deleting weight data: ", error);
         this.errorMessage = "Failed to delete weight data.";
         this.errorDialog = true;
+      } finally {
+        this.weightLoading = false;
       }
     },
     async getWeights() {

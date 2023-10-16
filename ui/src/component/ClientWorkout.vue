@@ -14,7 +14,10 @@
         @keyup.enter="assignWorkoutToClient"
       ></v-textarea>
 
-      <v-btn @click="assignWorkoutToClient" class="mb-6">Assign Workout</v-btn>
+      <v-btn @click="assignWorkoutToClient" class="mb-6" :loading="assigning"
+        >Assign Workout</v-btn
+      >
+
       <v-card-title> Assigned Workouts </v-card-title>
       <v-text-field
         v-model="searchQuery"
@@ -120,11 +123,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
-      {{ snackbarMessage }}
-      <v-btn icon @click="snackbar = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="750">
+      <div class="text-center flex-grow-1">
+        {{ snackbarMessage }}
+      </div>
     </v-snackbar>
   </div>
 </template>
@@ -136,6 +138,7 @@ import { format, parseISO } from "date-fns";
 export default {
   data() {
     return {
+      assigning: false,
       note: "",
       currentPage: 1,
       itemsPerPage: 10,
@@ -251,7 +254,6 @@ export default {
         this.sortAscending = true;
       }
 
-      // Sorting logic
       this.clientWorkouts.sort((a, b) => {
         let result = 0;
         switch (this.sortedColumn) {
@@ -354,6 +356,8 @@ export default {
         date: new Date().toISOString(),
       };
 
+      this.assigning = true;
+
       try {
         const response = await apiClient.post(
           `${import.meta.env.VITE_API_URL}clients/workouts`,
@@ -369,8 +373,11 @@ export default {
         this.snackbarMessage = "Failed to assign workout. Please try again.";
         this.snackbarColor = "error";
         this.snackbar = true;
+      } finally {
+        this.assigning = false;
       }
     },
+
     async getClientWorkouts() {
       try {
         const response = await apiClient.get(

@@ -17,6 +17,7 @@ export default {
     goalWeight: {
       type: Number,
       default: null,
+      required: false,
     },
   },
   data() {

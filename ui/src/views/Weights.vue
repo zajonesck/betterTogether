@@ -21,6 +21,9 @@ export default {
       clientLastName: "",
       clientBirthDay: "",
       loading: true,
+      chartData: {
+        goalWeight: null,
+      },
     };
   },
 
@@ -47,6 +50,9 @@ export default {
     capitalize(text) {
       if (!text) return "";
       return text.charAt(0).toUpperCase() + text.slice(1);
+    },
+    handleGoalWeightUpdated(newGoalWeight) {
+      this.chartData.goalWeight = newGoalWeight;
     },
 
     async getClient() {
@@ -95,7 +101,7 @@ export default {
 
           <ClientWorkout />
 
-          <ClientGoal />
+          <ClientGoal @goalWeightUpdated="handleGoalWeightUpdated" />
         </v-window>
       </v-card-text>
       <v-dialog v-model="errorDialog" max-width="500px">

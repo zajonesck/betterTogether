@@ -17,11 +17,10 @@
       ></v-textarea>
     </div>
     <v-btn @click="updateNotes">Save Notes</v-btn>
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="1500">
-      {{ snackbarMessage }}
-      <v-btn icon @click="snackbar = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top timeout="750">
+      <div class="text-center flex-grow-1">
+        {{ snackbarMessage }}
+      </div>
     </v-snackbar>
   </v-window-item>
 </template>
@@ -86,17 +85,28 @@ export default {
   methods: {
     async updateNotes() {
       try {
+        const payload = {
+          health_note: this.notes.healthMedsNote,
+          goal_note: this.notes.goalsNote,
+          misc_note: this.notes.miscNote,
+        };
+
+        if (
+          this.notes.goalWeight !== undefined &&
+          this.notes.goalWeight !== ""
+        ) {
+          payload.goal_weight = this.notes.goalWeight;
+        } else {
+          null;
+        }
+
         await apiClient.put(
           `${import.meta.env.VITE_API_URL}clients/${
             this.$route.params.clientId
           }/notes`,
-          {
-            health_note: this.notes.healthMedsNote,
-            goal_note: this.notes.goalsNote,
-            goal_weight: this.notes.goalWeight,
-            misc_note: this.notes.miscNote,
-          }
+          payload
         );
+
         this.snackbarMessage = "Notes updated successfully!";
         this.snackbarColor = "success";
       } catch (error) {
@@ -116,8 +126,8 @@ export default {
       } finally {
         this.snackbar = true;
       }
+      this.$emit("goalWeightUpdated", this.notes.goalWeight);
     },
-
     async getClient() {
       try {
         const response = await apiClient.get(
