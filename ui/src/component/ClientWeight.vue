@@ -11,7 +11,7 @@
         <line-chart
           v-else-if="chartData && Object.keys(chartData).length"
           :chartData="chartData"
-          :goal-weight="notes.goalWeight"
+          :goal-weight="Number(notes.goalWeight)"
         ></line-chart>
       </div>
       <v-table>

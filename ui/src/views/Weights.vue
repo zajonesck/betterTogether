@@ -51,8 +51,8 @@ export default {
       if (!text) return "";
       return text.charAt(0).toUpperCase() + text.slice(1);
     },
-    handleGoalWeightUpdated(newGoalWeight) {
-      this.chartData.goalWeight = newGoalWeight;
+    handleGoalWeightUpdated() {
+      this.$refs.clientWeightComponent.getClient();
     },
 
     async getClient() {
@@ -97,11 +97,13 @@ export default {
       </v-tabs>
       <v-card-text>
         <v-window v-model="tab">
-          <ClientWeight />
+          <client-weight ref="clientWeightComponent"></client-weight>
 
           <ClientWorkout />
 
-          <ClientGoal @goalWeightUpdated="handleGoalWeightUpdated" />
+          <client-goal
+            @goalWeightUpdated="handleGoalWeightUpdated"
+          ></client-goal>
         </v-window>
       </v-card-text>
       <v-dialog v-model="errorDialog" max-width="500px">
