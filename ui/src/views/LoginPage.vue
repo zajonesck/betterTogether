@@ -57,6 +57,14 @@ export default {
         if (user && user.signInUserSession) {
           const jwtToken = user.signInUserSession.idToken.jwtToken;
           sessionStorage.setItem("jwt", jwtToken);
+
+          const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
+          const tokenDuration = decodedToken.exp * 1000 - Date.now();
+          setTimeout(() => {
+            sessionStorage.removeItem("jwt");
+            router.push("/login");
+          }, tokenDuration);
+
           router.push("/client-roster");
         } else {
           error.value = "Authentication failed";
@@ -65,8 +73,6 @@ export default {
         error.value = err.message || "An error occurred during login";
       }
     };
-
-    // to retrive : const jwtToken = sessionStorage.getItem('jwt');
 
     const tryAsGuest = () => {
       router.push("/client-roster");

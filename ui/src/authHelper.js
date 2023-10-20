@@ -1,4 +1,4 @@
-const { Auth } = require("aws-amplify");
+import { Auth } from "aws-amplify";
 
 async function getToken() {
   try {
@@ -8,7 +8,9 @@ async function getToken() {
     console.error("Failed to fetch JWT token", error);
   }
 }
-
-module.exports = {
-  getToken,
-};
+function isTokenExpired(jwtToken) {
+  const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
+  const currentTime = Math.floor(Date.now() / 1000);
+  return decodedToken.exp < currentTime;
+}
+export { getToken, isTokenExpired };
