@@ -147,7 +147,7 @@ Testing is crucial for ensuring the reliability and stability of the application
 
 ### Tools Used for API Testing
 
-- **Jest**: A delightful JavaScript Testing Framework with a focus on simplicity.
+- **Jest**: A JavaScript Testing Framework with a focus on simplicity.
 - **Supertest**: Provides a high-level abstraction for testing HTTP, while still allowing you to drop down to the lower-level API provided by superagent.
 
 ### Tools Used for UI Testing
