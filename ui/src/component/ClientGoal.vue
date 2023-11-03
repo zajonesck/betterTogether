@@ -89,6 +89,7 @@ export default {
           health_note: this.notes.healthMedsNote,
           goal_note: this.notes.goalsNote,
           misc_note: this.notes.miscNote,
+          goal_weight: null, // Initialize to null by default
         };
 
         if (
@@ -96,8 +97,6 @@ export default {
           this.notes.goalWeight !== ""
         ) {
           payload.goal_weight = this.notes.goalWeight;
-        } else {
-          null;
         }
 
         await apiClient.put(

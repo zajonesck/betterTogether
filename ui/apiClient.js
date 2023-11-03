@@ -8,15 +8,18 @@ apiClient.interceptors.request.use(
   (config) => {
     const jwtToken = sessionStorage.getItem("jwt");
 
-    if (jwtToken && isTokenExpired(jwtToken)) {
-      sessionStorage.removeItem("jwt");
+    if (!jwtToken) {
       window.location.href = "/path-to-login";
-      return;
+      return Promise.reject(new Error("No token found, redirecting to login"));
     }
 
-    if (jwtToken) {
-      config.headers["Authorization"] = `Bearer ${jwtToken}`;
+    if (isTokenExpired(jwtToken)) {
+      sessionStorage.removeItem("jwt");
+      window.location.href = "/path-to-login";
+      return Promise.reject(new Error("Token expired, redirecting to login"));
     }
+
+    config.headers["Authorization"] = `Bearer ${jwtToken}`;
 
     return config;
   },
