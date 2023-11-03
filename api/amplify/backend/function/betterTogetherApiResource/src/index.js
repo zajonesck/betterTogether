@@ -24,6 +24,8 @@ const jwtProtectedRouter = express.Router();
 router.use(jwtProtectedRouter);
 jwtProtectedRouter.use(verifyJWT);
 
+jwtProtectedRouter.delete("/clients_weights/:weightId", db.deleteWeight);
+
 jwtProtectedRouter.get("/exercises", db.getAllExercises);
 
 jwtProtectedRouter.get("/exercises/:id", db.getExerciseById);

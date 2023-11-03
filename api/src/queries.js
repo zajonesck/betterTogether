@@ -403,17 +403,8 @@ const updateClientNotes = (req, res) => {
   const clientId = req.params.clientId;
   const { health_note, goal_note, misc_note, goal_weight } = req.body;
 
-  let errors = [];
-
-  // Validate fields separately and collect error messages
-  if (!health_note) errors.push("Health note is missing.");
-  if (!goal_note) errors.push("Goal note is missing.");
-  if (!misc_note) errors.push("Misc note is missing.");
-  if (!goal_weight) errors.push("Goal weight is missing.");
-
-  // If there are any errors, send them back in the response
-  if (errors.length > 0) {
-    return res.status(400).send(errors.join(" "));
+  if (!health_note && !goal_note && !misc_note && !goal_weight) {
+    return res.status(400).send("No data provided to update.");
   }
 
   const pool = getPoolInstance();

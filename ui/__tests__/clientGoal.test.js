@@ -1,5 +1,13 @@
 import { mount } from "@vue/test-utils";
 import ClientGoal from "../src/component/ClientGoal.vue";
+import { fetchData } from "../apiClient";
+import { vi } from "vitest";
+
+vi.mock("../apiClient", () => {
+  return {
+    fetchData: vi.fn().mockResolvedValue({ data: "mocked data" }),
+  };
+});
 
 describe("ClientGoal.vue", () => {
   let wrapper;
@@ -17,6 +25,10 @@ describe("ClientGoal.vue", () => {
         };
       },
     });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe("Rendering functionality", () => {
