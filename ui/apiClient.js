@@ -9,13 +9,13 @@ apiClient.interceptors.request.use(
     const jwtToken = sessionStorage.getItem("jwt");
 
     if (!jwtToken) {
-      window.location.href = "/path-to-login";
+      window.location.href = "/login";
       return Promise.reject(new Error("No token found, redirecting to login"));
     }
 
     if (isTokenExpired(jwtToken)) {
       sessionStorage.removeItem("jwt");
-      window.location.href = "/path-to-login";
+      window.location.href = "/login";
       return Promise.reject(new Error("Token expired, redirecting to login"));
     }
 
