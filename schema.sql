@@ -11,12 +11,6 @@ CREATE TABLE clients (
 
 );
 
--- Indices -------------------------------------------------------
-
-
-
-CREATE UNIQUE INDEX clients_data_pkey ON clients(id int4_ops);
-
 --clients weights table
 
 CREATE TABLE clients_weights (

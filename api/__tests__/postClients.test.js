@@ -28,22 +28,21 @@ function makeRequest(method, path, body = null) {
 }
 
 describe("Client Operations", () => {
-  let createdClientIds = [];
+  let cleanUpPostTestClientIds = [];
 
   afterEach(async () => {
-    for (let clientId of createdClientIds) {
+    for (let clientId of cleanUpPostTestClientIds) {
       try {
         await deleteClientForTest(clientId);
       } catch (error) {
         console.error(`Failed to delete client with ID ${clientId}:`, error);
       }
     }
-    createdClientIds = []; // Reset after cleaning up
+    cleanUpPostTestClientIds = []; // Reset after cleaning up
   });
 
   describe("Create a new client", () => {
     test("It responds with the newly created client", async () => {
-      console.log("pppppp", request.body);
       const response = await makeRequest("get", "/api/clients");
       const numberOfClients = response.body.length;
 
@@ -52,10 +51,6 @@ describe("Client Operations", () => {
         last_name: "Client",
         birth_day: "10/10/2010",
       });
-
-      if (newClient.body.id) {
-        createdClientIds.push(newClient.body.id);
-      }
 
       const newResponse = await makeRequest("get", "/api/clients");
       expect(newResponse.body.length).toBe(numberOfClients + 1);
@@ -67,6 +62,10 @@ describe("Client Operations", () => {
         "2010-10-10T05:00:00.000Z"
       );
       expect(newClient.statusCode).toBe(201);
+
+      if (newClient.body.id) {
+        cleanUpPostTestClientIds.push(newClient.body.id);
+      }
     });
 
     test("Throws 400 error when there is no client_name", async () => {
@@ -127,14 +126,14 @@ describe("Client Operations", () => {
     });
 
     afterEach(async () => {
-      for (let clientId of createdClientIds) {
+      for (let clientId of cleanUpPostTestClientIds) {
         try {
           await deleteClientForTest(clientId);
         } catch (error) {
           console.error(`Failed to delete client with ID ${clientId}:`, error);
         }
       }
-      createdClientIds = []; // Reset after cleaning
+      cleanUpPostTestClientIds = []; // Reset after cleaning
     });
 
     describe("Create a new client weight", () => {

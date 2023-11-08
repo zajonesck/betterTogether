@@ -72,10 +72,10 @@ export default {
           this.errorDialog = false;
         })
         .catch((error) => {
-          console.error("Failed to add client:", error);
+          console.error("Failed to get clients:", error);
           this.errorMessage =
             "Failed to fetch clients. Please try again later.";
-          this.errorDialog = true; // Open the error dialog
+          this.errorDialog = true;
         });
     },
 
