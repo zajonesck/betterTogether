@@ -32,7 +32,6 @@
       </v-row>
     </v-container>
     <v-row justify="center" class="mt-1">
-      <v-btn text @click="tryAsGuest" class="mx-2">Try as Guest</v-btn>
       <v-btn text @click="signUp" class="mx-2">Sign Up</v-btn>
     </v-row>
   </div>
@@ -74,10 +73,6 @@ export default {
       }
     };
 
-    const tryAsGuest = () => {
-      router.push("/client-roster");
-    };
-
     const signUp = () => {
       router.push("/signup");
     };
@@ -87,7 +82,6 @@ export default {
       email,
       error,
       login,
-      tryAsGuest,
       signUp,
     };
   },
