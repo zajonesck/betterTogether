@@ -4,6 +4,7 @@ const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 const { getTestJWT } = require("../src/testJWTSecret");
+const db = require("../src/database");
 
 let TESTJWT;
 
@@ -88,4 +89,8 @@ describe("Workout Operations", () => {
       expect(res.statusCode).toBe(400);
     });
   });
+});
+
+afterAll(async () => {
+  await db.closePool();
 });

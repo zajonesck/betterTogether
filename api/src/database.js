@@ -54,5 +54,10 @@ function getPoolInstance() {
   return pool;
 }
 
+function closePool() {
+  return pool.end();
+}
+
 exports.getPoolInstance = getPoolInstance;
 exports.initializePool = initializePool;
+exports.closePool = closePool;

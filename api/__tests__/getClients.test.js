@@ -4,6 +4,7 @@ const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 const { getTestJWT } = require("../src/testJWTSecret");
+const db = require("../src/database");
 
 let TESTJWT;
 
@@ -42,4 +43,8 @@ describe("GET /clients", () => {
     const response = await makeRequest("get", "/api/clients", "invalidToken");
     expect(response.statusCode).toBe(403);
   });
+});
+
+afterAll(async () => {
+  await db.closePool();
 });

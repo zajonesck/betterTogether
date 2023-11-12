@@ -5,6 +5,7 @@ const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 const { getTestJWT } = require("../src/testJWTSecret");
+const db = require("../src/database");
 
 let TESTJWT;
 
@@ -174,4 +175,8 @@ describe("Client Operations", () => {
       });
     });
   });
+});
+
+afterAll(async () => {
+  await db.closePool();
 });
