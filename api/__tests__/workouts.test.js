@@ -28,7 +28,6 @@ describe("Workout Operations", () => {
   describe("GET workouts", () => {
     test("should get all workouts", async () => {
       const res = await makeRequest("get", "/api/workouts");
-      console.log(res.body);
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
     });
@@ -85,7 +84,7 @@ describe("Workout Operations", () => {
         "/api/clients/workouts",
         incompleteWorkout
       );
-      expect(res.text).toBe("workout_id is required.");
+      expect(res.text).toBe('{"error":"workout_id is required."}');
       expect(res.statusCode).toBe(400);
     });
   });

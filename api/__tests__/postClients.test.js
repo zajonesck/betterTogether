@@ -74,8 +74,8 @@ describe("Client Operations", () => {
         last_name: "Client",
         birth_day: "10/10/2010",
       });
-      expect(newClient.body).toStrictEqual({});
-      expect(newClient.text).toEqual("Client name required.");
+      expect(newClient.body).toStrictEqual({ error: "Client name required." });
+      expect(newClient.text).toEqual('{"error":"Client name required."}');
       expect(newClient.statusCode).toBe(400);
     });
     test("Throws 400 error when there is no birth_day", async () => {
@@ -89,8 +89,8 @@ describe("Client Operations", () => {
         "/api/clients",
         newClientBody
       );
-      expect(newClient.body).toStrictEqual({});
-      expect(newClient.text).toEqual("Birthday required.");
+      expect(newClient.body).toStrictEqual({ error: "Birthday required." });
+      expect(newClient.text).toEqual('{"error":"Birthday required."}');
       expect(newClient.statusCode).toBe(400);
     });
     test("Throws 400 error when birth_day is an invalid date", async () => {
@@ -104,8 +104,10 @@ describe("Client Operations", () => {
         "/api/clients",
         newClientBody
       );
-      expect(newClient.body).toStrictEqual({});
-      expect(newClient.text).toEqual("Valid birthday required.");
+      expect(newClient.body).toStrictEqual({
+        error: "Valid birthday required.",
+      });
+      expect(newClient.text).toEqual('{"error":"Valid birthday required."}');
       expect(newClient.statusCode).toBe(400);
     });
 
@@ -120,8 +122,10 @@ describe("Client Operations", () => {
         "/api/clients",
         newClientBody
       );
-      expect(newClient.body).toStrictEqual({});
-      expect(newClient.text).toEqual("Are you really that old?");
+      expect(newClient.body).toStrictEqual({
+        error: "Are you really that old?",
+      });
+      expect(newClient.text).toEqual('{"error":"Are you really that old?"}');
       expect(newClient.statusCode).toBe(400);
     });
 
@@ -146,8 +150,10 @@ describe("Client Operations", () => {
           "/api/clients_weights/:153",
           newWeightBody
         );
-        expect(newClient.body).toStrictEqual({});
-        expect(newClient.text).toEqual("Client weight required.");
+        expect(newClient.body).toStrictEqual({
+          error: "Client weight required.",
+        });
+        expect(newClient.text).toEqual('{"error":"Client weight required."}');
         expect(newClient.statusCode).toBe(400);
       });
 
@@ -160,8 +166,10 @@ describe("Client Operations", () => {
           "/api/clients_weights/:clientId",
           newWeightBody
         );
-        expect(newClient.body).toStrictEqual({});
-        expect(newClient.text).toEqual("Valid weight required.");
+        expect(newClient.body).toStrictEqual({
+          error: "Valid weight required.",
+        });
+        expect(newClient.text).toEqual('{"error":"Valid weight required."}');
         expect(newClient.statusCode).toBe(400);
       });
     });
