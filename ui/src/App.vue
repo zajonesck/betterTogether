@@ -54,6 +54,13 @@
         >
           About Better Together
         </v-btn>
+        <v-btn
+          href="https://www.bettertogetherfitness.xyz/"
+          class="px-1 py-1 ml-3"
+          target="_blank"
+        >
+          Interested In Training
+        </v-btn>
         <v-col class="text-center mt-4" cols="12"
           >&copy; {{ new Date().getFullYear() }} — <strong>Zack Jones</strong>
         </v-col>
