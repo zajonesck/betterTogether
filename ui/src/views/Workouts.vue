@@ -1,13 +1,6 @@
 <template>
   <div>
-    <v-card-title>
-      Workouts
-      <v-list-subheader>
-        <router-link to="/exercises" class="custom-link"
-          >View Exercises</router-link
-        >
-      </v-list-subheader>
-    </v-card-title>
+    <v-card-title>Workouts</v-card-title>
 
     <v-container style="min-height: calc(100vh - 250px)">
       <v-text-field

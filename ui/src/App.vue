@@ -15,6 +15,13 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item link to="/exercises">
+        <v-list-item-content>
+          <v-list-item-title>
+            <v-icon>mdi-arm-flex</v-icon> Exercises
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <v-list-item @click="logout">
         <v-list-item-content>
           <v-list-item-title>
