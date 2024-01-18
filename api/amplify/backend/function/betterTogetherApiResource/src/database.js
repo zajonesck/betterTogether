@@ -1,4 +1,5 @@
 const Pool = require("pg").Pool;
+const { InternalServerError } = require("./APIError");
 require("dotenv").config();
 
 const {
@@ -20,7 +21,7 @@ async function getDatabaseCredentials() {
     return JSON.parse(response.SecretString);
   } catch (error) {
     console.error("Error retrieving secret:", error);
-    throw error;
+    throw new InternalServerError("Failed to retrieve database credentials.");
   }
 }
 
@@ -48,10 +49,15 @@ async function initializePool() {
 
 function getPoolInstance() {
   if (!pool) {
-    throw new Error("Database pool is not initialized.");
+    throw new InternalServerError("Database pool is not initialized.");
   }
   return pool;
 }
 
+function closePool() {
+  return pool.end();
+}
+
 exports.getPoolInstance = getPoolInstance;
 exports.initializePool = initializePool;
+exports.closePool = closePool;

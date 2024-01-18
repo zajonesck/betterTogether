@@ -3,6 +3,13 @@ const {
   GetSecretValueCommand,
 } = require("@aws-sdk/client-secrets-manager");
 
+class SecretRetrievalError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "SecretRetrievalError";
+  }
+}
+
 async function getTestJWT() {
   const client = new SecretsManagerClient({ region: "us-east-1" });
 
@@ -18,8 +25,7 @@ async function getTestJWT() {
     return secret.TESTJWT;
   } catch (error) {
     console.error("Error retrieving JWT secret:", error);
-    throw error;
+    throw new SecretRetrievalError("Failed to retrieve JWT secret.");
   }
 }
-
 exports.getTestJWT = getTestJWT;

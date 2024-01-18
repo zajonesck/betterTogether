@@ -1,5 +1,5 @@
 const Pool = require("pg").Pool;
-const { InternalServerError } = require("./ApiError");
+const { InternalServerError } = require("./APIError");
 require("dotenv").config();
 
 const {

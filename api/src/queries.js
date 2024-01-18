@@ -3,7 +3,7 @@ const {
   BadRequestError,
   NotFoundError,
   InternalServerError,
-} = require("./ApiError");
+} = require("./APIError");
 
 const deleteClient = async (request, response, next) => {
   const clientId = request.params.clientId;

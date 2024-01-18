@@ -9,7 +9,7 @@ const {
   BadRequestError,
   NotFoundError,
   InternalServerError,
-} = require("./ApiError");
+} = require("./APIError");
 const awsServerlessExpress = require("aws-serverless-express");
 
 const app = express();
