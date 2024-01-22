@@ -1,18 +1,23 @@
 #!/bin/bash
 
-# Define the source and target directories
-TARGET_DIR="./amplify/backend/function/betterTogetherApiResource/src/"
-SRC_DIR="./src/"
+# Pre-deployment tasks
+echo "Starting deployment..."
 
-# Remove all files in the target directory
-rm -rf ${TARGET_DIR}*
+# Copy files
+rm -rf ./amplify/backend/function/betterTogetherApiResource/src/*
+cp ./package.json ./amplify/backend/function/betterTogetherApiResource/src/
+cp -r ./src/* ./amplify/backend/function/betterTogetherApiResource/src/
+cp ./.env ./amplify/backend/function/betterTogetherApiResource/src/
 
-# Use rsync to copy files to the target directory
-rsync -av --exclude='path/to/exclude' ${SRC_DIR}* ${TARGET_DIR}
+# Navigate to src directory and run npm install
+cd ./amplify/backend/function/betterTogetherApiResource/src/
+npm install --production 
+cd -
 
-# Copy other necessary files
-cp ./.env ./package.json ${TARGET_DIR}
+# This is a hack that i need to fix soon since amplify rebuilds my package-lock and makes my lambda function too big to deploy
+cp ./package-lock-copy.json ./amplify/backend/function/betterTogetherApiResource/src/package-lock.json
 
-echo "Copied code to package for lambda, now pushing to amplify"
 # Push the changes to Amplify
-# amplify push
+amplify push
+# Post-deployment tasks
+echo "Deployment completed successfully."

@@ -35,6 +35,7 @@
     "start": "NODE_ENV=production node server.js",
     "start-local": "NODE_ENV=local node server.js",
     "test": "jest --runInBand",
+    "test:watch": "jest --watch",
     "copy-amplify": "rm -rf ./amplify/backend/function/betterTogetherApiResource/src/* && cp ./package.json ./amplify/backend/function/betterTogetherApiResource/src/ && cp -r ./src/* ./amplify/backend/function/betterTogetherApiResource/src/ && cp ./.env ./amplify/backend/function/betterTogetherApiResource/src/",
     "deploy-amplify": "amplify push"
   }
