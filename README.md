@@ -10,7 +10,10 @@ Better Together is a comprehensive fitness application designed to bring trainer
 - [Backend - Better Together API](#api---better-together-server-nodejs)
 - [Recommended IDE Setup](#recommended-ide-setup)
 - [Deployments](#deployments)
+  - [Deployment Script: `deploy.sh`](#deployment-script-deploysh)
+  - [Amplify Setup](#amplify-setup)
 - [Automated Tests](#automated-tests)
+- [Google Sign-In Integration](#google-sign-in-integration)
 - [roles coming soon]
 
 ## Local Development Overview
@@ -86,10 +89,33 @@ We recommend using [VSCode](https://code.visualstudio.com/) with the following e
 - [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (Remember to disable Vetur)
 - [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
 
-## Deployments
+## Deployment
 
-Frontend: Push to your `main` branch to deploy the app.
-Backend: `Amplify push` will automatically trigger a new Amplify build.
+## Deployment Script: `deploy.sh`
+
+---
+
+#### Overview
+
+The `deploy.sh` script automates the deployment process for the BetterTogether application, handling pre- and post-deployment tasks for backend functions.
+
+#### Prerequisites
+
+- Execution permissions.
+- Node.js, npm, and AWS Amplify CLI installed and configured.
+
+#### Usage Instructions
+
+1. **Start Deployment**: Execute `./deploy.sh`.
+2. **Copy Files**: Clears and copies necessary files to `./amplify/backend/function/betterTogetherApiResource/src`.
+3. **Install Dependencies**: Installs production dependencies in the `src` directory.
+4. **Temporary Fix**: Replaces `package-lock.json` to address Amplify build issues.
+5. **Push to AWS Amplify**: Updates Amplify environment with new changes.
+6. **Completion Confirmation**: Outputs success message upon completion.
+
+#### Notes
+
+- Includes a temporary workaround for an issue with `package-lock.json`.
 
 ### Amplify Setup
 
@@ -167,3 +193,26 @@ $ npm run test
 ```UI
 $ npm run test
 ```
+
+## Google Sign-In Integration with AWS Amplify
+
+This section details the integration of Google Sign-In with AWS Amplify for the Better Together application.
+
+### Overview
+
+Google Sign-In provides users with a convenient and secure authentication method. This integration enhances user experience by allowing login with Google accounts.
+
+### Integration Steps
+
+- Configured AWS Cognito for Google authentication.
+- Registered the application in Google Developer Console for client credentials.
+- Updated AWS Amplify configuration for Google as a social identity provider.
+- Implemented the Google Sign-In button in the frontend.
+
+### Tutorial Reference
+
+The setup followed this AWS Knowledge Center tutorial: [AWS Google Federation Tutorial](https://repost.aws/knowledge-center/cognito-google-social-identity-provider).
+
+### Notes
+
+This documentation serves as a reference for future updates or troubleshooting related to Google Sign-In integration.
