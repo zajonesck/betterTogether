@@ -6,6 +6,11 @@ import SignupPage from "../views/SignupPage.vue";
 
 const routes = [
   {
+    path: "/create-workout",
+    name: "CreateWorkout",
+    component: () => import("../views/CreateWorkout.vue"),
+  },
+  {
     path: "/signup",
     name: "Signup",
     component: SignupPage,

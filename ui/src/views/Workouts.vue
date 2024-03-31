@@ -1,6 +1,17 @@
 <template>
   <div>
-    <v-card-title>Workouts</v-card-title>
+    <v-container>
+      <v-row align="center" justify="space-between">
+        <v-col cols="auto">
+          <v-card-title class="display-1">Workouts</v-card-title>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn color="primary" @click="navigateToCreateWorkout"
+            >Create New Workout</v-btn
+          >
+        </v-col>
+      </v-row>
+    </v-container>
 
     <v-container style="min-height: calc(100vh - 250px)">
       <v-text-field
@@ -91,6 +102,10 @@ export default {
     },
   },
   methods: {
+    navigateToCreateWorkout() {
+      this.$router.push({ name: "CreateWorkout" });
+    },
+
     async getWorkouts() {
       try {
         const response = await apiClient.get(
