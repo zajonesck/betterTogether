@@ -1,12 +1,11 @@
 import axios from "axios";
+import { getToken, isTokenExpired } from "./src/authHelper";
 
 const apiClient = axios.create({});
 
-import { isTokenExpired } from "./src/authHelper";
-
 apiClient.interceptors.request.use(
-  (config) => {
-    const jwtToken = sessionStorage.getItem("jwt");
+  async (config) => {
+    const jwtToken = await getToken();
 
     if (!jwtToken) {
       window.location.href = "/login";
