@@ -5,6 +5,33 @@ const {
   InternalServerError,
 } = require("./APIError");
 
+const createWorkout = async (name, description, difficulty) => {
+  const query =
+    "INSERT INTO workouts (workout_name, description, difficulty) VALUES ($1, $2, $3) RETURNING *";
+  const values = [name, description, difficulty];
+  const { rows } = await getPoolInstance().query(query, values);
+  return rows[0];
+};
+
+const deleteExerciseFromWorkout = async (workoutId, exerciseId) => {
+  const pool = getPoolInstance();
+  try {
+    const results = await pool.query(
+      "DELETE FROM workouts_exercises WHERE workout_id = $1 AND exercise_id = $2 RETURNING *",
+      [workoutId, exerciseId]
+    );
+    if (results.rowCount === 0) {
+      throw new Error("Exercise not found in the workout.");
+    }
+    return results.rows[0];
+  } catch (error) {
+    console.error("Error executing deleteExerciseFromWorkout query:", error);
+    throw new Error(
+      "An error occurred during the exercise removal from the workout."
+    );
+  }
+};
+
 const deleteClient = async (request, response, next) => {
   const clientId = request.params.clientId;
   const pool = getPoolInstance();
@@ -458,6 +485,23 @@ const getAllExercises = async (request, response, next) => {
   }
 };
 
+// Function to link an exercise to a workout in the workouts_exercises table
+const addExerciseToWorkout = async (
+  workoutId,
+  exerciseId,
+  sets,
+  reps,
+  rpe,
+  duration,
+  order
+) => {
+  const query =
+    'INSERT INTO workouts_exercises (workout_id, exercise_id, sets, reps, rpe, duration, "order") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
+  const values = [workoutId, exerciseId, sets, reps, rpe, duration, order];
+  const { rows } = await getPoolInstance().query(query, values);
+  return rows[0];
+};
+
 const updateClientNotes = async (request, response, next) => {
   const clientId = request.params.clientId;
   const { health_note, goal_note, misc_note, goal_weight } = request.body;
@@ -510,4 +554,7 @@ module.exports = {
   getExerciseById,
   deleteClientWorkout,
   deleteClientForTest,
+  deleteExerciseFromWorkout,
+  createWorkout,
+  addExerciseToWorkout,
 };

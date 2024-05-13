@@ -51,6 +51,43 @@ jwtProtectedRouter.get("/workout/:workoutId", db.getWorkout);
 
 jwtProtectedRouter.post("/clients/workouts", db.addClientWorkout);
 
+jwtProtectedRouter.post("/workouts", async (req, res) => {
+  try {
+    const { name, description, difficulty } = req.body;
+    const workout = await db.createWorkout(name, description, difficulty);
+    res.status(201).json({ message: "Workout created successfully", workout });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to create workout", error: error.message });
+  }
+});
+
+// POST endpoint to add an exercise to a workout
+jwtProtectedRouter.post("/workouts/:workoutId/exercises", async (req, res) => {
+  const { workoutId } = req.params;
+  const { exerciseId, sets, reps, rpe, duration, order } = req.body;
+  try {
+    const result = await db.addExerciseToWorkout(
+      workoutId,
+      exerciseId,
+      sets,
+      reps,
+      rpe,
+      duration,
+      order
+    );
+    res
+      .status(201)
+      .json({ message: "Exercise added to workout successfully", result });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to add exercise to workout",
+      error: error.message,
+    });
+  }
+});
+
 jwtProtectedRouter.post("/clients_weights/:clientId", (req, res, next) => {
   if (!req.body.weight) {
     return next(new BadRequestError("Client weight required."));
@@ -60,6 +97,52 @@ jwtProtectedRouter.post("/clients_weights/:clientId", (req, res, next) => {
   }
   db.addWeight(req, res);
 });
+
+// POST endpoint to add an exercise to a workout
+jwtProtectedRouter.post("/workouts/:workoutId/exercises", async (req, res) => {
+  const { workoutId } = req.params;
+  const { exerciseId, sets, reps, rpe, duration, order } = req.body;
+  try {
+    const result = await db.addExerciseToWorkout(
+      workoutId,
+      exerciseId,
+      sets,
+      reps,
+      rpe,
+      duration,
+      order
+    );
+    res
+      .status(201)
+      .json({ message: "Exercise added to workout successfully", result });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Failed to add exercise to workout",
+        error: error.message,
+      });
+  }
+});
+
+jwtProtectedRouter.delete(
+  "/workouts/:workoutId/exercises/:exerciseId",
+  async (req, res) => {
+    const { workoutId, exerciseId } = req.params;
+    try {
+      const result = await db.deleteExerciseFromWorkout(workoutId, exerciseId);
+      res.status(200).json({
+        message: "Exercise removed from workout successfully",
+        data: result,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Failed to remove exercise from workout",
+        error: error.message,
+      });
+    }
+  }
+);
 
 jwtProtectedRouter.post("/search/workouts", db.searchWorkouts);
 
