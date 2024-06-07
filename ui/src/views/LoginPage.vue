@@ -17,11 +17,17 @@
 
                 <v-text-field
                   v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
                   label="Password"
-                  type="password"
                   required
                   autocomplete="current-password"
-                ></v-text-field>
+                >
+                  <template v-slot:append>
+                    <v-icon @click="togglePasswordVisibility">
+                      {{ showPassword ? "mdi-eye-off" : "mdi-eye" }}
+                    </v-icon>
+                  </template>
+                </v-text-field>
               </v-form>
             </v-card-text>
             <v-card-actions class="justify-center">
@@ -46,8 +52,13 @@ export default {
   setup() {
     const email = ref("");
     const password = ref("");
+    const showPassword = ref(false); // Add a ref for password visibility
     const error = ref(null);
     const router = useRouter();
+
+    const togglePasswordVisibility = () => {
+      showPassword.value = !showPassword.value;
+    };
 
     const login = async () => {
       try {
@@ -80,9 +91,11 @@ export default {
     return {
       password,
       email,
+      showPassword, // Add showPassword to the return object
       error,
       login,
       signUp,
+      togglePasswordVisibility, // Add the toggle function to the return object
     };
   },
 };
