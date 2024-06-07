@@ -74,7 +74,7 @@ jwtProtectedRouter.post("/clients", (req, res, next) => {
     new Date(req.body.birth_day).getFullYear() <
     new Date().getFullYear() - 200
   ) {
-    return next(new BadRequestError("Are you really that old?"));
+    return next(new BadRequestError("Are you really that old???"));
   }
   if (isNaN(Date.parse(req.body.birth_day))) {
     return next(new BadRequestError("Valid birthday required."));
