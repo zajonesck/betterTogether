@@ -59,6 +59,11 @@ For additional customization, see the [Vite Configuration Reference](https://vit
 
 ## API - Better Together Server (Node.js)
 
+```bash
+./deploy.sh
+amplify push
+```
+
 ### Compile and hot-reload for development
 
 ```bash
