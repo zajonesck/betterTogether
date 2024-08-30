@@ -13,6 +13,9 @@
           :chartData="chartData"
           :goal-weight="Number(notes.goalWeight)"
         ></line-chart>
+        <div v-if="weightDifference !== null" class="weight-difference">
+          <p>{{ weightDifferenceText }}</p>
+        </div>
       </div>
       <v-table>
         <thead>
@@ -118,6 +121,29 @@ export default {
         return true;
       },
     };
+  },
+  computed: {
+    weightDifference() {
+      if (this.clientWeights.length && this.notes.goalWeight != null) {
+        const currentWeight =
+          this.clientWeights[this.clientWeights.length - 1].weight;
+        return currentWeight - this.notes.goalWeight;
+      }
+      return null;
+    },
+
+    weightDifferenceText() {
+      const difference = this.weightDifference;
+      if (difference > 0) {
+        return `You need to lose ${difference} lbs to reach your goal.`;
+      } else if (difference < 0) {
+        return `You need to gain ${Math.abs(
+          difference
+        )} lbs to reach your goal.`;
+      } else {
+        return `Congratulations! You have reached your goal weight.`;
+      }
+    },
   },
   methods: {
     async fetchChartData() {
@@ -246,3 +272,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.weight-difference {
+  margin-top: 20px;
+  font-size: 16px;
+  color: rgb(0, 255, 89);
+}
+</style>
