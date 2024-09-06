@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const { initializePool } = require("./database");
 const db = require("./queries");
@@ -19,12 +18,8 @@ initializePool().catch((error) => {
 });
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(express.json()); // Replaces bodyParser.json()
+app.use(express.urlencoded({ extended: true })); // Replaces bodyParser.urlencoded()
 
 const jwtProtectedRouter = express.Router();
 jwtProtectedRouter.use(verifyJWT);

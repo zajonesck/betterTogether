@@ -15,7 +15,7 @@
       "function": {
         "betterTogetherApiResource": {
           "deploymentBucketName": "amplify-bettertogetherapi-prod-193441-deployment",
-          "s3Key": "amplify-builds/betterTogetherApiResource-49616879337579424b6b-build.zip"
+          "s3Key": "amplify-builds/betterTogetherApiResource-46594773514c65494537-build.zip"
         }
       },
       "api": {
